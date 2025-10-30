@@ -11,12 +11,16 @@ export class CounterHelper {
     this.user = userEvent.setup()
   }
 
-  get button() {
-    return this.element.getByRole('button')
+  get value() {
+    return this.element.getByTestId('value')
   }
 
-  click() {
-    return this.user.click(this.button)
+  increment() {
+    return this.user.click(this.element.getByRole('button', { name: /increment/i }))
+  }
+
+  decrement() {
+    return this.user.click(this.element.getByRole('button', { name: /decrement/i }))
   }
 
   unmount() {

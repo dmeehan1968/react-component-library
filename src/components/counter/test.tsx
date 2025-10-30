@@ -8,12 +8,17 @@ describe('Counter', () => {
     counter?.unmount()
   })
 
-  it('increments count on click', async () => {
+  it('shows initial value and increments/decrements correctly', async () => {
     counter = new CounterHelper()
-    expect(counter.button.textContent).toContain('count is 0')
-    await counter.click()
-    expect(counter.button.textContent).toContain('count is 1')
-    await counter.click()
-    expect(counter.button.textContent).toContain('count is 2')
+    expect(counter.value.textContent).toContain('count is 0')
+
+    await counter.increment()
+    expect(counter.value.textContent).toContain('count is 1')
+
+    await counter.increment()
+    expect(counter.value.textContent).toContain('count is 2')
+
+    await counter.decrement()
+    expect(counter.value.textContent).toContain('count is 1')
   })
 })

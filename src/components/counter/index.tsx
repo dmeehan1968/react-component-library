@@ -16,7 +16,7 @@ export function Counter() {
           data-testid="value"
           className="badge badge-lg tabular-nums min-w-[12ch] justify-center text-center"
         >
-          count is {count}
+          count is <span data-testid="count">{count}</span>
         </span>
         <button
           className="btn btn-lg btn-primary h-12 w-24 min-h-12 min-w-24"

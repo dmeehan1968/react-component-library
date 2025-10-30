@@ -15,6 +15,27 @@ export class CounterHelper {
     return this.element.getByTestId('value')
   }
 
+  getButton(name: 'increment' | 'decrement') {
+    return this.element.getByRole('button', { name })
+  }
+
+  async setValue(n: number) {
+    // Get current value from text content and click diff times
+    const text = this.value.textContent ?? ''
+    const match = text.match(/(-?\d+)/)
+    const current = match ? parseInt(match[1], 10) : 0
+    let diff = n - current
+    while (diff !== 0) {
+      if (diff > 0) {
+        await this.increment()
+        diff--
+      } else {
+        await this.decrement()
+        diff++
+      }
+    }
+  }
+
   increment() {
     return this.user.click(this.element.getByRole('button', { name: /increment/i }))
   }

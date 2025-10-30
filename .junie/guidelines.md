@@ -1,6 +1,6 @@
 # Project Development Guidelines
 
-Last verified: 2025-10-30 11:45 (local time)
+Last verified: 2025-10-30 13:44 (local time)
 
 This repository is a React 19 + TypeScript + Vite 7 project managed with Bun. The guidance below documents the project-specific build, lint, and test setup, plus tips that help with day-to-day development and debugging.
 
@@ -42,6 +42,16 @@ Notes
 - The repo favors ESM and Vite’s bundler-mode TS settings; avoid CommonJS/`require`.
 - React Fast Refresh rules are enforced by `eslint-plugin-react-refresh`; avoid patterns that break HMR.
 - Vite env vars must be prefixed with `VITE_` to be exposed to client code.
+
+### Styling
+- Tailwind CSS v4 + DaisyUI are used for styling. Tailwind Preflight provides the CSS reset; do not add custom global resets.
+- Global stylesheet is `src/index.css` and should only import Tailwind and the DaisyUI plugin:
+  ```css
+  @import "tailwindcss";
+  @plugin "daisyui";
+  ```
+- Prefer Tailwind utilities and DaisyUI component classes (`btn`, `card`, `badge`, etc.) over bespoke CSS. Avoid new `.css` files; use `className` utilities in components.
+- The legacy Vite starter styles were removed (`src/App.css`).
 
 ## Testing
 
@@ -102,6 +112,7 @@ The project uses Bun’s built-in test runner and React Testing Library for comp
 - Keep components small and stateless where possible.
 - Co-locate tests and their helpers with features; use `tests/` only for larger integration suites.
 - Avoid adding global ambient types in `src/`.
+ - Prefer Tailwind/DaisyUI utility classes; consult the DaisyUI docs when picking components, and keep markup semantic.
 
 ---
 This document is intentionally project-specific. If you adjust the setup, append the exact commands and minimal configs here.

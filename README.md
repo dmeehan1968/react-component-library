@@ -2,7 +2,7 @@
 
 This is a React 19 + TypeScript + Vite 7 project managed with Bun. The repo is configured to use Bun 1.3 as the runtime and package manager, Bun’s built‑in test runner for unit tests, and React Testing Library for focused component tests.
 
-Last updated: 2025-10-30 11:45 (local time)
+Last updated: 2025-10-30 13:44 (local time)
 
 ## Prerequisites
 - Bun 1.3.x installed (`bun --version` should report 1.3.x)
@@ -18,6 +18,20 @@ Last updated: 2025-10-30 11:45 (local time)
 - Preview production build: `bunx vite preview`
 - Lint: `bunx eslint .`
 - Tests: `bun test` (watch: `bun test --watch`, coverage: `bun test --coverage`)
+
+## Styling: Tailwind CSS + DaisyUI
+
+- Tailwind CSS v4 and DaisyUI are installed and configured. We rely on Tailwind Preflight for the CSS reset and avoid custom global CSS.
+- Global stylesheet: `src/index.css` contains only Tailwind/DaisyUI imports:
+
+```css
+@import "tailwindcss";
+@plugin "daisyui";
+```
+
+- Use Tailwind utility classes and DaisyUI component classes (`btn`, `card`, `badge`, `navbar`, etc.) instead of writing bespoke CSS.
+- Prefer semantic HTML plus utilities; co-locate any rare component‑scoped styles via inline `className` utilities rather than separate `.css` files.
+- The previous Vite starter CSS (`App.css`) was removed.
 
 ## Testing
 
@@ -73,6 +87,7 @@ describe('App', () => {
 - Keep components small and pure to benefit from Vite React Fast Refresh.
 - Co-locate tests and their helpers next to their feature modules.
 - Avoid global ambient types in `src/`.
+ - Prefer Tailwind/DaisyUI class utilities over custom CSS; when in doubt, consult https://daisyui.com/components/ for available components.
 
 ## Troubleshooting
 - If `bun test` errors about missing DOM APIs, ensure `bunfig.toml` exists and `happy-dom` is installed, then re‑run `bun install`.

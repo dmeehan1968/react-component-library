@@ -1,7 +1,6 @@
 {
   "name": "Bun DevContainer",
   "image": "oven/bun:latest",
-  "workspaceFolder": "/workspace",
   "customizations": {
     "vscode": {
       "extensions": [

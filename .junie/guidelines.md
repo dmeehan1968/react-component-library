@@ -37,6 +37,7 @@ Key files and settings:
 - Preview production build: `bun run preview`.
 - Lint: `bunx eslint .`.
 - Typecheck: `bunx tsc --noEmit`.
+- GitHub: Use the GitHub CLI (e.g. `gh issue list` etc.)
 
 Notes
 - The repo favors ESM and Vite’s bundler-mode TS settings; avoid CommonJS/`require`.

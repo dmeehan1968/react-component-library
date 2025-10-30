@@ -12,7 +12,7 @@ export class CounterHelper {
   }
 
   get button() {
-    return this.element.getByRole('button', { name: /count is/i })
+    return this.element.getByRole('button')
   }
 
   click() {

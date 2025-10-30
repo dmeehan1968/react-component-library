@@ -19,7 +19,6 @@ describe('App', () => {
 
   it('contains the Counter component', () => {
     app = new AppHelper()
-    // App is responsible for rendering the Counter; behavior is tested in Counter tests
-    expect(app.counter).toBeTruthy()
+    expect(app.counters).toHaveLength(1)
   })
 })

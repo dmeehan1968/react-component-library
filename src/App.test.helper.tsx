@@ -17,8 +17,8 @@ export class AppHelper {
   }
 
   // For App-level tests we only assert the presence of the counter, not its behavior
-  get counter() {
-    return this.element.getByRole('button', { name: /count is/i })
+  get counters() {
+    return this.element.getAllByTestId('counter')
   }
 
   unmount() {

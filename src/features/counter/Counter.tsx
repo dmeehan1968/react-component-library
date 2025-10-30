@@ -3,8 +3,8 @@ import { useState } from 'react'
 export function Counter() {
   const [count, setCount] = useState(0)
   return (
-    <div className="card">
-      <button onClick={() => setCount((c) => c + 1)}>
+    <div className="card" data-testid="counter">
+      <button onClick={() => setCount((c) => c + 1)} data-testid="value">
         count is {count}
       </button>
       <p>

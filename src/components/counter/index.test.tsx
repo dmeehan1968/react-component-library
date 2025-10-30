@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'bun:test'
-import { CounterHelper } from './test.helper.tsx'
+import { CounterHelper } from './index.test.helper.tsx'
 
 describe('Counter', () => {
   let counter: CounterHelper

@@ -47,11 +47,11 @@ Last updated: 2025-10-30 13:44 (local time)
   - App layer should only assert composition (that child features exist), not child behavior.
   - Example layout:
     - `src/App.tsx` (app shell)
-    - `src/App.test.helper.tsx` (`AppHelper`: render + semantic queries used by App tests)
-    - `src/App.test.tsx` (checks title/docs note and that `Counter` is present)
+    - `src/App.index.test.helper.tsx` (`AppHelper`: render + semantic queries used by App tests)
+    - `src/App.index.test.tsx` (checks title/docs note and that `Counter` is present)
     - `src/components/counter/index.tsx` (feature component)
-    - `src/components/counter/test.helper.tsx` (`CounterHelper`: encapsulates render, queries, and user actions)
-    - `src/components/counter/test.tsx` (behavior‑oriented tests for counter increment)
+    - `src/components/counter/index.test.helper.tsx` (`CounterHelper`: encapsulates render, queries, and user actions)
+    - `src/components/counter/index.test.tsx` (behavior‑oriented tests for counter increment)
 
 ### Writing tests
 - Import from Bun’s runner: `import { describe, it, expect } from 'bun:test'`.
@@ -61,7 +61,7 @@ Last updated: 2025-10-30 13:44 (local time)
 ```ts
 import { describe, it, expect } from 'bun:test'
 import { afterEach } from 'node:test'
-import { AppHelper } from './App.test.helper.tsx'
+import { AppHelper } from './App.index.test.helper.tsx'
 
 describe('App', () => {
   let app: AppHelper

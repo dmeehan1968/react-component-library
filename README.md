@@ -1,73 +1,70 @@
-# React + TypeScript + Vite
+# React Component Library
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a React 19 + TypeScript + Vite 7 project managed with Bun. The repo is configured to use Bun 1.3 as the runtime and package manager, Bun’s built‑in test runner for unit tests, and React Testing Library for focused component tests.
 
-Currently, two official plugins are available:
+Last updated: 2025-10-30 10:57 (local time)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Prerequisites
+- Bun 1.3.x installed (`bun --version` should report 1.3.x)
+- Node is not required to run scripts; the project is ESM‑only.
 
-## React Compiler
+`package.json` enforces this via:
+- `"packageManager": "bun@1.3.0"`
+- `"engines": { "bun": ">=1.3.0 <2" }`
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Scripts
+- Dev server (HMR): `bunx vite`
+- Build (typecheck + bundle): `bunx tsc -b && vite build`
+- Preview production build: `bunx vite preview`
+- Lint: `bunx eslint .`
+- Tests: `bun test` (watch: `bun test --watch`, coverage: `bun test --coverage`)
 
-## Expanding the ESLint configuration
+## Testing
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Runner
+- Uses Bun’s built‑in test runner (`bun:test`). No extra script is required; invoke `bun test`.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### DOM support for component tests
+- We use `happy-dom` to provide a lightweight DOM under Bun. It’s registered automatically via `bunfig.toml` and `test/setup.ts`.
+- Library used for components: `@testing-library/react`.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Structure and co-location
+- Co-locate each feature’s tests and a tiny DSL module with the feature itself.
+  - Example (from this repo):
+    - `src/App.tsx` (component)
+    - `src/App.test.dsl.tsx` (helpers to render and query the component)
+    - `src/App.test.tsx` (the readable, behavior‑oriented tests)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Writing tests
+- Import from Bun’s runner: `import { describe, it, expect } from 'bun:test'`.
+- Use the DSL to keep tests concise and intention‑revealing.
+- Example:
+
+```ts
+import { describe, it, expect } from 'bun:test'
+import userEvent from '@testing-library/user-event'
+import { renderApp } from './App.test.dsl'
+
+describe('App', () => {
+  it('increments count on click', async () => {
+    const { get } = renderApp()
+    const btn = get.countButton()
+    expect(btn.textContent).toContain('count is 0')
+    await userEvent.click(btn)
+    expect(btn.textContent).toContain('count is 1')
+  })
+})
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Coverage
+- Run `bun test --coverage`.
+- Goal is 100% statement/branch/function/line coverage across the repo. If we cannot meet 100%, please open an issue describing the gaps so we can agree on exclusions or additional tests.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Conventions
+- Keep components small and pure to benefit from Vite React Fast Refresh.
+- Co-locate tests and DSLs next to their feature modules.
+- Avoid global ambient types in `src/`.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Troubleshooting
+- If `bun test` errors about missing DOM APIs, ensure `bunfig.toml` exists and `happy-dom` is installed, then re‑run `bun install`.
+- If coverage isn’t reported, ensure your Bun build supports coverage and run with `--coverage`.

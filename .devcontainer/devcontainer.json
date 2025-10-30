@@ -1,76 +1,17 @@
 {
-  "name": "Node TypeScript Dev",
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bullseye",
-  "features": {
-    "ghcr.io/devcontainers/features/node:1": {
-      "version": "lts",
-      "nodeGypDependencies": true,
-      "nvmInstallPath": "/usr/local/share/nvm"
-    },
-    "ghcr.io/devcontainers/features/git:1": {},
-    "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/devcontainers/features/common-utils:2": {
-      "installZsh": true,
-      "username": "node",
-      "uid": "1000",
-      "gid": "1000"
-    }
-  },
+  "name": "Bun DevContainer",
+  "image": "oven/bun:latest",
+  "workspaceFolder": "/workspace",
   "customizations": {
     "vscode": {
       "extensions": [
-        "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode",
-        "ms-vscode.vscode-typescript-next",
-        "ms-azuretools.vscode-docker",
-        "github.vscode-github-actions",
-        "streetsidesoftware.code-spell-checker",
-        "vitest.explorer",
-        "orzechowski.karma-problem-matcher",
-        "firsttris.vscode-jest-runner"
+        "oven.bun-vscode"
       ],
       "settings": {
-        "typescript.tsdk": "node_modules/typescript/lib",
-        "editor.formatOnSave": true,
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
-        "eslint.packageManager": "pnpm",
-        "prettier.prettierPath": "node_modules/prettier",
-        "files.eol": "\n",
-        "terminal.integrated.defaultProfile.linux": "zsh",
-        "terminal.integrated.env.linux": {
-          "FORCE_COLOR": "1"
-        },
-        "typescript.preferences.importModuleSpecifier": "non-relative"
+        "bun.runtime": "/usr/local/bin/bun"
       }
     }
   },
-  "remoteUser": "node",
-  "updateRemoteUserUID": true,
-  "containerUser": "node",
-  "containerEnv": {
-    "NODE_ENV": "development",
-    "FORCE_COLOR": "1"
-  },
-  "mounts": [
-    "type=cache,target=/home/node/.npm",
-    "type=cache,target=/home/node/.pnpm-store",
-    "type=cache,target=/usr/local/share/.cache/yarn"
-  ],
-  "postCreateCommand": "bash .devcontainer/postCreate.sh",
-  "postStartCommand": "bash .devcontainer/postStart.sh",
-  "forwardPorts": [3000, 5173, 9229],
-  "portsAttributes": {
-    "3000": { "label": "App" },
-    "5173": { "label": "Vite" },
-    "9229": { "label": "Node Debug" }
-  },
-  "shutdownAction": "stopContainer",
-  "onCreateCommand": "corepack enable",
-  "runArgs": [
-    "--init",
-    "--cap-add=SYS_PTRACE",
-    "--security-opt",
-    "seccomp=unconfined"
-  ]
+  "forwardPorts": [3000],
+  "shutdownAction": "stopContainer"
 }

@@ -1,30 +1,32 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if command -v pnpm >/dev/null 2>&1; then
+# Pick package manager
+if [ -f bun.lockb ] || grep -q '"packageManager": *"bun@' package.json 2>/dev/null; then
+  pm=bun
+elif [ -f pnpm-lock.yaml ]; then
   pm=pnpm
-elif command -v yarn >/dev/null 2>&1; then
+elif [ -f yarn.lock ]; then
   pm=yarn
 else
   pm=npm
 fi
 
-corepack enable || true
+# Enable corepack only if using pnpm/yarn
+if [ "$pm" = "pnpm" ] || [ "$pm" = "yarn" ]; then
+  corepack enable || true
+fi
 
+# Install deps
 if [ -f package.json ]; then
-  if [ "$pm" = "pnpm" ]; then
-    pnpm install
-  elif [ "$pm" = "yarn" ]; then
-    yarn install
-  else
-    npm ci || npm install
-  fi
+  case "$pm" in
+    bun) bun install ;;
+    pnpm) pnpm install ;;
+    yarn) yarn install ;;
+    npm) npm ci || npm install ;;
+  esac
 fi
 
-if [ -f .nvmrc ]; then
-  nvm install
-  nvm use
-fi
-
-git config --global core.autocrlf input
-git config --global pull.rebase false
+# Optional git defaults
+git config --global core.autocrlf input || true
+git config --global pull.rebase false || true

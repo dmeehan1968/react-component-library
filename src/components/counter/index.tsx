@@ -5,11 +5,11 @@ export function Counter() {
   return (
     <div className="w-full" data-testid="counter">
       <div className="inline-flex items-center gap-3">
-        <button className="btn btn-circle" aria-label="decrement" onClick={() => setCount((c) => c - 1)}>
+        <button className="btn btn-circle btn-lg btn-primary" aria-label="decrement" onClick={() => setCount((c) => c - 1)}>
           −
         </button>
         <span data-testid="value" className="badge badge-lg">count is {count}</span>
-        <button className="btn btn-circle" aria-label="increment" onClick={() => setCount((c) => c + 1)}>
+        <button className="btn btn-circle btn-lg btn-primary" aria-label="increment" onClick={() => setCount((c) => c + 1)}>
           +
         </button>
       </div>

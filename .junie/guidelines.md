@@ -1,6 +1,6 @@
 # Project Development Guidelines
 
-Last verified: 2025-10-30 11:36 (local time)
+Last verified: 2025-10-30 11:45 (local time)
 
 This repository is a React 19 + TypeScript + Vite 7 project managed with Bun. The guidance below documents the project-specific build, lint, and test setup, plus tips that help with day-to-day development and debugging.
 
@@ -58,9 +58,14 @@ The project uses Bun’s built-in test runner and React Testing Library for comp
 
 ### Test locations, naming, and helpers
 - Co-locate tests and their helper classes next to the feature module.
-  - Example: for `src/App.tsx`
-    - `src/App.test.helper.tsx` — `AppHelper` class encapsulating render, semantic queries, user actions, and an `unmount()` cleanup.
-    - `src/App.test.tsx` — readable tests using the helper.
+  - App tests should assert composition (children exist) and top-level layout only; feature behavior lives in feature tests.
+  - Example layout:
+    - `src/App.tsx` — app shell
+    - `src/App.test.helper.tsx` — `AppHelper` with only the queries App tests need
+    - `src/App.test.tsx` — checks the title/docs note and that `Counter` is present
+    - `src/features/counter/Counter.tsx` — feature component
+    - `src/features/counter/Counter.test.helper.tsx` — `CounterHelper` encapsulating render, queries, and user actions
+    - `src/features/counter/Counter.test.tsx` — behavior tests (e.g., incrementing)
 - Supported suffixes: `.test.ts`, `.spec.ts`, and TSX variants.
 - Use `import { describe, it, expect } from 'bun:test'` in tests.
 

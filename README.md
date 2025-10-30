@@ -2,7 +2,7 @@
 
 This is a React 19 + TypeScript + Vite 7 project managed with Bun. The repo is configured to use Bun 1.3 as the runtime and package manager, Bun’s built‑in test runner for unit tests, and React Testing Library for focused component tests.
 
-Last updated: 2025-10-30 11:36 (local time)
+Last updated: 2025-10-30 11:45 (local time)
 
 ## Prerequisites
 - Bun 1.3.x installed (`bun --version` should report 1.3.x)
@@ -30,10 +30,14 @@ Last updated: 2025-10-30 11:36 (local time)
 
 ### Structure and co-location
 - Co-locate each feature’s tests and a tiny helper class next to the feature itself.
-  - New pattern:
-    - `src/App.tsx` (component)
-    - `src/App.test.helper.tsx` (`AppHelper`: encapsulates render, semantic queries, and user actions)
-    - `src/App.test.tsx` (readable, behavior‑oriented tests built on the helper)
+  - App layer should only assert composition (that child features exist), not child behavior.
+  - Example layout:
+    - `src/App.tsx` (app shell)
+    - `src/App.test.helper.tsx` (`AppHelper`: render + semantic queries used by App tests)
+    - `src/App.test.tsx` (checks title/docs note and that `Counter` is present)
+    - `src/features/counter/Counter.tsx` (feature component)
+    - `src/features/counter/Counter.test.helper.tsx` (`CounterHelper`: encapsulates render, queries, and user actions)
+    - `src/features/counter/Counter.test.tsx` (behavior‑oriented tests for counter increment)
 
 ### Writing tests
 - Import from Bun’s runner: `import { describe, it, expect } from 'bun:test'`.

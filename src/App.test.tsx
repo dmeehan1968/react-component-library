@@ -17,12 +17,9 @@ describe('App', () => {
     expect(app.docsNote).toBeTruthy()
   })
 
-  it('increments count on click', async () => {
+  it('contains the Counter component', () => {
     app = new AppHelper()
-    expect(app.counter.textContent).toContain('count is 0')
-    await app.increment()
-    expect(app.counter.textContent).toContain('count is 1')
-    await app.increment()
-    expect(app.counter.textContent).toContain('count is 2')
+    // App is responsible for rendering the Counter; behavior is tested in Counter tests
+    expect(app.counter).toBeTruthy()
   })
 })

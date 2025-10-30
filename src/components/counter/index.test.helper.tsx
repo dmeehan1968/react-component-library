@@ -15,10 +15,6 @@ export class CounterHelper {
     return Number(this.element.getByTestId('count').textContent)
   }
 
-  get label() {
-    return this.element.getByTestId('value')
-  }
-
   increment() {
     return this.user.click(this.element.getByRole('button', { name: /increment/i }))
   }

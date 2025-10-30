@@ -2,7 +2,7 @@
 
 This is a React 19 + TypeScript + Vite 7 project managed with Bun. The repo is configured to use Bun 1.3 as the runtime and package manager, Bun’s built‑in test runner for unit tests, and React Testing Library for focused component tests.
 
-Last updated: 2025-10-30 10:57 (local time)
+Last updated: 2025-10-30 11:36 (local time)
 
 ## Prerequisites
 - Bun 1.3.x installed (`bun --version` should report 1.3.x)
@@ -29,29 +29,34 @@ Last updated: 2025-10-30 10:57 (local time)
 - Library used for components: `@testing-library/react`.
 
 ### Structure and co-location
-- Co-locate each feature’s tests and a tiny DSL module with the feature itself.
-  - Example (from this repo):
+- Co-locate each feature’s tests and a tiny helper class next to the feature itself.
+  - New pattern:
     - `src/App.tsx` (component)
-    - `src/App.test.dsl.tsx` (helpers to render and query the component)
-    - `src/App.test.tsx` (the readable, behavior‑oriented tests)
+    - `src/App.test.helper.tsx` (`AppHelper`: encapsulates render, semantic queries, and user actions)
+    - `src/App.test.tsx` (readable, behavior‑oriented tests built on the helper)
 
 ### Writing tests
 - Import from Bun’s runner: `import { describe, it, expect } from 'bun:test'`.
-- Use the DSL to keep tests concise and intention‑revealing.
+- Use the helper class to keep tests concise and intention‑revealing.
 - Example:
 
 ```ts
 import { describe, it, expect } from 'bun:test'
-import userEvent from '@testing-library/user-event'
-import { renderApp } from './App.test.dsl'
+import { afterEach } from 'node:test'
+import { AppHelper } from './App.test.helper.tsx'
 
 describe('App', () => {
+  let app: AppHelper
+
+  afterEach(() => {
+    app?.unmount()
+  })
+
   it('increments count on click', async () => {
-    const { get } = renderApp()
-    const btn = get.countButton()
-    expect(btn.textContent).toContain('count is 0')
-    await userEvent.click(btn)
-    expect(btn.textContent).toContain('count is 1')
+    app = new AppHelper()
+    expect(app.counter.textContent).toContain('count is 0')
+    await app.increment()
+    expect(app.counter.textContent).toContain('count is 1')
   })
 })
 ```
@@ -62,7 +67,7 @@ describe('App', () => {
 
 ## Conventions
 - Keep components small and pure to benefit from Vite React Fast Refresh.
-- Co-locate tests and DSLs next to their feature modules.
+- Co-locate tests and their helpers next to their feature modules.
 - Avoid global ambient types in `src/`.
 
 ## Troubleshooting

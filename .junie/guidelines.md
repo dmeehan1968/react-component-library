@@ -1,6 +1,6 @@
 # Project Development Guidelines
 
-Last verified: 2025-10-30 10:57 (local time)
+Last verified: 2025-10-30 11:36 (local time)
 
 This repository is a React 19 + TypeScript + Vite 7 project managed with Bun. The guidance below documents the project-specific build, lint, and test setup, plus tips that help with day-to-day development and debugging.
 
@@ -32,10 +32,11 @@ Key files and settings:
 
 ### Typical workflows
 - Install deps: `bun install`.
-- Start dev server (HMR): `bunx vite`.
-- Type check + production build: `bunx tsc -b && vite build`.
-- Preview production build: `bunx vite preview`.
+- Start dev server (HMR): `bun run dev`.
+- Type check + production build: `bun run build`.
+- Preview production build: `bun run preview`.
 - Lint: `bunx eslint .`.
+- Typecheck: `bunx tsc --noEmit`.
 
 Notes
 - The repo favors ESM and Vite’s bundler-mode TS settings; avoid CommonJS/`require`.
@@ -55,11 +56,11 @@ The project uses Bun’s built-in test runner and React Testing Library for comp
 - We use `happy-dom` to provide DOM APIs under Bun. It is registered automatically via `bunfig.toml` → `[test].preload = ["./test/setup.ts"]`.
 - No Jest/Vitest dependency is required; we use Bun’s runner with RTL.
 
-### Test locations, naming, and DSLs
-- Co-locate tests and their DSL helpers next to the feature module.
+### Test locations, naming, and helpers
+- Co-locate tests and their helper classes next to the feature module.
   - Example: for `src/App.tsx`
-    - `src/App.test.dsl.tsx` — tiny helper layer (render function + semantic getters)
-    - `src/App.test.tsx` — readable tests using the DSL
+    - `src/App.test.helper.tsx` — `AppHelper` class encapsulating render, semantic queries, user actions, and an `unmount()` cleanup.
+    - `src/App.test.tsx` — readable tests using the helper.
 - Supported suffixes: `.test.ts`, `.spec.ts`, and TSX variants.
 - Use `import { describe, it, expect } from 'bun:test'` in tests.
 
@@ -94,7 +95,7 @@ The project uses Bun’s built-in test runner and React Testing Library for comp
 
 ## Conventions
 - Keep components small and stateless where possible.
-- Co-locate tests and their DSLs with features; use `tests/` only for larger integration suites.
+- Co-locate tests and their helpers with features; use `tests/` only for larger integration suites.
 - Avoid adding global ambient types in `src/`.
 
 ---

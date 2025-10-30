@@ -1,7 +1,7 @@
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
 import './App.css'
-import Counter from './features/counter/Counter.tsx'
+import Counter from './components/counter'
 
 function App() {
   return (

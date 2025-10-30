@@ -35,9 +35,9 @@ Last updated: 2025-10-30 11:45 (local time)
     - `src/App.tsx` (app shell)
     - `src/App.test.helper.tsx` (`AppHelper`: render + semantic queries used by App tests)
     - `src/App.test.tsx` (checks title/docs note and that `Counter` is present)
-    - `src/features/counter/Counter.tsx` (feature component)
-    - `src/features/counter/Counter.test.helper.tsx` (`CounterHelper`: encapsulates render, queries, and user actions)
-    - `src/features/counter/Counter.test.tsx` (behavior‑oriented tests for counter increment)
+    - `src/components/counter/index.tsx` (feature component)
+    - `src/components/counter/test.helper.tsx` (`CounterHelper`: encapsulates render, queries, and user actions)
+    - `src/components/counter/test.tsx` (behavior‑oriented tests for counter increment)
 
 ### Writing tests
 - Import from Bun’s runner: `import { describe, it, expect } from 'bun:test'`.

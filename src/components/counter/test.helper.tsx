@@ -1,6 +1,6 @@
 import { render, type RenderResult } from '@testing-library/react'
 import userEvent, { type UserEvent } from '@testing-library/user-event/dist/cjs/index.js'
-import Counter from './Counter.tsx'
+import Counter from './index.tsx'
 
 export class CounterHelper {
   private readonly element: RenderResult

@@ -1,8 +1,5 @@
-import { describe, expect, it } from 'bun:test'
-import { afterEach } from 'node:test'
-import { CounterHelper } from './Counter.test.helper.tsx'
-
-// Counter component tests using Bun's test runner + React Testing Library
+import { afterEach, describe, expect, it } from 'bun:test'
+import { CounterHelper } from './test.helper.tsx'
 
 describe('Counter', () => {
   let counter: CounterHelper

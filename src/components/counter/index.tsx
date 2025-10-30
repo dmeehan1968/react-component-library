@@ -6,7 +6,7 @@ export function Counter() {
     <div className="w-full" data-testid="counter">
       <div className="inline-flex items-center gap-3">
         <button
-          className="btn btn-lg btn-primary w-12 h-12 min-w-12 min-h-12"
+          className="btn btn-lg btn-primary h-12 w-24 min-h-12 min-w-24"
           aria-label="decrement"
           onClick={() => setCount((c) => c - 1)}
         >
@@ -19,7 +19,7 @@ export function Counter() {
           count is {count}
         </span>
         <button
-          className="btn btn-lg btn-primary w-12 h-12 min-w-12 min-h-12"
+          className="btn btn-lg btn-primary h-12 w-24 min-h-12 min-w-24"
           aria-label="increment"
           onClick={() => setCount((c) => c + 1)}
         >

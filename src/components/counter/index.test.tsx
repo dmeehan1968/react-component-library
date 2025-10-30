@@ -31,13 +31,13 @@ describe('Counter', () => {
     expect(classes).toContain('min-w-[12ch]')
     expect(classes).toContain('text-center')
 
-    // Buttons have equal square tap target of at least 44x44 (48x48 via w-12 h-12)
+    // Buttons have equal tap targets with width double the height (96x48 via w-24 h-12)
     const inc = counter.getButton('increment')
     const dec = counter.getButton('decrement')
 
-    expect(inc.className).toContain('w-12')
+    expect(inc.className).toContain('w-24')
     expect(inc.className).toContain('h-12')
-    expect(dec.className).toContain('w-12')
+    expect(dec.className).toContain('w-24')
     expect(dec.className).toContain('h-12')
 
     // Basic behavioral check across digit boundary to ensure no errors

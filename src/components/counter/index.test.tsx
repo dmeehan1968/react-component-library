@@ -22,4 +22,17 @@ describe('Counter', () => {
     expect(counter.count).toEqual(1)
   })
 
+  it('should style the buttons twice the width as the height', async () => {
+    counter = new CounterHelper()
+
+    expect(counter.incrementBtn).toHaveContainerRatio(2)
+    expect(counter.decrementBtn).toHaveContainerRatio(2)
+  })
+
+  it('should fix the count value width', async () => {
+    counter = new CounterHelper()
+
+    expect(counter.countElement).toHaveFixedWidth()
+  })
+
 })

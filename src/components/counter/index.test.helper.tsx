@@ -15,12 +15,24 @@ export class CounterHelper {
     return Number(this.element.getByTestId('count').textContent)
   }
 
+  get countElement() {
+    return this.element.getByTestId('value') as HTMLElement
+  }
+
+  get incrementBtn() {
+    return this.element.getByRole('button', { name: /increment/i })
+  }
+
+  get decrementBtn() {
+    return this.element.getByRole('button', { name: /decrement/i })
+  }
+
   increment() {
-    return this.user.click(this.element.getByRole('button', { name: /increment/i }))
+    return this.user.click(this.incrementBtn)
   }
 
   decrement() {
-    return this.user.click(this.element.getByRole('button', { name: /decrement/i }))
+    return this.user.click(this.decrementBtn)
   }
 
   unmount() {

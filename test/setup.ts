@@ -1,6 +1,8 @@
 // Bun test preload: register a DOM for React Testing Library
 // We use happy-dom to provide window/document globals under Bun's test runner.
 import { GlobalRegistrator } from '@happy-dom/global-registrator'
+// Register custom matchers for tests (expect.extend)
+import './matchers.ts'
 
 // Register before tests run
 GlobalRegistrator.register()

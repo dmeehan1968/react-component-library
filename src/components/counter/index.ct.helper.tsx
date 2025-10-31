@@ -1,5 +1,5 @@
-import type { Locator, MountResult } from '@playwright/experimental-ct-react'
-import type { MountFixture } from '@playwright/experimental-ct-react'
+import type { MountResult, ComponentFixtures } from '@playwright/experimental-ct-react'
+import type { Locator } from '@playwright/experimental-ct-core'
 import Counter from './index.tsx'
 
 export class CounterCTHelper {
@@ -9,7 +9,7 @@ export class CounterCTHelper {
     this.mounted = mounted
   }
 
-  static async mount(mount: MountFixture) {
+  static async mount(mount: ComponentFixtures['mount']) {
     const mounted = await mount(<Counter />)
     return new CounterCTHelper(mounted)
   }

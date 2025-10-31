@@ -1,4 +1,11 @@
 {
+  // Root solution-style tsconfig. Playwright CT uses this for test transpilation.
+  "compilerOptions": {
+    // Ensure TS can import TSX in tests (fixes TS6142 for CT helpers/components)
+    "jsx": "react-jsx",
+    // Allow explicit `.tsx` extension in imports inside CT helpers/specs (fixes TS5097)
+    "allowImportingTsExtensions": true
+  },
   "files": [],
   "references": [
     { "path": "./tsconfig.app.json" },

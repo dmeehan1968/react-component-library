@@ -1,6 +1,5 @@
-import { test, expect } from '@playwright/experimental-ct-react'
-// Ensure custom matchers are registered in the worker even if ctSetup is skipped
-import '../../../test/pw.matchers'
+import { test } from '@playwright/experimental-ct-react'
+import { expect } from '../../../test/pw.matchers'
 import { CounterCTHelper } from './index.ct.helper'
 
 test.describe('Counter (Playwright CT)', () => {

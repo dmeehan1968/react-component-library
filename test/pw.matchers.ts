@@ -1,4 +1,4 @@
-import { expect } from '@playwright/experimental-ct-react'
+import { expect as base } from '@playwright/experimental-ct-react'
 import type { Locator } from '@playwright/test'
 
 type TWSize = {
@@ -54,7 +54,7 @@ async function readClassName(target: Locator): Promise<string> {
   return className + (count > 1 ? ` /*matched ${count} nodes, used first*/` : '')
 }
 
-expect.extend({
+export const expect = base.extend({
   async toHaveContainerRatio(received: Locator, ratio: number) {
     if (!received || typeof (received as any).evaluate !== 'function') {
       return {

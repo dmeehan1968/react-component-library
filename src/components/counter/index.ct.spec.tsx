@@ -1,5 +1,5 @@
 import { Locator } from "@playwright/test"
-import { test as baseTest, expect as baseExpect, test as base } from '@playwright/experimental-ct-react'
+import { test as baseTest, expect as baseExpect } from '@playwright/experimental-ct-react'
 
 import Counter from "./index"
 
@@ -27,8 +27,11 @@ class CounterDSL {
         await this.incrementBtn.click()
         return await this.readCount()
       }
-    ;(fn as any).then = (onFulfilled: any, onRejected: any) => fn().then(onFulfilled, onRejected)
-    return fn as (typeof fn) & PromiseLike<number>
+    type ThenCb<T> = (value: T) => unknown
+    const thenable = fn as (typeof fn) & PromiseLike<number>
+    ;(thenable as { then: PromiseLike<number>['then'] }).then = (onFulfilled: ThenCb<number>, onRejected?: (reason: unknown) => unknown) =>
+      fn().then(onFulfilled, onRejected)
+    return thenable
   })()
 
   decrement = (() => {
@@ -36,8 +39,11 @@ class CounterDSL {
         await this.decrementBtn.click()
         return await this.readCount()
       }
-    ;(fn as any).then = (onFulfilled: any, onRejected: any) => fn().then(onFulfilled, onRejected)
-    return fn as (typeof fn) & PromiseLike<number>
+    type ThenCb<T> = (value: T) => unknown
+    const thenable = fn as (typeof fn) & PromiseLike<number>
+    ;(thenable as { then: PromiseLike<number>['then'] }).then = (onFulfilled: ThenCb<number>, onRejected?: (reason: unknown) => unknown) =>
+      fn().then(onFulfilled, onRejected)
+    return thenable
   })()
 }
 
@@ -116,8 +122,8 @@ export const expect = baseExpect.extend({
       // Already a number
       if (typeof value === 'number') return value
 
-      // Promise<number>
-      if (value && typeof (value as any).then === 'function') {
+      // Promise-like<number>
+      if (typeof value === 'object' && value !== null && 'then' in value && typeof (value as PromiseLike<unknown>).then === 'function') {
         try {
           const v = await (value as Promise<unknown>)
           return typeof v === 'number' ? v : await readCount(v)
@@ -127,7 +133,7 @@ export const expect = baseExpect.extend({
       }
 
       // Playwright Locator -> try inner [data-testid="count"], else textContent of the locator itself
-      if (value && typeof (value as any).evaluate === 'function') {
+      if (typeof value === 'object' && value !== null && 'evaluate' in value && typeof (value as { evaluate: unknown }).evaluate === 'function') {
         const locator = value as Locator
         const inner = locator.getByTestId('count').first()
         const hasInner = (await locator.getByTestId('count').count().catch(() => 0)) > 0
@@ -140,7 +146,7 @@ export const expect = baseExpect.extend({
       // Function that returns a promise/number
       if (typeof value === 'function') {
         try {
-          const out = (value as any)()
+          const out = (value as () => unknown)()
           return await readCount(out)
         } catch {
           return null
@@ -161,7 +167,11 @@ export const expect = baseExpect.extend({
     }
   },
   async toHaveContainerRatio(received: Locator, ratio: number) {
-    if (!received || typeof (received as any).evaluate !== 'function') {
+    if (
+      !received ||
+      typeof received !== 'object' || !('evaluate' in (received as object)) ||
+      typeof (received as { evaluate: unknown }).evaluate !== 'function'
+    ) {
       return {
         pass: false,
         message: () => `toHaveContainerRatio can only be used on a Playwright Locator. Received: ${String(received)}`,
@@ -201,7 +211,11 @@ export const expect = baseExpect.extend({
   },
 
   async toHaveFixedWidth(received: Locator) {
-    if (!received || typeof (received as any).evaluate !== 'function') {
+    if (
+      !received ||
+      typeof received !== 'object' || !('evaluate' in (received as object)) ||
+      typeof (received as { evaluate: unknown }).evaluate !== 'function'
+    ) {
       return {
         pass: false,
         message: () => `toHaveFixedWidth can only be used on a Playwright Locator. Received: ${String(received)}`,

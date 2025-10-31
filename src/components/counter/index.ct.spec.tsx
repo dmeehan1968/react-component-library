@@ -1,5 +1,5 @@
+import { expect as baseExpect, test as baseTest } from '@playwright/experimental-ct-react'
 import { Locator } from "@playwright/test"
-import { test as baseTest, expect as baseExpect } from '@playwright/experimental-ct-react'
 
 import Counter from "./index"
 
@@ -27,10 +27,9 @@ class CounterDSL {
         await this.incrementBtn.click()
         return await this.readCount()
       }
-    type ThenCb<T> = (value: T) => unknown
     const thenable = fn as (typeof fn) & PromiseLike<number>
-    ;(thenable as { then: PromiseLike<number>['then'] }).then = (onFulfilled: ThenCb<number>, onRejected?: (reason: unknown) => unknown) =>
-      fn().then(onFulfilled, onRejected)
+    (thenable as unknown as { then: PromiseLike<number>['then'] }).then = ((onfulfilled?: (value: number) => unknown, onrejected?: (reason: unknown) => unknown) =>
+      Promise.resolve(fn()).then(onfulfilled, onrejected)) as PromiseLike<number>['then']
     return thenable
   })()
 
@@ -39,10 +38,9 @@ class CounterDSL {
         await this.decrementBtn.click()
         return await this.readCount()
       }
-    type ThenCb<T> = (value: T) => unknown
     const thenable = fn as (typeof fn) & PromiseLike<number>
-    ;(thenable as { then: PromiseLike<number>['then'] }).then = (onFulfilled: ThenCb<number>, onRejected?: (reason: unknown) => unknown) =>
-      fn().then(onFulfilled, onRejected)
+    (thenable as unknown as { then: PromiseLike<number>['then'] }).then = ((onfulfilled?: (value: number) => unknown, onrejected?: (reason: unknown) => unknown) =>
+      Promise.resolve(fn()).then(onfulfilled, onrejected)) as PromiseLike<number>['then']
     return thenable
   })()
 }

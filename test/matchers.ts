@@ -88,8 +88,7 @@ expect.extend({
       message: () =>
         pass
           ? `Expected element not to have container ratio >= ${ratio}, but it did (${printable()}).`
-          : `Expected element to have container ratio >= ${ratio} using either (w/h) or (min-w/min-h), but it did not. ${printable()}.
-Classes: ${className}`,
+          : `Expected element to have container ratio >= ${ratio} using either (w/h) or (min-w/min-h), but it did not. ${printable()}.Classes: ${className}`,
     }
   },
 
@@ -122,6 +121,6 @@ Classes: ${className}`,
 declare global {
   // Augment Bun's matcher types at runtime safety; TS types are provided under src/test/matchers.d.ts
   // This block ensures the module is treated as a module.
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface __EnsureModule {}
 }

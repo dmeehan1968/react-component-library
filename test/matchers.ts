@@ -58,7 +58,7 @@ expect.extend({
       }
     }
 
-    if (typeof ratio !== 'number' || !isFinite(ratio) || ratio <= 0) {
+    if (!isFinite(ratio) || ratio <= 0) {
       return {
         pass: false,
         message: () => `Invalid ratio: ${String(ratio)}. Ratio must be a positive finite number.`,
@@ -117,10 +117,3 @@ Classes: ${className}`,
     }
   },
 })
-
-declare global {
-  // Augment Bun's matcher types at runtime safety; TS types are provided under src/test/matchers.d.ts
-  // This block ensures the module is treated as a module.
-  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-  interface __EnsureModule {}
-}

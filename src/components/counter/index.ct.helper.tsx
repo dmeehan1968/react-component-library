@@ -1,53 +1,47 @@
-import type { MountResult, ComponentFixtures } from '@playwright/experimental-ct-react'
 import type { Locator } from '@playwright/experimental-ct-core'
-import Counter from './index.tsx'
 
-export class CounterCTHelper {
-  private mounted!: MountResult
+export class CounterHelper {
+  private readonly countNode: Locator
+  readonly countElement: Locator
+  readonly incrementBtn: Locator
+  readonly decrementBtn: Locator
 
-  constructor(mounted: MountResult) {
-    this.mounted = mounted
+  constructor(root: Locator) {
+    this.countNode = root.getByTestId('count')
+    this.countElement = root.getByTestId('value')
+    this.incrementBtn = root.getByRole('button', { name: /increment/i })
+    this.decrementBtn = root.getByRole('button', { name: /decrement/i })
   }
 
-  static async mount(mount: ComponentFixtures['mount']) {
-    const mounted = await mount(<Counter />)
-    return new CounterCTHelper(mounted)
-  }
-
-  get root(): Locator {
-    return this.mounted
-  }
-
-  get countLocator(): Locator {
-    return this.mounted.getByTestId('count')
-  }
-
-  async count(): Promise<number> {
-    const txt = await this.countLocator.textContent()
+  private readCount = async (): Promise<number> => {
+    const txt = await this.countNode.textContent()
     return Number(txt)
   }
 
-  get countElement(): Locator {
-    return this.mounted.getByTestId('value')
-  }
+  // Thenable function properties so `expect(counter.increment).resolves` works
+  increment = (() => {
+    const fn = async () => {
+      await this.incrementBtn.click()
+      return await this.readCount()
+    }
+    const thenable = fn as (typeof fn) & PromiseLike<number>
+    (thenable as unknown as {
+      then: PromiseLike<number>['then']
+    }).then = ((onfulfilled?: (value: number) => unknown, onrejected?: (reason: unknown) => unknown) =>
+      Promise.resolve(fn()).then(onfulfilled, onrejected)) as PromiseLike<number>['then']
+    return thenable
+  })()
 
-  get incrementBtn(): Locator {
-    return this.mounted.getByRole('button', { name: /increment/i })
-  }
-
-  get decrementBtn(): Locator {
-    return this.mounted.getByRole('button', { name: /decrement/i })
-  }
-
-  increment() {
-    return this.incrementBtn.click()
-  }
-
-  decrement() {
-    return this.decrementBtn.click()
-  }
-
-  async unmount() {
-    await this.mounted.unmount()
-  }
+  decrement = (() => {
+    const fn = async () => {
+      await this.decrementBtn.click()
+      return await this.readCount()
+    }
+    const thenable = fn as (typeof fn) & PromiseLike<number>
+    (thenable as unknown as {
+      then: PromiseLike<number>['then']
+    }).then = ((onfulfilled?: (value: number) => unknown, onrejected?: (reason: unknown) => unknown) =>
+      Promise.resolve(fn()).then(onfulfilled, onrejected)) as PromiseLike<number>['then']
+    return thenable
+  })()
 }

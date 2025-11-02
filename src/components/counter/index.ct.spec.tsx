@@ -1,5 +1,4 @@
 import { expect as baseExpect, test as baseTest } from '@playwright/experimental-ct-react'
-import Counter from "./index"
 import { CounterHelper } from "./index.ct.helper"
 import { toHaveContainerRatio } from "./toHaveContainerRatio"
 import { toHaveCount } from "./toHaveCount"
@@ -7,10 +6,8 @@ import { toHaveFixedWidth } from "./toHaveFixedWidth"
 
 export const test = baseTest.extend<{ counter: CounterHelper }>({
   counter: async ({ mount }, provide) => {
-    const mounted = await mount(<Counter/>)
-    const dsl = new CounterHelper(mounted)
+    const dsl = await CounterHelper.mount(mount)
     await provide(dsl)
-    await mounted.unmount()
   },
 })
 
@@ -21,11 +18,13 @@ export const expect = baseExpect.extend({
 })
 
 test.describe('Counter (Playwright CT)', () => {
+
   test('shows initial value and increments/decrements correctly', async ({ counter }) => {
-    await expect(counter.increment).resolves.toHaveCount(1)
-    await expect(counter.increment).resolves.toHaveCount(2)
-    await expect(counter.increment).resolves.toHaveCount(3)
-    await expect(counter.decrement).resolves.toHaveCount(2)
+    expect(counter).toHaveCount(0)
+    await expect(counter.increment()).resolves.toHaveCount(1)
+    await expect(counter.increment()).resolves.toHaveCount(2)
+    await expect(counter.increment()).resolves.toHaveCount(3)
+    await expect(counter.decrement()).resolves.toHaveCount(2)
   })
 
   test('should style the buttons twice the width as the height', async ({ counter }) => {
@@ -34,6 +33,16 @@ test.describe('Counter (Playwright CT)', () => {
   })
 
   test('should fix the count value width', async ({ counter }) => {
-    await expect(counter.countElement).toHaveFixedWidth()
+    await expect(counter.valueElement).toHaveFixedWidth()
+  })
+
+  test('should support custom initial value', async ({ counter }) => {
+    await counter.update({ initial: 2 })
+    await expect(counter).toHaveCount(2)
+  })
+
+  test('should support custom step', async ({ counter }) => {
+    await counter.update({ step: 2 })
+    await expect(counter.increment()).resolves.toHaveCount(2)
   })
 })

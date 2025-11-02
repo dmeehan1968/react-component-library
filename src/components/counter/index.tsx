@@ -1,14 +1,19 @@
 import { useState } from 'react'
 
-export function Counter() {
-  const [count, setCount] = useState(0)
+export interface CounterProps {
+  initial?: number
+  step?: number
+}
+
+export function Counter({ initial = 0, step = 1 }: CounterProps = {}) {
+  const [count, setCount] = useState(initial)
   return (
     <div className="w-full" data-testid="counter">
       <div className="inline-flex items-center gap-3">
         <button
           className="btn btn-lg btn-primary h-12 w-24 min-h-12 min-w-24"
           aria-label="decrement"
-          onClick={() => setCount((c) => c - 1)}
+          onClick={() => setCount((c) => c - step)}
         >
           −
         </button>
@@ -21,7 +26,7 @@ export function Counter() {
         <button
           className="btn btn-lg btn-primary h-12 w-24 min-h-12 min-w-24"
           aria-label="increment"
-          onClick={() => setCount((c) => c + 1)}
+          onClick={() => setCount((c) => c + step)}
         >
           +
         </button>

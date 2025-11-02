@@ -1,4 +1,4 @@
-import { Locator, MatcherReturnType } from "@playwright/test"
+import type { Locator, MatcherReturnType } from "@playwright/test"
 
 type TWSize = {
   kind: 'w' | 'min-w' | 'h' | 'min-h'
@@ -43,28 +43,7 @@ export function hasWidthSet(tokens: TWSize[]): boolean {
   return tokens.some((t) => t.kind === 'w' || t.kind === 'min-w')
 }
 
-export async function readClassName(target: Locator): Promise<string> {
-  // Use first match in case the locator matches multiple nodes
-  const nth = target.first()
-  const count = await target.count()
-  // If the element is detached, Playwright will throw here, which is fine
-  const className = await nth.evaluate((el) => (el as HTMLElement).className || '')
-  // Include match count in message via a hidden property we return alongside
-  return className + (count > 1 ? ` /*matched ${count} nodes, used first*/` : '')
-}
-
-export async function toHaveContainerRatio(received: Locator, ratio: number): Promise<MatcherReturnType> {
-  if (
-    !received ||
-    typeof received !== 'object' || !('evaluate' in (received as object)) ||
-    typeof (received as { evaluate: unknown }).evaluate !== 'function'
-  ) {
-    return {
-      pass: false,
-      message: () => `toHaveContainerRatio can only be used on a Playwright Locator. Received: ${String(received)}`,
-    }
-  }
-
+export async function toHaveContainerRatio(locator: Locator, ratio: number): Promise<MatcherReturnType> {
   if (!isFinite(ratio) || ratio <= 0) {
     return {
       pass: false,
@@ -72,7 +51,7 @@ export async function toHaveContainerRatio(received: Locator, ratio: number): Pr
     }
   }
 
-  const className = await readClassName(received)
+  const className = await locator.getAttribute('class') ?? ''
   const tokens = extractSizeTokens(className)
 
   const ratios: Array<{ label: string; value: number | null }> = [
@@ -80,7 +59,7 @@ export async function toHaveContainerRatio(received: Locator, ratio: number): Pr
     { label: 'min-w/min-h', value: computeRatioFromTokens(tokens, 'min-w', 'min-h') },
   ]
 
-  const match = ratios.find((r) => r.value != null && (r.value as number) >= ratio)
+  const match = ratios.find((r) => r.value != null && r.value >= ratio)
 
   const pass = Boolean(match)
   const printable = () => {

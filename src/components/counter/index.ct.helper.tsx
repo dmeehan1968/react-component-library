@@ -1,47 +1,48 @@
-import type { Locator } from '@playwright/experimental-ct-core'
+import type { ComponentFixtures, MountResult } from "@playwright/experimental-ct-react"
+import Counter, { type CounterProps } from "./index.tsx"
 
 export class CounterHelper {
-  private readonly countNode: Locator
-  readonly countElement: Locator
-  readonly incrementBtn: Locator
-  readonly decrementBtn: Locator
+  private readonly root: MountResult
 
-  constructor(root: Locator) {
-    this.countNode = root.getByTestId('count')
-    this.countElement = root.getByTestId('value')
-    this.incrementBtn = root.getByRole('button', { name: /increment/i })
-    this.decrementBtn = root.getByRole('button', { name: /decrement/i })
+  protected constructor(root: MountResult) {
+    this.root = root
   }
 
-  private readCount = async (): Promise<number> => {
-    const txt = await this.countNode.textContent()
-    return Number(txt)
+  static async mount(mount: ComponentFixtures['mount'], props: CounterProps = {}): Promise<CounterHelper> {
+    return new CounterHelper(await mount(<Counter {...props} />))
+  }
+  private get countElement() {
+    return this.root.getByTestId('count')
   }
 
-  // Thenable function properties so `expect(counter.increment).resolves` works
-  increment = (() => {
-    const fn = async () => {
-      await this.incrementBtn.click()
-      return await this.readCount()
-    }
-    const thenable = fn as (typeof fn) & PromiseLike<number>
-    (thenable as unknown as {
-      then: PromiseLike<number>['then']
-    }).then = ((onfulfilled?: (value: number) => unknown, onrejected?: (reason: unknown) => unknown) =>
-      Promise.resolve(fn()).then(onfulfilled, onrejected)) as PromiseLike<number>['then']
-    return thenable
-  })()
+  get valueElement() {
+    return this.root.getByTestId('value')
+  }
 
-  decrement = (() => {
-    const fn = async () => {
-      await this.decrementBtn.click()
-      return await this.readCount()
-    }
-    const thenable = fn as (typeof fn) & PromiseLike<number>
-    (thenable as unknown as {
-      then: PromiseLike<number>['then']
-    }).then = ((onfulfilled?: (value: number) => unknown, onrejected?: (reason: unknown) => unknown) =>
-      Promise.resolve(fn()).then(onfulfilled, onrejected)) as PromiseLike<number>['then']
-    return thenable
-  })()
+  get incrementBtn() {
+    return this.root.getByRole('button', { name: /increment/i })
+  }
+
+  get decrementBtn() {
+    return this.root.getByRole('button', { name: /decrement/i })
+  }
+
+  async update(props: CounterProps = {}): Promise<void> {
+    // Use key= to force remount when props change
+    await this.root.update(<Counter key={`init-${props.initial}`} {...props} />)
+  }
+
+  get count() {
+    return this.countElement.textContent().then(Number)
+  }
+
+  async increment() {
+    await this.incrementBtn.click()
+    return this
+  }
+
+  async decrement() {
+    await this.decrementBtn.click()
+    return this
+  }
 }

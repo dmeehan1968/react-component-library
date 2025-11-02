@@ -1,19 +1,8 @@
-import { Locator, MatcherReturnType } from "@playwright/test"
-import { extractSizeTokens, hasWidthSet, readClassName } from "./toHaveContainerRatio.tsx"
+import type { Locator, MatcherReturnType } from "@playwright/test"
+import { extractSizeTokens, hasWidthSet } from "./toHaveContainerRatio.tsx"
 
-export async function toHaveFixedWidth(received: Locator): Promise<MatcherReturnType> {
-  if (
-    !received ||
-    typeof received !== 'object' || !('evaluate' in (received as object)) ||
-    typeof (received as { evaluate: unknown }).evaluate !== 'function'
-  ) {
-    return {
-      pass: false,
-      message: () => `toHaveFixedWidth can only be used on a Playwright Locator. Received: ${String(received)}`,
-    }
-  }
-
-  const className = await readClassName(received)
+export async function toHaveFixedWidth(locator: Locator): Promise<MatcherReturnType> {
+  const className = await locator.getAttribute('class') ?? ''
   const tokens = extractSizeTokens(className)
 
   const widthSet = hasWidthSet(tokens)

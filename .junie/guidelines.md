@@ -82,12 +82,10 @@ The project uses Bun’s built-in test runner and React Testing Library for comp
 - Co-locate tests and their helper classes next to the feature module.
   - App tests should assert composition (children exist) and top-level layout only; feature behavior lives in feature tests.
   - Example layout:
-    - `src/App.tsx` — app shell
-    - `src/App.index.test.helper.tsx` — `AppHelper` with only the queries App tests need
-    - `src/App.index.test.tsx` — checks the title/docs note and that `Counter` is present
-    - `src/features/counter/index.tsx` — feature component
-    - `src/features/counter/index.test.helper.tsx` — `CounterHelper` encapsulating render, queries, and user actions
-    - `src/features/counter/index.test.tsx` — behavior tests (e.g., incrementing)
+    - `src/App.tsx` (app shell)
+    - `src/components/counter/index.tsx` (feature component)
+    - `src/components/counter/index.test.helper.tsx` (`CounterHelper`: encapsulates render, queries, and user actions)
+    - `src/components/counter/index.test.tsx` (behavior‑oriented tests for counter increment)
 - Supported suffixes: `.test.ts`, `.spec.ts`, and TSX variants.
 - Use `import { describe, it, expect } from 'bun:test'` in tests.
 

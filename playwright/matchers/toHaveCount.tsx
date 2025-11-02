@@ -1,5 +1,5 @@
 import type { MatcherReturnType } from "@playwright/test"
-import { CounterHelper } from "./index.ct.helper.tsx"
+import { CounterHelper } from "../../src/components/counter/index.test.helper.tsx"
 
 export async function toHaveCount(counter: CounterHelper, expected: number): Promise<MatcherReturnType> {
   const actual = await counter.count

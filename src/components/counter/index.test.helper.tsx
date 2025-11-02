@@ -1,41 +1,48 @@
-import { render, type RenderResult } from '@testing-library/react'
-import userEvent, { type UserEvent } from '@testing-library/user-event/dist/cjs/index.js'
-import Counter from './index.tsx'
+import type { ComponentFixtures, MountResult } from "@playwright/experimental-ct-react"
+import Counter, { type CounterProps } from "./index.tsx"
 
 export class CounterHelper {
-  private readonly element: RenderResult
-  private readonly user: UserEvent
+  private readonly root: MountResult
 
-  constructor() {
-    this.element = render(<Counter />)
-    this.user = userEvent.setup()
+  protected constructor(root: MountResult) {
+    this.root = root
   }
 
-  get count() {
-    return Number(this.element.getByTestId('count').textContent)
+  static async mount(mount: ComponentFixtures['mount'], props: CounterProps = {}): Promise<CounterHelper> {
+    return new CounterHelper(await mount(<Counter {...props} />))
+  }
+  private get countElement() {
+    return this.root.getByTestId('count')
   }
 
-  get countElement() {
-    return this.element.getByTestId('value') as HTMLElement
+  get valueElement() {
+    return this.root.getByTestId('value')
   }
 
   get incrementBtn() {
-    return this.element.getByRole('button', { name: /increment/i })
+    return this.root.getByRole('button', { name: /increment/i })
   }
 
   get decrementBtn() {
-    return this.element.getByRole('button', { name: /decrement/i })
+    return this.root.getByRole('button', { name: /decrement/i })
   }
 
-  increment() {
-    return this.user.click(this.incrementBtn)
+  async update(props: CounterProps = {}): Promise<void> {
+    // Use key= to force remount when props change
+    await this.root.update(<Counter key={`init-${props.initial}`} {...props} />)
   }
 
-  decrement() {
-    return this.user.click(this.decrementBtn)
+  get count() {
+    return this.countElement.textContent().then(Number)
   }
 
-  unmount() {
-    this.element.unmount()
+  async increment() {
+    await this.incrementBtn.click()
+    return this
+  }
+
+  async decrement() {
+    await this.decrementBtn.click()
+    return this
   }
 }

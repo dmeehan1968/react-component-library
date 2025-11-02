@@ -1,38 +1,48 @@
-import { afterEach, describe, expect, it } from 'bun:test'
-import { CounterHelper } from './index.test.helper.tsx'
+import { expect as baseExpect, test as baseTest } from '@playwright/experimental-ct-react'
+import { CounterHelper } from "./index.test.helper.tsx"
+import { toHaveContainerRatio } from "../../../playwright/matchers/toHaveContainerRatio.tsx"
+import { toHaveCount } from "../../../playwright/matchers/toHaveCount.tsx"
+import { toHaveFixedWidth } from "../../../playwright/matchers/toHaveFixedWidth.tsx"
 
-describe('Counter', () => {
-  let counter: CounterHelper
+export const test = baseTest.extend<{ counter: CounterHelper }>({
+  counter: async ({ mount }, provide) => {
+    const dsl = await CounterHelper.mount(mount)
+    await provide(dsl)
+  },
+})
 
-  afterEach(() => {
-    counter?.unmount()
+export const expect = baseExpect.extend({
+  toHaveCount,
+  toHaveContainerRatio,
+  toHaveFixedWidth,
+})
+
+test.describe('Counter (Playwright CT)', () => {
+
+  test('shows initial value and increments/decrements correctly', async ({ counter }) => {
+    expect(counter).toHaveCount(0)
+    await expect(counter.increment()).resolves.toHaveCount(1)
+    await expect(counter.increment()).resolves.toHaveCount(2)
+    await expect(counter.increment()).resolves.toHaveCount(3)
+    await expect(counter.decrement()).resolves.toHaveCount(2)
   })
 
-  it('shows initial value and increments/decrements correctly', async () => {
-    counter = new CounterHelper()
-    expect(counter.count).toEqual(0)
-
-    await counter.increment()
-    expect(counter.count).toEqual(1)
-
-    await counter.increment()
-    expect(counter.count).toEqual(2)
-
-    await counter.decrement()
-    expect(counter.count).toEqual(1)
+  test('should style the buttons twice the width as the height', async ({ counter }) => {
+    await expect(counter.incrementBtn).toHaveContainerRatio(2)
+    await expect(counter.decrementBtn).toHaveContainerRatio(2)
   })
 
-  it('should style the buttons twice the width as the height', async () => {
-    counter = new CounterHelper()
-
-    expect(counter.incrementBtn).toHaveContainerRatio(2)
-    expect(counter.decrementBtn).toHaveContainerRatio(2)
+  test('should fix the count value width', async ({ counter }) => {
+    await expect(counter.valueElement).toHaveFixedWidth()
   })
 
-  it('should fix the count value width', async () => {
-    counter = new CounterHelper()
-
-    expect(counter.countElement).toHaveFixedWidth()
+  test('should support custom initial value', async ({ counter }) => {
+    await counter.update({ initial: 2 })
+    await expect(counter).toHaveCount(2)
   })
 
+  test('should support custom step', async ({ counter }) => {
+    await counter.update({ step: 2 })
+    await expect(counter.increment()).resolves.toHaveCount(2)
+  })
 })

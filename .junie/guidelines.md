@@ -65,33 +65,70 @@ Notes
 - Prefer Tailwind utilities and DaisyUI component classes (`btn`, `card`, `badge`, etc.) over bespoke CSS. Avoid new `.css` files; use `className` utilities in components.
 - The legacy Vite starter styles were removed (`src/App.css`).
 
-## Testing
+## Unit Testing
 
-The project uses Bun’s built-in test runner and React Testing Library for component tests.
+### Runner
+- Uses Bun’s built‑in test runner (`bun:test`). No extra script is required; invoke `bun test`.
 
-### How to run tests
-- Run all tests: `bun test`
-- Watch mode: `bun test --watch`
-- Coverage (when bun is built with coverage): `bun test --coverage`
-
-### DOM environment
-- We use `happy-dom` to provide DOM APIs under Bun. It is registered automatically via `bunfig.toml` → `[test].preload = ["./test/setup.ts"]`.
-- No Jest/Vitest dependency is required; we use Bun’s runner with RTL.
-
-### Test locations, naming, and helpers
-- Co-locate tests and their helper classes next to the feature module.
-  - App tests should assert composition (children exist) and top-level layout only; feature behavior lives in feature tests.
+### Structure and co-location
+- Co-locate each feature’s tests and a helper class next to the feature itself.
+  - App layer should only assert composition (that child features exist), not child behavior.
   - Example layout:
-    - `src/App.tsx` (app shell)
-    - `src/components/counter/index.tsx` (feature component)
-    - `src/components/counter/index.ctspec.helper.tsx` (`CounterHelper`: encapsulates render, queries, and user actions)
-    - `src/components/counter/index.ctspec.tsx` (behavior‑oriented tests for counter increment)
-- Supported suffixes: `.test.ts`, `.spec.ts`, and TSX variants.
-- Use `import { describe, it, expect } from 'bun:test'` in tests.
+    - `src/<module>.ts` (feature component)
+    - `src/<module>.test.helper.ts` (`class <Module>Helper`: encapsulates render, queries, and user actions)
+    - `src/<module>.test.tsx` (behavior‑oriented tests for module)
 
-### Coverage target
-- Aim for 100% coverage across statements/branches/functions/lines.
-- If 100% cannot be reached (e.g., external integrations), open an issue with details so we can decide on exclusions or add tests.
+### Writing tests
+- Import from Bun’s runner: `import { describe, it, expect } from 'bun:test'`.
+- Use the helper class to keep tests concise and intention‑revealing.
+
+### Coverage
+- Run `bun test --coverage`.
+- Goal is 100% statement/branch/function/line coverage across the repo. If we cannot meet 100%, please open an issue describing the gaps so we can agree on exclusions or additional tests.
+
+## Component Testing
+
+### Runner
+
+- Use playwright test runner (`bun run pw:ct`)
+- `import { expect, test } from '@playwright/experimental-ct-react'`
+
+### Structure and co-location
+- Co-locate each feature’s tests and a helper class next to the feature itself.
+- App layer should only assert composition (that child features exist), not child behavior.
+- Example layout:
+  - `src/components/<component>/index.tsx` (feature component)
+  - `src/components/<component>/index.ctspec.tsx` (behavior‑oriented tests for feature)
+  - `src/components/<component>/index.ctspec.helper.tsx` (`class <Component>Helper`: encapsulates render, queries, and user actions)
+
+### Writing component tests
+
+- Create a helper class to provide domain-specific-language (DSL) semantics for the test.
+- Create custom matchers (`/playwright/matchers`) to improve test semantics.
+  Example:
+
+```ts
+import { test as baseTest, expect as baseExpect } from '@playwright/experimental-ct-react'
+import { FeatureHelper } from "./index.ctspec.helper.tsx"
+import { toHaveSomeValue } from "../../../playwright/matchers/toHaveSomeValue.tsx"
+
+const test = baseTest.extend({
+  fixture: async ({ mount }, provide) => {
+    const fixture = await FeatureHelper.mount(mount)
+    await provide(fixture)
+  },
+})
+
+const expect = baseExpect.extend({
+  toHaveSomeValue,
+})
+
+test.describe('<Feature>', () => {
+  test('should do something', async ({ fixture }) => {
+    await expect(fixture).toHaveSomeValue()
+  })
+})
+```
 
 ## Additional Development Information
 

@@ -33,53 +33,70 @@ Last updated: 2025-10-30 13:44 (local time)
 - Prefer semantic HTML plus utilities; co-locate any rare component‑scoped styles via inline `className` utilities rather than separate `.css` files.
 - The previous Vite starter CSS (`App.css`) was removed.
 
-## Testing
+## Unit Testing
 
 ### Runner
 - Uses Bun’s built‑in test runner (`bun:test`). No extra script is required; invoke `bun test`.
 
-### DOM support for component tests
-- We use `happy-dom` to provide a lightweight DOM under Bun. It’s registered automatically via `bunfig.toml` and `test/setup.ts`.
-- Library used for components: `@testing-library/react`.
-
 ### Structure and co-location
-- Co-locate each feature’s tests and a tiny helper class next to the feature itself.
+- Co-locate each feature’s tests and a helper class next to the feature itself.
   - App layer should only assert composition (that child features exist), not child behavior.
   - Example layout:
-    - `src/App.tsx` (app shell)
-    - `src/components/counter/index.tsx` (feature component)
-    - `src/components/counter/index.ctspec.helper.tsx` (`CounterHelper`: encapsulates render, queries, and user actions)
-    - `src/components/counter/index.ctspec.tsx` (behavior‑oriented tests for counter increment)
+    - `src/<module>.ts` (feature component)
+    - `src/<module>.test.helper.ts` (`class <Module>Helper`: encapsulates render, queries, and user actions)
+    - `src/<module>.test.tsx` (behavior‑oriented tests for module)
 
 ### Writing tests
 - Import from Bun’s runner: `import { describe, it, expect } from 'bun:test'`.
 - Use the helper class to keep tests concise and intention‑revealing.
-- Example:
-
-```ts
-import { describe, it, expect } from 'bun:test'
-import { afterEach } from 'node:test'
-import { AppHelper } from './App.index.ctspec.helper.tsx'
-
-describe('App', () => {
-  let app: AppHelper
-
-  afterEach(() => {
-    app?.unmount()
-  })
-
-  it('increments count on click', async () => {
-    app = new AppHelper()
-    expect(app.counter.textContent).toContain('count is 0')
-    await app.increment()
-    expect(app.counter.textContent).toContain('count is 1')
-  })
-})
-```
 
 ### Coverage
 - Run `bun test --coverage`.
 - Goal is 100% statement/branch/function/line coverage across the repo. If we cannot meet 100%, please open an issue describing the gaps so we can agree on exclusions or additional tests.
+
+## Component Testing
+
+### Runner
+
+- Use playwright test runner (`bun run pw:ct`)
+- `import { expect, test } from '@playwright/experimental-ct-react'`
+
+### Structure and co-location
+- Co-locate each feature’s tests and a helper class next to the feature itself.
+- App layer should only assert composition (that child features exist), not child behavior.
+- Example layout:
+  - `src/components/<component>/index.tsx` (feature component)
+  - `src/components/<component>/index.ctspec.tsx` (behavior‑oriented tests for feature)
+  - `src/components/<component>/index.ctspec.helper.tsx` (`class <Component>Helper`: encapsulates render, queries, and user actions)
+
+### Writing component tests
+
+- Create a helper class to provide domain-specific-language (DSL) semantics for the test.
+- Create custom matchers (`/playwright/matchers`) to improve test semantics.
+Example:
+
+```ts
+import { test as baseTest, expect as baseExpect } from '@playwright/experimental-ct-react'
+import { FeatureHelper } from "./index.ctspec.helper.tsx"
+import { toHaveSomeValue } from "../../../playwright/matchers/toHaveSomeValue.tsx"
+
+const test = baseTest.extend({
+  fixture: async ({ mount }, provide) => {
+    const fixture = await FeatureHelper.mount(mount)
+    await provide(fixture)
+  },
+})
+
+const expect = baseExpect.extend({
+  toHaveSomeValue,
+})
+
+test.describe('<Feature>', () => {
+  test('should do something', async ({ fixture }) => {
+    await expect(fixture).toHaveSomeValue()
+  })
+})
+```
 
 ## Conventions
 - Keep components small and pure to benefit from Vite React Fast Refresh.

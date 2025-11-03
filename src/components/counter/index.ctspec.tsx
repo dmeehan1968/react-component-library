@@ -1,5 +1,5 @@
 import { expect as baseExpect, test as baseTest } from '@playwright/experimental-ct-react'
-import { CounterHelper } from "./index.test.helper.tsx"
+import { CounterHelper } from "./index.ctspec.helper.tsx"
 import { toHaveContainerRatio } from "../../../playwright/matchers/toHaveContainerRatio.tsx"
 import { toHaveCount } from "../../../playwright/matchers/toHaveCount.tsx"
 import { toHaveFixedWidth } from "../../../playwright/matchers/toHaveFixedWidth.tsx"

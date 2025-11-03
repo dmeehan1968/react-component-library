@@ -48,8 +48,8 @@ Last updated: 2025-10-30 13:44 (local time)
   - Example layout:
     - `src/App.tsx` (app shell)
     - `src/components/counter/index.tsx` (feature component)
-    - `src/components/counter/index.test.helper.tsx` (`CounterHelper`: encapsulates render, queries, and user actions)
-    - `src/components/counter/index.test.tsx` (behavior‑oriented tests for counter increment)
+    - `src/components/counter/index.ctspec.helper.tsx` (`CounterHelper`: encapsulates render, queries, and user actions)
+    - `src/components/counter/index.ctspec.tsx` (behavior‑oriented tests for counter increment)
 
 ### Writing tests
 - Import from Bun’s runner: `import { describe, it, expect } from 'bun:test'`.
@@ -59,7 +59,7 @@ Last updated: 2025-10-30 13:44 (local time)
 ```ts
 import { describe, it, expect } from 'bun:test'
 import { afterEach } from 'node:test'
-import { AppHelper } from './App.index.test.helper.tsx'
+import { AppHelper } from './App.index.ctspec.helper.tsx'
 
 describe('App', () => {
   let app: AppHelper

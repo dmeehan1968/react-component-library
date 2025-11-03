@@ -84,8 +84,8 @@ The project uses Bun’s built-in test runner and React Testing Library for comp
   - Example layout:
     - `src/App.tsx` (app shell)
     - `src/components/counter/index.tsx` (feature component)
-    - `src/components/counter/index.test.helper.tsx` (`CounterHelper`: encapsulates render, queries, and user actions)
-    - `src/components/counter/index.test.tsx` (behavior‑oriented tests for counter increment)
+    - `src/components/counter/index.ctspec.helper.tsx` (`CounterHelper`: encapsulates render, queries, and user actions)
+    - `src/components/counter/index.ctspec.tsx` (behavior‑oriented tests for counter increment)
 - Supported suffixes: `.test.ts`, `.spec.ts`, and TSX variants.
 - Use `import { describe, it, expect } from 'bun:test'` in tests.
 

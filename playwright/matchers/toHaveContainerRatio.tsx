@@ -1,4 +1,6 @@
-import type { Locator, MatcherReturnType } from "@playwright/test"
+import type { Locator } from "@playwright/test"
+
+type MatcherResult = { pass: boolean; message: () => string }
 
 type TWSize = {
   kind: 'w' | 'min-w' | 'h' | 'min-h'
@@ -43,7 +45,7 @@ export function hasWidthSet(tokens: TWSize[]): boolean {
   return tokens.some((t) => t.kind === 'w' || t.kind === 'min-w')
 }
 
-export async function toHaveContainerRatio(locator: Locator, ratio: number): Promise<MatcherReturnType> {
+export async function toHaveContainerRatio(locator: Locator, ratio: number): Promise<MatcherResult> {
   if (!isFinite(ratio) || ratio <= 0) {
     return {
       pass: false,

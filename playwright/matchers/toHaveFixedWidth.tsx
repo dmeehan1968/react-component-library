@@ -1,7 +1,9 @@
-import type { Locator, MatcherReturnType } from "@playwright/test"
+import type { Locator } from "@playwright/test"
 import { extractSizeTokens, hasWidthSet } from "./toHaveContainerRatio.tsx"
 
-export async function toHaveFixedWidth(locator: Locator): Promise<MatcherReturnType> {
+type MatcherResult = { pass: boolean; message: () => string }
+
+export async function toHaveFixedWidth(locator: Locator): Promise<MatcherResult> {
   const className = await locator.getAttribute('class') ?? ''
   const tokens = extractSizeTokens(className)
 

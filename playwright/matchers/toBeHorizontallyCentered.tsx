@@ -1,6 +1,8 @@
-import type { Locator, MatcherReturnType } from "@playwright/test"
+import type { Locator } from "@playwright/test"
 
-export async function toBeHorizontallyCentered(locator: Locator): Promise<MatcherReturnType> {
+type MatcherResult = { pass: boolean; message: () => string }
+
+export async function toBeHorizontallyCentered(locator: Locator): Promise<MatcherResult> {
   const result = await locator.first().evaluate(el => {
     const children = Array.from(el.children)
     return children.every(child => {

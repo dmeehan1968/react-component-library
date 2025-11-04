@@ -1,6 +1,8 @@
-import type { Locator, MatcherReturnType } from "@playwright/test"
+import type { Locator } from "@playwright/test"
 
-export async function toBeVerticallyCentered(locator: Locator): Promise<MatcherReturnType> {
+type MatcherResult = { pass: boolean; message: () => string }
+
+export async function toBeVerticallyCentered(locator: Locator): Promise<MatcherResult> {
   const pass = await locator.first().evaluate(el => {
     const children = Array.from(el.children)
     // Calculate the bounding box of all the children, then ensure it's centered

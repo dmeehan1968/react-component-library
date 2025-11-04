@@ -1,0 +1,6 @@
+/* Playwright wrapper */
+
+@import "tailwindcss" source("..");
+@plugin "daisyui";
+
+/* End Playwright wrapper */

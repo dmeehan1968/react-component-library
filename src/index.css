@@ -1,5 +1,5 @@
 /* Tailwind v4 + DaisyUI */
-@import "tailwindcss";
+@import "tailwindcss" source("..");
 @plugin "daisyui";
 
 /* No custom reset: Tailwind Preflight provides the CSS reset. */

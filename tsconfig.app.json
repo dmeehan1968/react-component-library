@@ -24,12 +24,12 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "test"],
+  "include": ["src", "test", "playwright-ct.config.ts"],
   "exclude": [
     // Exclude Playwright component testing files from the application TS project
     "src/**/*.ct.*",
     "playwright/**",
-    "playwright-ct.config.ts",
+//    "playwright-ct.config.ts",
     // Playwright runtime matchers live under test/; exclude them from app typecheck
     "test/pw.*"
   ]

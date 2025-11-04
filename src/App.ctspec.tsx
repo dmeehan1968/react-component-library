@@ -1,16 +1,21 @@
-import { test as baseTest, expect as baseExpect } from '@playwright/experimental-ct-react'
+import ctReact from '@playwright/experimental-ct-react'
+import { toBeHorizontallyCentered } from "../playwright/matchers/toBeHorizontallyCentered.tsx"
+import { toBeVerticallyCentered } from "../playwright/matchers/ToBeVerticallyCentered.tsx"
 import { AppHelper } from './App.ctspec.helper.tsx'
 
-export const test = baseTest.extend<{ app: AppHelper }>({
+export const test = ctReact.test.extend<{ app: AppHelper }>({
   app: async ({ mount }, provide) => {
     const app = await AppHelper.mount(mount)
     await provide(app)
   },
 })
 
-export const expect = baseExpect
+export const expect = ctReact.expect.extend({
+  toBeHorizontallyCentered,
+  toBeVerticallyCentered,
+})
 
-test.describe('App (Playwright CT)', () => {
+test.describe('App', () => {
   test('renders exactly one Counter component', async ({ app }) => {
     await expect(app.counter).toHaveCount(1)
   })
@@ -24,8 +29,7 @@ test.describe('App (Playwright CT)', () => {
   })
 
   test('content is centered horizontally and vertically', async ({ app }) => {
-    // Assert centering semantics by walking ancestors from a known child
-    // to find an element using the centering utilities.
-    expect(await app.isContentCentered()).toBe(true)
+    await expect(app.root).toBeHorizontallyCentered()
+    await expect(app.root).toBeVerticallyCentered()
   })
 })

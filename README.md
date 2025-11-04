@@ -76,18 +76,18 @@ Last updated: 2025-10-30 13:44 (local time)
 Example:
 
 ```ts
-import { test as baseTest, expect as baseExpect } from '@playwright/experimental-ct-react'
+import ctReact from '@playwright/experimental-ct-react'
 import { FeatureHelper } from "./index.ctspec.helper.tsx"
 import { toHaveSomeValue } from "../../../playwright/matchers/toHaveSomeValue.tsx"
 
-const test = baseTest.extend({
+const test = ctReact.test.extend({
   fixture: async ({ mount }, provide) => {
     const fixture = await FeatureHelper.mount(mount)
     await provide(fixture)
   },
 })
 
-const expect = baseExpect.extend({
+const expect = ctReact.expect.extend({
   toHaveSomeValue,
 })
 

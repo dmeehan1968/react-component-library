@@ -1,0 +1,5 @@
+# Bun test configuration for DOM-based unit tests
+# Ensures happy-dom provides window/document for tests executed via `bun test`
+
+[test]
+preload = ["./test/setup.ts"]

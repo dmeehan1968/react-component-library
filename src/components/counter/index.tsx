@@ -32,7 +32,7 @@ export function Counter({ initial = 0, step = 1 }: CounterProps = {}) {
         </button>
       </div>
       <p className="mt-3 text-sm opacity-70">
-        Edit <code>src/features/counter/Counter.tsx</code> and save to test HMR
+        Edit <code>src/components/counter/index.tsx</code> and save to test HMR
       </p>
     </div>
   )

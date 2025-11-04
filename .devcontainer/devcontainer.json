@@ -1,0 +1,24 @@
+{
+  "name": "Bun DevContainer",
+  "image": "oven/bun:latest",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "oven.bun-vscode"
+      ],
+      "settings": {
+        "bun.runtime": "/usr/local/bin/bun"
+      }
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": false,
+      "username": "node",
+      "uid": "1000",
+      "gid": "1000"
+    }
+  },
+  "forwardPorts": [3000],
+  "shutdownAction": "stopContainer"
+}

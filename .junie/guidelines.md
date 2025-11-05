@@ -26,6 +26,7 @@ Key files and settings:
     - Strictness: `strict`, `noUnusedLocals`, `noUnusedParameters`, `noUncheckedSideEffectImports`, `noFallthroughCasesInSwitch`, `erasableSyntaxOnly`.
     - Includes only `src/`.
   - `tsconfig.node.json` (tooling/Node): same strictness, includes `vite.config.ts`.
+  - Do not use access modifiers on constructor parameters, define the class property separately.
 - ESLint (`eslint.config.js`)
   - Extends: `@eslint/js` recommended, `typescript-eslint` recommended, `eslint-plugin-react-hooks` latest recommended, `eslint-plugin-react-refresh` Vite preset.
   - `globalIgnores(["dist"])` enabled.
@@ -38,8 +39,8 @@ Key files and settings:
 - Lint: `bunx eslint .`.
 - Typecheck: `bunx tsc --noEmit`.
 - GitHub
-  - Use the GitHub CLI (e.g. `gh issue list` etc.).  
-  - Use markdown formatting for issues, comments etc.  
+  - Use the GitHub CLI (e.g. `gh issue list` etc.).
+  - Use markdown formatting for issues, comments etc.
   - DO NOT escape newlines.
   - Include the following sections in the issue body:
     - Description
@@ -103,8 +104,11 @@ Notes
 
 ### Writing component tests
 
-- Create a helper class to provide domain-specific-language (DSL) semantics for the test.
-- Create custom matchers (`/playwright/matchers`) to improve test semantics.
+- Create a helper class to provide domain-specific-language (DSL) semantics for the test
+  - Add getters for common queries such as locators, text, etc.
+  - Add actions for user interactions (e.g. click, type, etc.)
+  - DO NOT Add assertions for expected state (e.g. text, visibility, etc.) - these should be implemented as custom expect matchers.
+- Create custom matchers (in `/playwright/matchers`) to improve test semantics
   Example:
 
 ```ts
@@ -112,10 +116,10 @@ import ctReact from '@playwright/experimental-ct-react'
 import { FeatureHelper } from "./index.ctspec.helper.tsx"
 import { toHaveSomeValue } from "../../../playwright/matchers/toHaveSomeValue.tsx"
 
-const test = ctReact.test.extend({
-  fixture: async ({ mount }, provide) => {
-    const fixture = await FeatureHelper.mount(mount)
-    await provide(fixture)
+const test = ctReact.test.extend<{ feature: FeatureHelper }>({
+  feature: async ({ mount }, provide) => {
+    const feature = await FeatureHelper.mount(mount)
+    await provide(feature)
   },
 })
 
@@ -159,7 +163,7 @@ test.describe('<Feature>', () => {
 - Keep components small and stateless where possible.
 - Co-locate tests and their helpers with features; use `tests/` only for larger integration suites.
 - Avoid adding global ambient types in `src/`.
- - Prefer Tailwind/DaisyUI utility classes; consult the DaisyUI docs when picking components, and keep markup semantic.
+- Prefer Tailwind/DaisyUI utility classes; consult the DaisyUI docs when picking components, and keep markup semantic.
 
 ---
 This document is intentionally project-specific. If you adjust the setup, append the exact commands and minimal configs here.

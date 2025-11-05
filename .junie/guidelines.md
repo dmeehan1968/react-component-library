@@ -39,7 +39,18 @@ Key files and settings:
 - Lint: `bunx eslint .`.
 - Typecheck: `bunx tsc --noEmit`.
 - GitHub
-  - Use the GitHub CLI (e.g. `gh issue list` etc.).
+  - `gh` is installed globally and pre-configured for the repo and authorisation.
+  - Use `gh issue create` to create a new issue.
+    - Use `--body-file` to pass a file containing the issue body instead of creating long command lines.
+    - Remove any temporary files used in the command line (e.g. `--body-file <tmp>`) after running the command
+  - Use `gh issue list` to list issues.
+  - Use `gh issue view` to view an issue.
+  - Use `gh issue close` to close an issue.
+  - Use `gh pr create` to create a new PR.
+    - Use `--body-file` to pass a file containing the PR body instead of creating long command lines.
+  - Use `gh pr list` to list PRs.
+  - Use `gh pr view` to view a PR.
+  - Use `gh pr close` to close a PR.
   - Use markdown formatting for issues, comments etc.
   - DO NOT escape newlines.
   - Include the following sections in the issue body:
@@ -47,7 +58,7 @@ Key files and settings:
     - Steps to reproduce (if a bug)
     - Current Implementation
     - Proposed Change
-    - Files to modify
+    - Files to add, modify and remove (separate sections for each)
     - Acceptance Criteria (include checkboxes)
     - Additional Notes (if any)
 

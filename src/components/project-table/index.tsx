@@ -10,21 +10,12 @@ import {
   noDataMessage,
 } from "./index.testids.ts"
 
-export interface Project {
-  name: string
-  lastUpdated: Date
-  issueCount: number
-}
-
-export interface ProjectTableViewProps {
-  projects?: Project[]
-}
-
-export const ProjectTableView: React.FC<ProjectTableViewProps> = (
-  props,
-) => {
-  const [projects, setProjects] = React.useState<Project[]>(props.projects ?? [])
-  const [sort, setSort] = React.useState<{ column: 'name' | 'lastUpdated', order: 'asc' | 'desc' }>({ column: 'name', order: 'asc' })
+function useProjects(initialProjects: Project[] = []) {
+  const [projects, setProjects] = React.useState<Project[]>(initialProjects)
+  const [sort, setSort] = React.useState<{ column: 'name' | 'lastUpdated', order: 'asc' | 'desc' }>({
+    column: 'name',
+    order: 'asc',
+  })
 
   const handleSort = (column: 'name' | 'lastUpdated') => {
     return () => {
@@ -38,19 +29,37 @@ export const ProjectTableView: React.FC<ProjectTableViewProps> = (
 
   useEffect(() => {
     if (sort.column === 'name') {
-      setProjects([...props.projects ?? []].sort((a, b) => {
+      setProjects([...initialProjects].sort((a, b) => {
         return sort.order === 'asc'
           ? a.name.localeCompare(b.name)
           : b.name.localeCompare(a.name)
       }))
     } else if (sort.column === 'lastUpdated') {
-      setProjects([...props.projects ?? []].sort((a, b) => {
+      setProjects([...initialProjects].sort((a, b) => {
         return sort.order === 'asc'
           ? a.lastUpdated.getTime() - b.lastUpdated.getTime()
           : b.lastUpdated.getTime() - a.lastUpdated.getTime()
       }))
     }
-  }, [props.projects, sort])
+  }, [initialProjects, sort])
+
+  return { projects, sort, handleSort }
+}
+
+export interface Project {
+  name: string
+  lastUpdated: Date
+  issueCount: number
+}
+
+export interface ProjectTableViewProps {
+  projects?: Project[]
+}
+
+export const ProjectTableView: React.FC<ProjectTableViewProps> = (
+  props,
+) => {
+  const { projects, sort, handleSort } = useProjects(props.projects)
 
   return (
     <table className="table table-zebra h-full">

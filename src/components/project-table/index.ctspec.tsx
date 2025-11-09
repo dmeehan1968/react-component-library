@@ -9,15 +9,15 @@ baseTest.describe("ProjectTableView", () => {
 
     const projects: Project[] = []
 
-    const tableTest = baseTest.extend<{ table: Locator }>({
+    const test = baseTest.extend<{ table: Locator }>({
       table: async ({ mount }, provide) => {
         await provide(await mount(<ProjectTableView projects={projects} />))
       }
     })
 
-    commonProjectTableSuite(projects, tableTest)
+    commonProjectTableSuite(projects, test)
 
-    tableTest('should contain no data message when empty', async ({ table }) => {
+    test('should contain no data message when empty', async ({ table }) => {
       const noDataMessage = table.getByTestId('no-data-message')
       expect(await noDataMessage.count()).toEqual(1)
       expect(await noDataMessage.textContent()).toMatch(/no projects found/i)
@@ -32,15 +32,15 @@ baseTest.describe("ProjectTableView", () => {
       { name: 'Project 3', lastUpdated: new Date(), issueCount: 0 },
     ]
 
-    const tableTest = baseTest.extend<{ table: Locator }>({
+    const test = baseTest.extend<{ table: Locator }>({
       table: async ({ mount }, provide) => {
         await provide(await mount(<ProjectTableView projects={projects} />))
       }
     })
 
-    commonProjectTableSuite(projects, tableTest)
+    commonProjectTableSuite(projects, test)
 
-    tableTest('should contain rows for each project', async ({ mount }) => {
+    test('should contain rows for each project', async ({ mount }) => {
       const table = await mount(<ProjectTableView projects={projects} />)
       expect(await table.locator('tbody').getByRole('row').count()).toEqual(projects.length)
     })

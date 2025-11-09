@@ -1,0 +1,8 @@
+export const nameColumn = 'name-column'
+export const lastUpdatedColumn = 'last-updated-column'
+export const issueCountColumn = 'issue-count-column'
+export const name = 'name'
+export const lastUpdated = 'last-updated'
+export const issueCount = 'issue-count'
+export const noDataMessage = 'no-data-message'
+export const project = 'project'

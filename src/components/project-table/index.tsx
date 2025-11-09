@@ -1,4 +1,13 @@
 import * as React from "react"
+import {
+  issueCount,
+  issueCountColumn,
+  lastUpdated,
+  lastUpdatedColumn,
+  name,
+  nameColumn,
+  noDataMessage,
+} from "./index.testids.ts"
 
 export interface Project {
   name: string
@@ -33,17 +42,17 @@ export const ProjectTableView: React.FC<ProjectTableViewProps> = (
         <th
           className="cursor-pointer"
           onClick={handleNameSort}
-          data-testid="name-column"
+          data-testid={nameColumn}
         >
           Name {sortOrder === 'asc' ? '↑' : '↓'}
         </th>
         <th
-          data-testid="last-updated-column"
+          data-testid={lastUpdatedColumn}
         >
           Last Updated
         </th>
         <th
-          data-testid="issue-count-column"
+          data-testid={issueCountColumn}
         >
           Issues
         </th>
@@ -55,17 +64,17 @@ export const ProjectTableView: React.FC<ProjectTableViewProps> = (
           <td
             colSpan={3}
             className="text-center align-middle"
-            data-testid="no-data-message"
+            data-testid={noDataMessage}
           >
             No projects found
           </td>
         </tr>
       )}
       {projects.map((project) => (
-        <tr key={project.name}>
-          <td data-testid="name">{project.name}</td>
-          <td data-testid="last-updated">{project.lastUpdated.toLocaleString()}</td>
-          <td data-testid="issue-count">{project.issueCount}</td>
+        <tr key={project.name} data-testid="project">
+          <td data-testid={name}>{project.name}</td>
+          <td data-testid={lastUpdated}>{project.lastUpdated.toLocaleString()}</td>
+          <td data-testid={issueCount}>{project.issueCount}</td>
         </tr>
       ))}
       </tbody>

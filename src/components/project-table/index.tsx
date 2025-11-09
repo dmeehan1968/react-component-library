@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import * as React from "react"
 import {
   issueCount,
@@ -23,17 +24,33 @@ export const ProjectTableView: React.FC<ProjectTableViewProps> = (
   props,
 ) => {
   const [projects, setProjects] = React.useState<Project[]>(props.projects ?? [])
-  const [sortOrder, setSortOrder] = React.useState<'asc' | 'desc'>('asc')
+  const [sort, setSort] = React.useState<{ column: 'name' | 'lastUpdated', order: 'asc' | 'desc' }>({ column: 'name', order: 'asc' })
 
-  const handleNameSort = () => {
-    const newOrder = sortOrder === 'asc' ? 'desc' : 'asc'
-    setSortOrder(newOrder)
-    setProjects([...projects].sort((a, b) => {
-      return newOrder === 'asc'
-        ? a.name.localeCompare(b.name)
-        : b.name.localeCompare(a.name)
-    }))
+  const handleSort = (column: 'name' | 'lastUpdated') => {
+    return () => {
+      if (sort.column === column) {
+        setSort({ column, order: sort.order === 'asc' ? 'desc' : 'asc' })
+      } else {
+        setSort({ column, order: 'asc' })
+      }
+    }
   }
+
+  useEffect(() => {
+    if (sort.column === 'name') {
+      setProjects([...props.projects ?? []].sort((a, b) => {
+        return sort.order === 'asc'
+          ? a.name.localeCompare(b.name)
+          : b.name.localeCompare(a.name)
+      }))
+    } else if (sort.column === 'lastUpdated') {
+      setProjects([...props.projects ?? []].sort((a, b) => {
+        return sort.order === 'asc'
+          ? a.lastUpdated.getTime() - b.lastUpdated.getTime()
+          : b.lastUpdated.getTime() - a.lastUpdated.getTime()
+      }))
+    }
+  }, [props.projects, sort])
 
   return (
     <table className="table table-zebra h-full">
@@ -41,15 +58,17 @@ export const ProjectTableView: React.FC<ProjectTableViewProps> = (
       <tr>
         <th
           className="cursor-pointer"
-          onClick={handleNameSort}
+          onClick={handleSort('name')}
           data-testid={nameColumn}
         >
-          Name {sortOrder === 'asc' ? '↑' : '↓'}
+          Name {sort.column === 'name' ? sort.order === 'asc' ? '↑' : '↓' : ''}
         </th>
         <th
+          className="cursor-pointer"
+          onClick={handleSort('lastUpdated')}
           data-testid={lastUpdatedColumn}
         >
-          Last Updated
+          Last Updated {sort.column === 'lastUpdated' ? sort.order === 'asc' ? '↑' : '↓' : ''}
         </th>
         <th
           data-testid={issueCountColumn}

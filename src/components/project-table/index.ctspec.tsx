@@ -31,9 +31,9 @@ baseTest.describe("ProjectTableView", () => {
 
   baseTest.describe("with data", () => {
     const projects: Project[] = [
-      { name: 'Project 1', lastUpdated: new Date(), issueCount: 10 },
-      { name: 'Project 2', lastUpdated: new Date(), issueCount: 5 },
-      { name: 'Project 3', lastUpdated: new Date(), issueCount: 0 },
+      { name: 'Project 1', lastUpdated: new Date('2025/01/02 12:00:00'), issueCount: 10 },
+      { name: 'Project 2', lastUpdated: new Date('2025/01/01 12:00:00'), issueCount: 5 },
+      { name: 'Project 3', lastUpdated: new Date('2025/01/03 12:00:00'), issueCount: 0 },
     ]
 
     const test = baseTest.extend<{ table: Locator }>({
@@ -73,18 +73,35 @@ function commonProjectTableSuite<T extends TestType<ComponentFixtures & {
     expect(await table.getByTestId(issueCountColumn).count()).toEqual(1)
   })
 
-  test('name column header should be sortable', async ({ table }) => {
-    const getProjectNames = async () => {
-      return table.getByTestId(name).allTextContents()
-    }
+  const getProjectNames = async (table: Locator) => {
+    return table.getByTestId(name).allTextContents()
+  }
 
-    const initialNames = await getProjectNames()
+  test('name column header should be sortable', async ({ table }) => {
+
+    const initialNames = await getProjectNames(table)
     expect(initialNames).toEqual(projects.map(p => p.name))
 
     await table.getByTestId(nameColumn).click()
 
-    const sortedNames = await getProjectNames()
-    expect(sortedNames).toEqual(projects.map(p => p.name).reverse())
+    await expect.poll(() => getProjectNames(table)).toEqual(projects.map(p => p.name).reverse())
+  })
+
+  test('lastUpdated column header should be sortable', async ({ table }) => {
+    const initialNames = await getProjectNames(table)
+    expect(initialNames).toEqual(projects.map(p => p.name))
+
+    await table.getByTestId(lastUpdatedColumn).click()
+    // should be ascending sorted after changing from name sort
+    await expect.poll(() => getProjectNames(table)).toEqual(projects.toSorted((a, b) => {
+      return a.lastUpdated.getTime() - b.lastUpdated.getTime()
+    }).map(p => p.name))
+
+    // should be descending sorted after last column click
+    await table.getByTestId(lastUpdatedColumn).click()
+    await expect.poll(() => getProjectNames(table)).toEqual(projects.toSorted((a, b) => {
+      return b.lastUpdated.getTime() - a.lastUpdated.getTime()
+    }).map(p => p.name))
   })
 
 }

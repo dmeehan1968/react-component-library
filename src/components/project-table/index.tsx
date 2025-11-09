@@ -16,6 +16,10 @@ function useProjects(initialProjects: Project[] = []) {
     column: 'name',
     order: 'asc',
   })
+  const [sortIndicator, setSortIndicator] = React.useState<{ name: string, lastUpdated: string }>({
+    name: '',
+    lastUpdated: '',
+  })
 
   const handleSort = (column: 'name' | 'lastUpdated') => {
     return () => {
@@ -43,7 +47,14 @@ function useProjects(initialProjects: Project[] = []) {
     }
   }, [initialProjects, sort])
 
-  return { projects, sort, handleSort }
+  useEffect(() => {
+    setSortIndicator({
+      name: sort.column === 'name' ? sort.order === 'asc' ? '↑' : '↓' : '',
+      lastUpdated: sort.column === 'lastUpdated' ? sort.order === 'asc' ? '↑' : '↓' : '',
+    })
+  }, [sort])
+
+  return { projects, handleSort, indicator: sortIndicator }
 }
 
 export interface Project {
@@ -59,7 +70,7 @@ export interface ProjectTableViewProps {
 export const ProjectTableView: React.FC<ProjectTableViewProps> = (
   props,
 ) => {
-  const { projects, sort, handleSort } = useProjects(props.projects)
+  const { projects, handleSort, indicator } = useProjects(props.projects)
 
   return (
     <table className="table table-zebra h-full">
@@ -70,14 +81,14 @@ export const ProjectTableView: React.FC<ProjectTableViewProps> = (
           onClick={handleSort('name')}
           data-testid={nameColumn}
         >
-          Name {sort.column === 'name' ? sort.order === 'asc' ? '↑' : '↓' : ''}
+          Name {indicator.name}
         </th>
         <th
           className="cursor-pointer"
           onClick={handleSort('lastUpdated')}
           data-testid={lastUpdatedColumn}
         >
-          Last Updated {sort.column === 'lastUpdated' ? sort.order === 'asc' ? '↑' : '↓' : ''}
+          Last Updated {indicator.lastUpdated}
         </th>
         <th
           data-testid={issueCountColumn}

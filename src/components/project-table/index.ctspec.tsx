@@ -82,9 +82,13 @@ function commonProjectTableSuite<T extends TestType<ComponentFixtures & {
     const initialNames = await getProjectNames(table)
     expect(initialNames).toEqual(projects.map(p => p.name))
 
+    await expect(table.getByTestId(nameColumn)).toContainText(/↑/i)
+
     await table.getByTestId(nameColumn).click()
 
     await expect.poll(() => getProjectNames(table)).toEqual(projects.map(p => p.name).reverse())
+
+    await expect(table.getByTestId(nameColumn)).toContainText(/↓/i)
   })
 
   test('lastUpdated column header should be sortable', async ({ table }) => {
@@ -97,11 +101,16 @@ function commonProjectTableSuite<T extends TestType<ComponentFixtures & {
       return a.lastUpdated.getTime() - b.lastUpdated.getTime()
     }).map(p => p.name))
 
+    await expect(table.getByTestId(lastUpdatedColumn)).toContainText(/↑/i)
+
     // should be descending sorted after last column click
     await table.getByTestId(lastUpdatedColumn).click()
     await expect.poll(() => getProjectNames(table)).toEqual(projects.toSorted((a, b) => {
       return b.lastUpdated.getTime() - a.lastUpdated.getTime()
     }).map(p => p.name))
+
+    await expect(table.getByTestId(lastUpdatedColumn)).toContainText(/↓/i)
+
   })
 
 }

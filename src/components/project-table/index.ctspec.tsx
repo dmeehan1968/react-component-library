@@ -4,7 +4,6 @@ import type { Locator } from "@playwright/test"
 import {
   issueCountColumn,
   lastUpdatedColumn,
-  name,
   nameColumn,
   noDataMessage,
   project,
@@ -47,6 +46,10 @@ class ProjectTableViewHelper {
     }).map(p => p.name)
   }
 
+  get nameColumn() {
+    return this.root.getByTestId(nameColumn)
+  }
+
   get lastUpdatedColumn() {
     return this.root.getByTestId(lastUpdatedColumn)
   }
@@ -77,7 +80,7 @@ baseTest.describe("ProjectTableView", () => {
       },
     })
 
-    commonProjectTableSuite(projects, test)
+    commonProjectTableSuite(test)
 
     test('should contain no data message when empty', async ({ table }) => {
       const message = table.getByTestId(noDataMessage)
@@ -103,7 +106,7 @@ baseTest.describe("ProjectTableView", () => {
       },
     })
 
-    commonProjectTableSuite(projects, test)
+    commonProjectTableSuite(test)
 
     test('should contain rows for each project', async ({ mount }) => {
       const table = await mount(<ProjectTableView projects={projects}/>)
@@ -117,7 +120,7 @@ baseTest.describe("ProjectTableView", () => {
 function commonProjectTableSuite<T extends TestType<ComponentFixtures & {
   table: Locator
   dsl: ProjectTableViewHelper
-}>>(projects: Project[], test: T) {
+}>>(test: T) {
   test('should render a table', async ({ table }) => {
     const tagName = await table.evaluate(el => el.tagName)
     expect(tagName).toEqual('TABLE')
@@ -135,22 +138,17 @@ function commonProjectTableSuite<T extends TestType<ComponentFixtures & {
     expect(await table.getByTestId(issueCountColumn).count()).toEqual(1)
   })
 
-  const getProjectNames = async (table: Locator) => {
-    return table.getByTestId(name).allTextContents()
-  }
+  test('name column header should be sortable', async ({ dsl }) => {
 
-  test('name column header should be sortable', async ({ table }) => {
+    const initial = await dsl.projectNamesAsRendered()
+    expect(initial).toEqual(dsl.projectNamesInOrder('name', 'asc'))
+    await expect.poll(() => dsl.getSortIndicators()).toEqual({ name: upArrow, lastUpdated: undefined })
 
-    const initialNames = await getProjectNames(table)
-    expect(initialNames).toEqual(projects.map(p => p.name))
+    await dsl.nameColumn.click()
 
-    await expect(table.getByTestId(nameColumn)).toContainText(/↑/i)
+    await expect.poll(() => dsl.projectNamesAsRendered()).toEqual(dsl.projectNamesInOrder('name', 'desc'))
+    await expect.poll(() => dsl.getSortIndicators()).toEqual({ name: downArrow, lastUpdated: undefined })
 
-    await table.getByTestId(nameColumn).click()
-
-    await expect.poll(() => getProjectNames(table)).toEqual(projects.map(p => p.name).reverse())
-
-    await expect(table.getByTestId(nameColumn)).toContainText(/↓/i)
   })
 
   test('lastUpdated column header should be sortable', async ({ dsl }) => {

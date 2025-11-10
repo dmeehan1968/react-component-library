@@ -1,5 +1,6 @@
 import type { Locator } from "@playwright/test"
-import type { Project } from "../../hooks/useProjects.tsx"
+import type { Project } from "../../providers/projectsContext.tsx"
+
 import { issueCountColumn, lastUpdatedColumn, nameColumn, noDataMessage, project, sortIndicator } from "./index.testids.ts"
 
 type sortableColumns = 'name' | 'lastUpdated'

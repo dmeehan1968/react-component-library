@@ -1,5 +1,5 @@
 import * as React from "react"
-import { type Project, useProjects } from "../../hooks/useProjects.tsx"
+import { useProjects } from "../../hooks/useProjects.tsx"
 import {
   issueCount,
   issueCountColumn,
@@ -10,14 +10,8 @@ import {
   noDataMessage,
 } from "./index.testids.ts"
 
-export interface ProjectTableViewProps {
-  projects?: Project[]
-}
-
-export const ProjectTableView: React.FC<ProjectTableViewProps> = (
-  props,
-) => {
-  const { projects, handleSort, indicator } = useProjects(props.projects)
+export const ProjectTableView: React.FC = () => {
+  const { projects, handleSort, indicator } = useProjects()
 
   return (
     <table className="table table-zebra h-full">

@@ -1,7 +1,10 @@
 import type { TestType } from "@playwright/experimental-ct-core"
 import { type ComponentFixtures, expect, test as baseTest } from "@playwright/experimental-ct-react"
-import type { Project } from "../../hooks/useProjects.tsx"
+import type { Project } from "../../providers/projectsContext.tsx"
+import { ProjectsProvider } from "../../providers/projectsProvider.tsx"
+
 import { downArrow, ProjectTableViewHelper, upArrow } from "./index.ctspec.helper.tsx"
+
 import { ProjectTableView } from "./index.tsx"
 
 baseTest.describe("ProjectTableView", () => {
@@ -9,11 +12,14 @@ baseTest.describe("ProjectTableView", () => {
   baseTest.describe("no data", () => {
 
     const projects: Project[] = []
-
     const test = baseTest.extend<{ table: ProjectTableViewHelper }>({
       table: async ({ mount }, provide) => {
         await provide(new ProjectTableViewHelper(
-          await mount(<ProjectTableView projects={projects}/>),
+          await mount(
+            <ProjectsProvider initialProjects={projects}>
+              <ProjectTableView/>
+            </ProjectsProvider>
+          ),
           projects,
         ))
       },
@@ -38,7 +44,11 @@ baseTest.describe("ProjectTableView", () => {
     const test = baseTest.extend<{ table: ProjectTableViewHelper }>({
       table: async ({ mount }, provide) => {
         await provide(new ProjectTableViewHelper(
-          await mount(<ProjectTableView projects={projects}/>),
+          await mount(
+            <ProjectsProvider initialProjects={projects}>
+              <ProjectTableView />
+            </ProjectsProvider>
+          ),
           projects,
         ))
       },

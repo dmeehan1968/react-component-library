@@ -1,4 +1,6 @@
+import clsx from "clsx"
 import * as React from "react"
+import { twMerge } from "tailwind-merge"
 import { useProjects } from "../../hooks/useProjects.tsx"
 import {
   errorMessage,
@@ -10,6 +12,22 @@ import {
   nameColumn,
   noDataMessage,
 } from "./index.testids.ts"
+
+const TableMessage: React.FC<{
+  message: string
+  testId: string
+  className?: string
+}> = ({ message, testId, className }) => (
+  <tr>
+    <td
+      colSpan={3}
+      className={twMerge(clsx(`text-center align-middle`, className))}
+      data-testid={testId}
+    >
+      {message}
+    </td>
+  </tr>
+)
 
 export const ProjectTableView: React.FC = () => {
   const { projects, handleSort, indicator, isLoading, error } = useProjects()
@@ -41,37 +59,23 @@ export const ProjectTableView: React.FC = () => {
       </thead>
       <tbody>
       {isLoading && (
-        <tr>
-          <td
-            colSpan={3}
-            className="text-center align-middle"
-            data-testid={loadingMessage}
-          >
-            Loading...
-          </td>
-        </tr>
+        <TableMessage
+          message="Loading..."
+          testId={loadingMessage}
+        />
       )}
       {error && (
-        <tr>
-          <td
-            colSpan={3}
-            className="text-center align-middle"
-            data-testid={errorMessage}
-          >
-            Error: {error.message}
-          </td>
-        </tr>
+        <TableMessage
+          message={`Error: ${error.message}`}
+          testId={errorMessage}
+          className="text-error"
+        />
       )}
       {!isLoading && !error && projects.length === 0 && (
-        <tr>
-          <td
-            colSpan={3}
-            className="text-center align-middle"
-            data-testid={noDataMessage}
-          >
-            No projects found
-          </td>
-        </tr>
+        <TableMessage
+          message="No projects found"
+          testId={noDataMessage}
+        />
       )}
       {!isLoading && !error && projects.map((project) => (
         <tr key={project.name} data-testid="project">

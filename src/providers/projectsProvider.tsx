@@ -43,7 +43,7 @@ export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
           setFetchedProjects(await new Promise(resolve => {
             setTimeout(() => {
               resolve(projectsOrFetch)
-            }, 1000)
+            }, 10)
           }))
         } else {
           const res = await projectsOrFetch('/api/projects')

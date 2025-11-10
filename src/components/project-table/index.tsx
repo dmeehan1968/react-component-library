@@ -1,33 +1,17 @@
-import clsx from "clsx"
 import * as React from "react"
-import { twMerge } from "tailwind-merge"
 import { useProjects } from "../../hooks/useProjects.tsx"
 import {
   errorMessage,
   issueCount,
   issueCountColumn,
   lastUpdated,
-  lastUpdatedColumn, loadingMessage,
+  lastUpdatedColumn,
+  loadingMessage,
   name,
   nameColumn,
   noDataMessage,
 } from "./index.testids.ts"
-
-const TableMessage: React.FC<{
-  message: string
-  testId: string
-  className?: string
-}> = ({ message, testId, className }) => (
-  <tr>
-    <td
-      colSpan={3}
-      className={twMerge(clsx(`text-center align-middle`, className))}
-      data-testid={testId}
-    >
-      {message}
-    </td>
-  </tr>
-)
+import { TableMessage } from "./tableMessage"
 
 export const ProjectTableView: React.FC = () => {
   const { projects, handleSort, indicator, isLoading, error } = useProjects()

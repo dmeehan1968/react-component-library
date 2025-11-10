@@ -1,16 +1,17 @@
 import * as React from "react"
 import { useProjects } from "../../hooks/useProjects.tsx"
 import {
-  errorMessage,
-  issueCount,
-  issueCountColumn,
-  lastUpdated,
-  lastUpdatedColumn,
-  loadingMessage,
-  name,
-  nameColumn,
-  noDataMessage,
-  sortIndicator,
+  errorMessageId,
+  issueCountId,
+  issueCountColumnId,
+  lastUpdatedId,
+  lastUpdatedColumnId,
+  loadingMessageId,
+  nameId,
+  nameColumnId,
+  noDataMessageId,
+  projectId,
+  sortIndicatorId,
 } from "./index.testids.ts"
 import { TableMessage } from "./table-message"
 
@@ -24,19 +25,19 @@ export const ProjectTableView: React.FC = () => {
         <th
           className="cursor-pointer"
           onClick={handleSort('name')}
-          data-testid={nameColumn}
+          data-testid={nameColumnId}
         >
-          Name <span data-testid={sortIndicator}>{indicator.name}</span>
+          Name <span data-testid={sortIndicatorId}>{indicator.name}</span>
         </th>
         <th
           className="cursor-pointer"
           onClick={handleSort('lastUpdated')}
-          data-testid={lastUpdatedColumn}
+          data-testid={lastUpdatedColumnId}
         >
-          Last Updated <span data-testid={sortIndicator}>{indicator.lastUpdated}</span>
+          Last Updated <span data-testid={sortIndicatorId}>{indicator.lastUpdated}</span>
         </th>
         <th
-          data-testid={issueCountColumn}
+          data-testid={issueCountColumnId}
         >
           Issues
         </th>
@@ -46,27 +47,27 @@ export const ProjectTableView: React.FC = () => {
       {isLoading && (
         <TableMessage
           message="Loading..."
-          testId={loadingMessage}
+          testId={loadingMessageId}
         />
       )}
       {error && (
         <TableMessage
           message={`Error: ${error.message}`}
-          testId={errorMessage}
+          testId={errorMessageId}
           className="text-error"
         />
       )}
       {!isLoading && !error && projects.length === 0 && (
         <TableMessage
           message="No projects found"
-          testId={noDataMessage}
+          testId={noDataMessageId}
         />
       )}
       {!isLoading && !error && projects.map((project) => (
-        <tr key={project.name} data-testid="project">
-          <td data-testid={name}>{project.name}</td>
-          <td data-testid={lastUpdated}>{project.lastUpdated.toLocaleString()}</td>
-          <td data-testid={issueCount}>{project.issueCount}</td>
+        <tr key={project.name} data-testid={projectId}>
+          <td data-testid={nameId}>{project.name}</td>
+          <td data-testid={lastUpdatedId}>{project.lastUpdated.toLocaleString()}</td>
+          <td data-testid={issueCountId}>{project.issueCount}</td>
         </tr>
       ))}
       </tbody>

@@ -2,14 +2,14 @@ import type { Locator } from "@playwright/test"
 import type { Project } from "../../providers/projectsContext.tsx"
 
 import {
-  errorMessage,
-  issueCountColumn,
-  lastUpdatedColumn,
-  loadingMessage,
-  nameColumn,
-  noDataMessage,
-  project,
-  sortIndicator,
+  errorMessageId,
+  issueCountColumnId,
+  lastUpdatedColumnId,
+  loadingMessageId,
+  nameColumnId,
+  noDataMessageId,
+  projectId,
+  sortIndicatorId,
 } from "./index.testids.ts"
 
 type sortableColumns = 'name' | 'lastUpdated'
@@ -27,7 +27,7 @@ export class ProjectTableViewHelper {
   }
 
   projectNamesAsRendered() {
-    return this.root.getByTestId(project).locator('td:first-child').allTextContents()
+    return this.root.getByTestId(projectId).locator('td:first-child').allTextContents()
   }
 
   projectNamesInOrder(by: sortableColumns, order: sortOrder) {
@@ -45,15 +45,15 @@ export class ProjectTableViewHelper {
   }
 
   get nameColumn() {
-    return this.root.getByTestId(nameColumn)
+    return this.root.getByTestId(nameColumnId)
   }
 
   get lastUpdatedColumn() {
-    return this.root.getByTestId(lastUpdatedColumn)
+    return this.root.getByTestId(lastUpdatedColumnId)
   }
 
   get issueCountColumn() {
-    return this.root.getByTestId(issueCountColumn)
+    return this.root.getByTestId(issueCountColumnId)
   }
 
   get tagName() {
@@ -61,13 +61,13 @@ export class ProjectTableViewHelper {
   }
 
   get projectRows() {
-    return this.root.getByTestId(project)
+    return this.root.getByTestId(projectId)
   }
 
   get sortIndicators(): Promise<{ name: string | undefined, lastUpdated: string | undefined }> {
     return (async () => {
-      const name = await this.nameColumn.getByTestId(sortIndicator).textContent()
-      const lastUpdated = await this.lastUpdatedColumn.getByTestId(sortIndicator).textContent()
+      const name = await this.nameColumn.getByTestId(sortIndicatorId).textContent()
+      const lastUpdated = await this.lastUpdatedColumn.getByTestId(sortIndicatorId).textContent()
       return {
         name: name ? name.trim() : undefined,
         lastUpdated: lastUpdated ? lastUpdated.trim() : undefined,
@@ -76,14 +76,14 @@ export class ProjectTableViewHelper {
   }
 
   get noDataMessage() {
-    return this.root.getByTestId(noDataMessage)
+    return this.root.getByTestId(noDataMessageId)
   }
 
   get loadingMessage() {
-    return this.root.getByTestId(loadingMessage)
+    return this.root.getByTestId(loadingMessageId)
   }
 
   get errorMessage() {
-    return this.root.getByTestId(errorMessage)
+    return this.root.getByTestId(errorMessageId)
   }
 }

@@ -12,7 +12,7 @@ baseTest.describe("ProjectTableView", () => {
     const test = baseTest.extend<{ table: ProjectTableViewHelper }>({
       table: async ({ mount }, provide) => {
         const helper = new ProjectTableViewHelper(mount, projects)
-        await helper.mount({ projectsOrFetch: { projects } })
+        await helper.mount({ dataSource: { projects } })
         await provide(helper)
       },
     })
@@ -36,7 +36,7 @@ baseTest.describe("ProjectTableView", () => {
     const test = baseTest.extend<{ table: ProjectTableViewHelper }>({
       table: async ({ mount }, provide) => {
         const helper = new ProjectTableViewHelper(mount, projects)
-        await helper.mount({ projectsOrFetch: { projects } })
+        await helper.mount({ dataSource: { projects } })
         await provide(helper)
       },
     })
@@ -54,7 +54,7 @@ baseTest.describe("ProjectTableView", () => {
     const test = baseTest.extend<{ table: ProjectTableViewHelper }>({
       table: async ({ mount }, provide) => {
         const helper = new ProjectTableViewHelper(mount, [])
-        await helper.mount({ projectsOrFetch: { error: 'fetch failed' } })
+        await helper.mount({ dataSource: { error: 'fetch failed' } })
         await provide(helper)
       },
     })

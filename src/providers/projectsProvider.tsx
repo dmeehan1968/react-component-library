@@ -3,14 +3,14 @@ import { type Project, ProjectsContext, type ProjectsContextType } from "./proje
 
 export interface ProjectsProviderProps {
   children?: React.ReactNode
-  projectsOrFetch?: { projects?: Project[], error?: string, fetch?: typeof fetch }
+  dataSource?: { projects: Project[], error?: never, fetch?: never } | { error: string, projects?: never, fetch?: never } | { fetch: typeof fetch, projects?: never, error?: never }
 }
 
 export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
   children,
-  projectsOrFetch = { fetch },
+  dataSource = { fetch },
 }) => {
-  const [fetchedProjects, setFetchedProjects] = React.useState<Project[]>(Array.isArray(projectsOrFetch) ? projectsOrFetch : [])
+  const [fetchedProjects, setFetchedProjects] = React.useState<Project[]>([])
   const [projects, setProjects] = React.useState<Project[]>(fetchedProjects)
   const [sort, setSort] = React.useState<{ column: 'name' | 'lastUpdated', order: 'asc' | 'desc' }>({
     column: 'name',
@@ -38,22 +38,22 @@ export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
       try {
         setIsLoading(true)
         setError(undefined)
-        console.log(projectsOrFetch)
-        if (projectsOrFetch.projects) {
+        console.log(dataSource)
+        if (dataSource.projects) {
           setFetchedProjects(await new Promise(resolve => {
             setTimeout(() => {
-              resolve(projectsOrFetch.projects!)
+              resolve(dataSource.projects!)
             }, 10)
           }))
-        } else if (projectsOrFetch.error) {
+        } else if (dataSource.error) {
           setError(await new Promise(resolve => {
             setTimeout(() => {
-              resolve(new Error(projectsOrFetch.error))
+              resolve(new Error(dataSource.error))
             }, 10)
           }))
-        } else if (projectsOrFetch.fetch) {
-          const res = await projectsOrFetch.fetch!('/api/projects')
-          console.log({ fetchImpl: projectsOrFetch, res })
+        } else if (dataSource.fetch) {
+          const res = await dataSource.fetch!('/api/projects')
+          console.log({ fetchImpl: dataSource, res })
           if (res.ok) {
             setFetchedProjects(await res.json())
           }
@@ -68,7 +68,7 @@ export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
     }
 
     void loadProjects()
-  }, [projectsOrFetch])
+  }, [dataSource])
 
   React.useEffect(() => {
     if (sort.column === 'name') {

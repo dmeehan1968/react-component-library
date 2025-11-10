@@ -81,14 +81,14 @@ export const ProjectTableView: React.FC<ProjectTableViewProps> = (
           onClick={handleSort('name')}
           data-testid={nameColumn}
         >
-          Name {indicator.name}
+          Name <span data-testid="sort-indicator">{indicator.name}</span>
         </th>
         <th
           className="cursor-pointer"
           onClick={handleSort('lastUpdated')}
           data-testid={lastUpdatedColumn}
         >
-          Last Updated {indicator.lastUpdated}
+          Last Updated <span data-testid="sort-indicator">{indicator.lastUpdated}</span>
         </th>
         <th
           data-testid={issueCountColumn}

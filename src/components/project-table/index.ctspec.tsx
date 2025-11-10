@@ -171,5 +171,18 @@ function commonProjectTableSuite<T extends TestType<ComponentFixtures & {
 
   })
 
+  test('when the name column is sorted, the last updated column should not show a sort indicator', async ({ dsl }) => {
+
+    await expect.poll(() => dsl.getSortIndicators()).toEqual({ name: upArrow, lastUpdated: undefined })
+
+  })
+
+  test('when the lastUpdated column is sorted, the name column should not show a sort indicator', async ({ dsl }) => {
+
+    await dsl.lastUpdatedColumn.click()
+    await expect.poll(() => dsl.getSortIndicators()).toEqual({ name: undefined, lastUpdated: upArrow })
+
+  })
+
 }
 

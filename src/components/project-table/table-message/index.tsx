@@ -2,11 +2,13 @@ import clsx from "clsx"
 import * as React from "react"
 import { twMerge } from "tailwind-merge"
 
-export const TableMessage: React.FC<{
+export interface TableMessageProps {
   message: string
   testId: string
   className?: string
-}> = ({ message, testId, className }) => (
+}
+
+export const TableMessage: React.FC<TableMessageProps> = ({ message, testId, className }) => (
   <tr>
     <td
       colSpan={3}

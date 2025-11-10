@@ -11,7 +11,7 @@ import {
   nameColumn,
   noDataMessage,
 } from "./index.testids.ts"
-import { TableMessage } from "./tableMessage"
+import { TableMessage } from "./table-message"
 
 export const ProjectTableView: React.FC = () => {
   const { projects, handleSort, indicator, isLoading, error } = useProjects()

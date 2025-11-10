@@ -40,7 +40,11 @@ export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
         setIsLoading(true)
         setError(undefined)
         if (Array.isArray(projectsOrFetch)) {
-          setFetchedProjects(projectsOrFetch)
+          setFetchedProjects(await new Promise(resolve => {
+            setTimeout(() => {
+              resolve(projectsOrFetch)
+            }, 1000)
+          }))
         } else {
           const res = await projectsOrFetch('/api/projects')
           console.log({ fetchImpl: projectsOrFetch, res })

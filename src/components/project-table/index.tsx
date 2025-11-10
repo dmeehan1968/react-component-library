@@ -1,17 +1,18 @@
 import * as React from "react"
 import { useProjects } from "../../hooks/useProjects.tsx"
 import {
+  errorMessage,
   issueCount,
   issueCountColumn,
   lastUpdated,
-  lastUpdatedColumn,
+  lastUpdatedColumn, loadingMessage,
   name,
   nameColumn,
   noDataMessage,
 } from "./index.testids.ts"
 
 export const ProjectTableView: React.FC = () => {
-  const { projects, handleSort, indicator } = useProjects()
+  const { projects, handleSort, indicator, isLoading, error } = useProjects()
 
   return (
     <table className="table table-zebra h-full">
@@ -39,7 +40,29 @@ export const ProjectTableView: React.FC = () => {
       </tr>
       </thead>
       <tbody>
-      {projects.length === 0 && (
+      {isLoading && (
+        <tr>
+          <td
+            colSpan={3}
+            className="text-center align-middle"
+            data-testid={loadingMessage}
+          >
+            Loading...
+          </td>
+        </tr>
+      )}
+      {error && (
+        <tr>
+          <td
+            colSpan={3}
+            className="text-center align-middle"
+            data-testid={errorMessage}
+          >
+            Error: {error.message}
+          </td>
+        </tr>
+      )}
+      {!isLoading && !error && projects.length === 0 && (
         <tr>
           <td
             colSpan={3}
@@ -50,7 +73,7 @@ export const ProjectTableView: React.FC = () => {
           </td>
         </tr>
       )}
-      {projects.map((project) => (
+      {!isLoading && !error && projects.map((project) => (
         <tr key={project.name} data-testid="project">
           <td data-testid={name}>{project.name}</td>
           <td data-testid={lastUpdated}>{project.lastUpdated.toLocaleString()}</td>

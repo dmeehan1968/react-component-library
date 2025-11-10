@@ -1,7 +1,16 @@
 import type { Locator } from "@playwright/test"
 import type { Project } from "../../providers/projectsContext.tsx"
 
-import { issueCountColumn, lastUpdatedColumn, nameColumn, noDataMessage, project, sortIndicator } from "./index.testids.ts"
+import {
+  errorMessage,
+  issueCountColumn,
+  lastUpdatedColumn,
+  loadingMessage,
+  nameColumn,
+  noDataMessage,
+  project,
+  sortIndicator,
+} from "./index.testids.ts"
 
 type sortableColumns = 'name' | 'lastUpdated'
 type sortOrder = 'asc' | 'desc'
@@ -68,5 +77,13 @@ export class ProjectTableViewHelper {
 
   get noDataMessage() {
     return this.root.getByTestId(noDataMessage)
+  }
+
+  get loadingMessage() {
+    return this.root.getByTestId(loadingMessage)
+  }
+
+  get errorMessage() {
+    return this.root.getByTestId(errorMessage)
   }
 }

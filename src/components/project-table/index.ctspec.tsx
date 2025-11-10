@@ -87,6 +87,8 @@ function commonProjectTableSuite<T extends TestType<ComponentFixtures & {
 
   test('name column header should be sortable', async ({ table }) => {
 
+    await expect(table.loadingMessage).toBeHidden()
+
     const initial = await table.projectNamesAsRendered()
     expect(initial).toEqual(table.projectNamesInOrder('name', 'asc'))
     await expect.poll(() => table.sortIndicators).toEqual({ name: upArrow, lastUpdated: undefined })
@@ -99,6 +101,8 @@ function commonProjectTableSuite<T extends TestType<ComponentFixtures & {
   })
 
   test('lastUpdated column header should be sortable', async ({ table }) => {
+
+    await expect(table.loadingMessage).toBeHidden()
 
     const initial = await table.projectNamesAsRendered()
     expect(initial).toEqual(table.projectNamesInOrder('name', 'asc'))

@@ -10,6 +10,7 @@ import {
   name,
   nameColumn,
   noDataMessage,
+  sortIndicator,
 } from "./index.testids.ts"
 import { TableMessage } from "./table-message"
 
@@ -25,14 +26,14 @@ export const ProjectTableView: React.FC = () => {
           onClick={handleSort('name')}
           data-testid={nameColumn}
         >
-          Name <span data-testid="sort-indicator">{indicator.name}</span>
+          Name <span data-testid={sortIndicator}>{indicator.name}</span>
         </th>
         <th
           className="cursor-pointer"
           onClick={handleSort('lastUpdated')}
           data-testid={lastUpdatedColumn}
         >
-          Last Updated <span data-testid="sort-indicator">{indicator.lastUpdated}</span>
+          Last Updated <span data-testid={sortIndicator}>{indicator.lastUpdated}</span>
         </th>
         <th
           data-testid={issueCountColumn}

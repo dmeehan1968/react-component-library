@@ -1,7 +1,8 @@
 import type { TestType } from "@playwright/experimental-ct-core"
 import { type ComponentFixtures, expect, test as baseTest } from "@playwright/experimental-ct-react"
+import type { Project } from "../../hooks/useProjects.tsx"
 import { downArrow, ProjectTableViewHelper, upArrow } from "./index.ctspec.helper.tsx"
-import { type Project, ProjectTableView } from "./index.tsx"
+import { ProjectTableView } from "./index.tsx"
 
 baseTest.describe("ProjectTableView", () => {
 

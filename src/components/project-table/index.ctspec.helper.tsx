@@ -1,5 +1,7 @@
+import type { ComponentFixtures, MountResult } from "@playwright/experimental-ct-react"
 import type { Locator } from "@playwright/test"
 import type { Project } from "../../providers/projectsContext.tsx"
+import { ProjectsProvider, type ProjectsProviderProps } from "../../providers/projectsProvider.tsx"
 
 import {
   errorMessageId,
@@ -11,6 +13,7 @@ import {
   projectId,
   sortIndicatorId,
 } from "./index.testids.ts"
+import { ProjectTableView } from "./index.tsx"
 
 type sortableColumns = 'name' | 'lastUpdated'
 type sortOrder = 'asc' | 'desc'
@@ -19,11 +22,30 @@ export const downArrow = '↓' as const
 
 export class ProjectTableViewHelper {
   readonly fixtures: Project[]
-  private readonly root: Locator
+  private _root: MountResult | undefined
+  private readonly _mount: ComponentFixtures['mount']
 
-  constructor(root: Locator, projects: Project[]) {
-    this.root = root
+  constructor(mount: ComponentFixtures['mount'], projects: Project[]) {
+    this._mount = mount
     this.fixtures = projects
+  }
+
+  get root(): Locator {
+    if (!this._root) {
+      throw new Error('ProjectTableViewHelper not mounted')
+    }
+    return this._root
+  }
+
+  async mount(props: ProjectsProviderProps) {
+    if (this._root) {
+      await this._root.unmount()
+    }
+    this._root = await this._mount(
+      <ProjectsProvider {...props}>
+        <ProjectTableView/>
+      </ProjectsProvider>
+    )
   }
 
   projectNamesAsRendered() {

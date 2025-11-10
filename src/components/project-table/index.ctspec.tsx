@@ -1,11 +1,8 @@
 import type { TestType } from "@playwright/experimental-ct-core"
 import { type ComponentFixtures, expect, test as baseTest } from "@playwright/experimental-ct-react"
 import type { Project } from "../../providers/projectsContext.tsx"
-import { ProjectsProvider } from "../../providers/projectsProvider.tsx"
 
 import { downArrow, ProjectTableViewHelper, upArrow } from "./index.ctspec.helper.tsx"
-
-import { ProjectTableView } from "./index.tsx"
 
 baseTest.describe("ProjectTableView", () => {
 
@@ -14,15 +11,9 @@ baseTest.describe("ProjectTableView", () => {
     const projects: Project[] = []
     const test = baseTest.extend<{ table: ProjectTableViewHelper }>({
       table: async ({ mount }, provide) => {
-        await provide(new ProjectTableViewHelper(
-          await mount(
-            // DO NOT pass fetch mock as return values are not supported by Playwright CT
-            <ProjectsProvider projectsOrFetch={projects}>
-              <ProjectTableView/>
-            </ProjectsProvider>
-          ),
-          projects,
-        ))
+        const helper = new ProjectTableViewHelper(mount, projects)
+        await helper.mount({ projectsOrFetch: { projects } })
+        await provide(helper)
       },
     })
 
@@ -44,15 +35,9 @@ baseTest.describe("ProjectTableView", () => {
 
     const test = baseTest.extend<{ table: ProjectTableViewHelper }>({
       table: async ({ mount }, provide) => {
-        await provide(new ProjectTableViewHelper(
-          await mount(
-            // DO NOT pass fetch mock as return values are not supported by Playwright CT
-            <ProjectsProvider projectsOrFetch={projects}>
-              <ProjectTableView />
-            </ProjectsProvider>
-          ),
-          projects,
-        ))
+        const helper = new ProjectTableViewHelper(mount, projects)
+        await helper.mount({ projectsOrFetch: { projects } })
+        await provide(helper)
       },
     })
 
@@ -64,6 +49,24 @@ baseTest.describe("ProjectTableView", () => {
 
   })
 
+  baseTest.describe('with error', () => {
+
+    const test = baseTest.extend<{ table: ProjectTableViewHelper }>({
+      table: async ({ mount }, provide) => {
+        const helper = new ProjectTableViewHelper(mount, [])
+        await helper.mount({ projectsOrFetch: { error: 'fetch failed' } })
+        await provide(helper)
+      },
+    })
+
+    commonProjectTableSuite(test)
+
+    test('error is shown when fetching projects fails', async ({ table }) => {
+      await expect(table.errorMessage).toBeVisible()
+      await expect(table.errorMessage).toHaveText(/fetch failed/i)
+    })
+
+  })
 })
 
 function commonProjectTableSuite<T extends TestType<ComponentFixtures & {

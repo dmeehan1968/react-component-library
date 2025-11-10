@@ -1,17 +1,17 @@
 import * as React from "react"
-import { useEffect } from "react"
 import { type Project, ProjectsContext, type ProjectsContextType } from "./projectsContext.tsx"
 
 export interface ProjectsProviderProps {
   children: React.ReactNode
   initialProjects?: Project[]
+  projectsOrFetch?: Project[] | typeof fetch
 }
 
 export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
   children,
-  initialProjects,
+  projectsOrFetch = fetch,
 }) => {
-  const [fetchedProjects, setFetchedProjects] = React.useState<Project[]>(initialProjects ?? [])
+  const [fetchedProjects, setFetchedProjects] = React.useState<Project[]>(Array.isArray(projectsOrFetch) ? projectsOrFetch : [])
   const [projects, setProjects] = React.useState<Project[]>(fetchedProjects)
   const [sort, setSort] = React.useState<{ column: 'name' | 'lastUpdated', order: 'asc' | 'desc' }>({
     column: 'name',
@@ -34,14 +34,19 @@ export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
     }
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     const loadProjects = async () => {
       try {
         setIsLoading(true)
         setError(undefined)
-        const res = await fetch('/api/projects')
-        if (res.ok) {
-          setFetchedProjects(await res.json())
+        if (Array.isArray(projectsOrFetch)) {
+          setFetchedProjects(projectsOrFetch)
+        } else {
+          const res = await projectsOrFetch('/api/projects')
+          console.log({ fetchImpl: projectsOrFetch, res })
+          if (res.ok) {
+            setFetchedProjects(await res.json())
+          }
         }
       } catch (err) {
         setError(err instanceof Error ? err : new Error(String(err)))
@@ -50,12 +55,10 @@ export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
       }
     }
 
-    if (!initialProjects) {
-      void loadProjects()
-    }
-  }, [initialProjects])
+    void loadProjects()
+  }, [projectsOrFetch])
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (sort.column === 'name') {
       setProjects([...fetchedProjects].sort((a, b) => {
         return sort.order === 'asc'
@@ -71,7 +74,7 @@ export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
     }
   }, [fetchedProjects, sort])
 
-  useEffect(() => {
+  React.useEffect(() => {
     setSortIndicator({
       name: sort.column === 'name' ? sort.order === 'asc' ? '↑' : '↓' : '',
       lastUpdated: sort.column === 'lastUpdated' ? sort.order === 'asc' ? '↑' : '↓' : '',

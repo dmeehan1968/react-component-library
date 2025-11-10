@@ -16,7 +16,8 @@ baseTest.describe("ProjectTableView", () => {
       table: async ({ mount }, provide) => {
         await provide(new ProjectTableViewHelper(
           await mount(
-            <ProjectsProvider initialProjects={projects}>
+            // DO NOT pass fetch mock as return values are not supported by Playwright CT
+            <ProjectsProvider projectsOrFetch={projects}>
               <ProjectTableView/>
             </ProjectsProvider>
           ),
@@ -45,7 +46,8 @@ baseTest.describe("ProjectTableView", () => {
       table: async ({ mount }, provide) => {
         await provide(new ProjectTableViewHelper(
           await mount(
-            <ProjectsProvider initialProjects={projects}>
+            // DO NOT pass fetch mock as return values are not supported by Playwright CT
+            <ProjectsProvider projectsOrFetch={projects}>
               <ProjectTableView />
             </ProjectsProvider>
           ),

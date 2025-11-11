@@ -6,12 +6,13 @@ export interface TableMessageProps {
   message: string
   testId: string
   className?: string
+  colSpan?: number
 }
 
-export const TableMessage: React.FC<TableMessageProps> = ({ message, testId, className }) => (
+export const TableMessage: React.FC<TableMessageProps> = ({ message, testId, className, colSpan = 3 }) => (
   <tr>
     <td
-      colSpan={3}
+      colSpan={colSpan}
       className={twMerge(clsx(`text-center align-middle`, className))}
       data-testid={testId}
     >

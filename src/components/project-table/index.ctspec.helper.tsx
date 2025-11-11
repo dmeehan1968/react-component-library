@@ -7,7 +7,7 @@ import {
   type SortableColumns,
   type SortOrder,
 } from "../../providers/projectsProvider.tsx"
-import { byLastUpdated, byName } from "../../providers/sortHelpers.tsx"
+import { projectSort } from "../../providers/sortHelpers.tsx"
 
 import {
   errorMessageId,
@@ -57,7 +57,7 @@ export class ProjectTableViewHelper {
   }
 
   projectNamesInOrder(by: SortableColumns, order: SortOrder) {
-    return (by === 'name' ? byName(this.fixtures, order) : byLastUpdated(this.fixtures, order)).map(p => p.name)
+    return projectSort(this.fixtures, by, order).map(p => p.name)
   }
 
   get nameColumn() {

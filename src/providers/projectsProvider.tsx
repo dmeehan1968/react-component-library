@@ -1,6 +1,6 @@
 import * as React from "react"
 import { type Project, ProjectsContext, type ProjectsContextType } from "./projectsContext.tsx"
-import { byLastUpdated, byName } from "./sortHelpers.tsx"
+import { projectSort } from "./sortHelpers.tsx"
 
 export type SortableColumns = 'name' | 'lastUpdated'
 export type SortOrder = 'asc' | 'desc'
@@ -67,11 +67,7 @@ export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
   }, [dataSource])
 
   React.useEffect(() => {
-    if (sort.column === 'name') {
-      setProjects(byName(fetchedProjects, sort.order))
-    } else if (sort.column === 'lastUpdated') {
-      setProjects(byLastUpdated(fetchedProjects, sort.order))
-    }
+    setProjects(projectSort(fetchedProjects, sort.column, sort.order))
   }, [fetchedProjects, sort])
 
   React.useEffect(() => {

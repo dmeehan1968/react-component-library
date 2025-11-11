@@ -96,7 +96,7 @@ export const IssuesTableView: React.FC = () => {
         </th>
         <th data-testid={ids.issueColumnId}>Issue</th>
         <th data-testid={ids.descriptionColumnId}>Description</th>
-        <th data-testid={ids.timestampColumnId}>Timestamp</th>
+        <th data-testid={ids.timestampColumnId} className="text-right">Timestamp</th>
         <th data-testid={ids.inputTokensColumnId} className="text-right">Input Tokens</th>
         <th data-testid={ids.outputTokensColumnId} className="text-right">Output Tokens</th>
         <th data-testid={ids.cacheTokensColumnId} className="text-right">Cache Tokens</th>
@@ -147,7 +147,7 @@ export const IssuesTableView: React.FC = () => {
             </a>
           </td>
           <td data-testid={ids.descriptionId}>{issue.description}</td>
-          <td data-testid={ids.timestampId}>{formatTimestamp(issue.timestamp)}</td>
+          <td data-testid={ids.timestampId} className="text-right">{formatTimestamp(issue.timestamp)}</td>
           <td data-testid={ids.inputTokensId} className="text-right">{formatTokens(issue.inputTokens)}</td>
           <td data-testid={ids.outputTokensId} className="text-right">{formatTokens(issue.outputTokens)}</td>
           <td data-testid={ids.cacheTokensId} className="text-right">{formatTokens(issue.cacheTokens)}</td>

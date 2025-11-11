@@ -189,6 +189,16 @@ baseTest.describe("IssuesTableView", () => {
       await expect(table.totalsFooter.time).toHaveClass(/\btext-right\b/)
     })
 
+    test('timestamp column is right-aligned', async ({ table }) => {
+      // Header
+      await expect(table.timestampColumn).toHaveClass(/\btext-right\b/)
+      // All data row cells
+      for (let i = 0 ; i < table.fixtures.length ; i++) {
+        const cells = table.cellsAt(i)
+        await expect(cells.timestamp).toHaveClass(/\btext-right\b/)
+      }
+    })
+
     test('totals header row appears between column headers and data rows', async ({ table }) => {
       const headerRows = table.root.locator('thead tr')
       // First row should be the column headers containing the select-column checkbox header
@@ -242,8 +252,8 @@ baseTest.describe("IssuesTableView", () => {
     })
 
     test('should not render totals header or footer when there is an error', async ({ table }) => {
-      await expect(table.root.getByTestId(ids.totalsHeaderRowId)).toBeVisible()
-      await expect(table.root.getByTestId(ids.totalsFooterRowId)).toBeVisible()
+      await expect(table.root.getByTestId(ids.totalsHeaderRowId)).toBeHidden()
+      await expect(table.root.getByTestId(ids.totalsFooterRowId)).toBeHidden()
     })
 
   })

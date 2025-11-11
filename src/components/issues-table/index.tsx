@@ -1,15 +1,9 @@
 import * as React from "react"
 import { useIssues } from "../../hooks/useIssues.tsx"
+import { useLocale } from "../../hooks/useLocale.tsx"
+import { useTableRowColumnCount } from "../../hooks/useTableRowColumnCount.tsx"
 import { TableMessage } from "../project-table/table-message"
 import * as ids from "./index.testids.ts"
-
-const useLocale = () => {
-  const [locale, setLocale] = React.useState<string>('en-US')
-  React.useEffect(() => {
-    setLocale(typeof navigator !== 'undefined' && navigator.language ? navigator.language : 'en-US')
-  }, [])
-  return locale
-}
 
 const useFormatters = () => {
   const locale = useLocale()
@@ -34,22 +28,12 @@ export const IssuesTableView: React.FC = () => {
   const { formatTokens, formatCost, formatHMS, formatTimestamp } = useFormatters()
 
   const [selected, setSelected] = React.useState<Set<string>>(new Set())
+  const { headerRowRef, columnCount } = useTableRowColumnCount()
   const headerCheckboxRef = React.useRef<HTMLInputElement>(null)
-  const headerRowRef = React.useRef<HTMLTableRowElement | null>(null)
-  const [columnCount, setColumnCount] = React.useState(1)
 
   const allIds = React.useMemo(() => issues.map(i => i.id), [issues])
   const allSelected = selected.size > 0 && selected.size === allIds.length
   const someSelected = selected.size > 0 && selected.size < allIds.length
-
-  React.useEffect(() => {
-    if (!headerRowRef.current) return
-
-    const cells = Array.from(headerRowRef.current.cells)
-    const count = cells.reduce((sum, cell) => sum + (cell.colSpan || 1), 0)
-
-    setColumnCount(count)
-  }, [])
 
   React.useEffect(() => {
     if (headerCheckboxRef.current) {

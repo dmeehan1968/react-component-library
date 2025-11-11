@@ -21,8 +21,26 @@ baseTest.describe("IssuesTableView", () => {
     commonIssuesTableSuite(test)
 
     test('should contain no data message when empty', async ({ table }) => {
-      await expect(table.noDataMessage).toHaveCount(1)
+      await expect(table.noDataMessage).toBeVisible()
       await expect(table.noDataMessage).toHaveText(/no issues found/i)
+    })
+
+    test('should not render totals header or footer when there are no issues', async ({ table }) => {
+      // Totals header cells should not exist
+      await expect(table.root.getByTestId(ids.totalsHeaderRowId)).toBeHidden()
+      await expect(table.root.getByTestId(ids.totalsHeaderInputId)).toBeHidden()
+      await expect(table.root.getByTestId(ids.totalsHeaderOutputId)).toBeHidden()
+      await expect(table.root.getByTestId(ids.totalsHeaderCacheId)).toBeHidden()
+      await expect(table.root.getByTestId(ids.totalsHeaderCostId)).toBeHidden()
+      await expect(table.root.getByTestId(ids.totalsHeaderTimeId)).toBeHidden()
+
+      // Totals footer cells should not exist
+      await expect(table.root.getByTestId(ids.totalsFooterRowId)).toBeHidden()
+      await expect(table.root.getByTestId(ids.totalsFooterInputId)).toBeHidden()
+      await expect(table.root.getByTestId(ids.totalsFooterOutputId)).toBeHidden()
+      await expect(table.root.getByTestId(ids.totalsFooterCacheId)).toBeHidden()
+      await expect(table.root.getByTestId(ids.totalsFooterCostId)).toBeHidden()
+      await expect(table.root.getByTestId(ids.totalsFooterTimeId)).toBeHidden()
     })
 
   })
@@ -147,12 +165,15 @@ baseTest.describe("IssuesTableView", () => {
       await expect(table.costColumn).toHaveClass(/\btext-right\b/)
       await expect(table.timeColumn).toHaveClass(/\btext-right\b/)
 
-      // First data row cells
-      await expect(table.firstRowNumeric.input).toHaveClass(/\btext-right\b/)
-      await expect(table.firstRowNumeric.output).toHaveClass(/\btext-right\b/)
-      await expect(table.firstRowNumeric.cache).toHaveClass(/\btext-right\b/)
-      await expect(table.firstRowNumeric.cost).toHaveClass(/\btext-right\b/)
-      await expect(table.firstRowNumeric.time).toHaveClass(/\btext-right\b/)
+      // Check all data row cells
+      for (let i = 0 ; i < table.fixtures.length ; i++) {
+        const cells = table.cellsAt(i)
+        await expect(cells.input).toHaveClass(/\btext-right\b/)
+        await expect(cells.output).toHaveClass(/\btext-right\b/)
+        await expect(cells.cache).toHaveClass(/\btext-right\b/)
+        await expect(cells.cost).toHaveClass(/\btext-right\b/)
+        await expect(cells.time).toHaveClass(/\btext-right\b/)
+      }
 
       // Totals header and footer cells
       await expect(table.totalsHeader.input).toHaveClass(/\btext-right\b/)
@@ -171,7 +192,7 @@ baseTest.describe("IssuesTableView", () => {
     test('totals header row appears between column headers and data rows', async ({ table }) => {
       const headerRows = table.root.locator('thead tr')
       // First row should be the column headers containing the select-column checkbox header
-      await expect(headerRows.nth(0).getByTestId(ids.selectColumnId)).toHaveCount(1)
+      await expect(headerRows.nth(0).getByTestId(ids.selectColumnId)).toBeVisible()
       // Second row should be the totals header row
       await expect(headerRows.nth(1)).toHaveAttribute('data-testid', ids.totalsHeaderRowId)
     })
@@ -220,6 +241,11 @@ baseTest.describe("IssuesTableView", () => {
       await expect(table.errorMessage).toHaveText(/fetch failed/i)
     })
 
+    test('should not render totals header or footer when there is an error', async ({ table }) => {
+      await expect(table.root.getByTestId(ids.totalsHeaderRowId)).toBeVisible()
+      await expect(table.root.getByTestId(ids.totalsFooterRowId)).toBeVisible()
+    })
+
   })
 })
 
@@ -229,15 +255,15 @@ function commonIssuesTableSuite<T extends TestType<ComponentFixtures & { table: 
   })
 
   test('should contain all required columns', async ({ table }) => {
-    await expect(table.selectColumn).toHaveCount(1)
-    await expect(table.issueColumn).toHaveCount(1)
-    await expect(table.descriptionColumn).toHaveCount(1)
-    await expect(table.timestampColumn).toHaveCount(1)
-    await expect(table.inputTokensColumn).toHaveCount(1)
-    await expect(table.outputTokensColumn).toHaveCount(1)
-    await expect(table.cacheTokensColumn).toHaveCount(1)
-    await expect(table.costColumn).toHaveCount(1)
-    await expect(table.timeColumn).toHaveCount(1)
-    await expect(table.statusColumn).toHaveCount(1)
+    await expect(table.selectColumn).toBeVisible()
+    await expect(table.issueColumn).toBeVisible()
+    await expect(table.descriptionColumn).toBeVisible()
+    await expect(table.timestampColumn).toBeVisible()
+    await expect(table.inputTokensColumn).toBeVisible()
+    await expect(table.outputTokensColumn).toBeVisible()
+    await expect(table.cacheTokensColumn).toBeVisible()
+    await expect(table.costColumn).toBeVisible()
+    await expect(table.timeColumn).toBeVisible()
+    await expect(table.statusColumn).toBeVisible()
   })
 }

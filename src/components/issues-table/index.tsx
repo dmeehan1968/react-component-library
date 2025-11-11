@@ -104,19 +104,21 @@ export const IssuesTableView: React.FC = () => {
         <th data-testid={ids.timeColumnId} className="text-right">Time</th>
         <th data-testid={ids.statusColumnId}>Status</th>
       </tr>
-      {/* Totals header row (no checkbox) should appear between headers and data rows */}
-      <tr className="bg-base-200 font-semibold" data-testid={ids.totalsHeaderRowId}>
-        {/* Blank cells spanning Select + Issue + Description + Timestamp */}
-        <th colSpan={4}></th>
-        {/* Totals aligned under token/cost/time columns */}
-        <th data-testid={ids.totalsHeaderInputId} className="text-right">{formatTokens(totals.input)}</th>
-        <th data-testid={ids.totalsHeaderOutputId} className="text-right">{formatTokens(totals.output)}</th>
-        <th data-testid={ids.totalsHeaderCacheId} className="text-right">{formatTokens(totals.cache)}</th>
-        <th data-testid={ids.totalsHeaderCostId} className="text-right">{formatCost(totals.cost)}</th>
-        <th data-testid={ids.totalsHeaderTimeId} className="text-right">{formatHMS(totals.time)}</th>
-        {/* Trailing blank for Status */}
-        <th></th>
-      </tr>
+      {/* Totals header row (no checkbox) appears only when there is at least one issue */}
+      {issues.length > 0 && (
+        <tr className="bg-base-200 font-semibold" data-testid={ids.totalsHeaderRowId}>
+          {/* Blank cells spanning Select + Issue + Description + Timestamp */}
+          <th colSpan={4}></th>
+          {/* Totals aligned under token/cost/time columns */}
+          <th data-testid={ids.totalsHeaderInputId} className="text-right">{formatTokens(totals.input)}</th>
+          <th data-testid={ids.totalsHeaderOutputId} className="text-right">{formatTokens(totals.output)}</th>
+          <th data-testid={ids.totalsHeaderCacheId} className="text-right">{formatTokens(totals.cache)}</th>
+          <th data-testid={ids.totalsHeaderCostId} className="text-right">{formatCost(totals.cost)}</th>
+          <th data-testid={ids.totalsHeaderTimeId} className="text-right">{formatHMS(totals.time)}</th>
+          {/* Trailing blank for Status */}
+          <th></th>
+        </tr>
+      )}
       </thead>
       <tbody>
       {isLoading && (
@@ -155,20 +157,23 @@ export const IssuesTableView: React.FC = () => {
         </tr>
       ))}
       </tbody>
-      <tfoot>
-      <tr className="bg-base-200 font-semibold" data-testid={ids.totalsFooterRowId}>
-        {/* Blank cells spanning Select + Issue + Description + Timestamp */}
-        <th colSpan={4}></th>
-        {/* Totals aligned under token/cost/time columns */}
-        <th data-testid={ids.totalsFooterInputId} className="text-right">{formatTokens(totals.input)}</th>
-        <th data-testid={ids.totalsFooterOutputId} className="text-right">{formatTokens(totals.output)}</th>
-        <th data-testid={ids.totalsFooterCacheId} className="text-right">{formatTokens(totals.cache)}</th>
-        <th data-testid={ids.totalsFooterCostId} className="text-right">{formatCost(totals.cost)}</th>
-        <th data-testid={ids.totalsFooterTimeId} className="text-right">{formatHMS(totals.time)}</th>
-        {/* Trailing blank for Status */}
-        <th></th>
-      </tr>
-      </tfoot>
+      {/* Totals footer row appears only when there is at least one issue */}
+      {issues.length > 0 && (
+        <tfoot>
+        <tr className="bg-base-200 font-semibold" data-testid={ids.totalsFooterRowId}>
+          {/* Blank cells spanning Select + Issue + Description + Timestamp */}
+          <th colSpan={4}></th>
+          {/* Totals aligned under token/cost/time columns */}
+          <th data-testid={ids.totalsFooterInputId} className="text-right">{formatTokens(totals.input)}</th>
+          <th data-testid={ids.totalsFooterOutputId} className="text-right">{formatTokens(totals.output)}</th>
+          <th data-testid={ids.totalsFooterCacheId} className="text-right">{formatTokens(totals.cache)}</th>
+          <th data-testid={ids.totalsFooterCostId} className="text-right">{formatCost(totals.cost)}</th>
+          <th data-testid={ids.totalsFooterTimeId} className="text-right">{formatHMS(totals.time)}</th>
+          {/* Trailing blank for Status */}
+          <th></th>
+        </tr>
+        </tfoot>
+      )}
     </table>
   )
 }

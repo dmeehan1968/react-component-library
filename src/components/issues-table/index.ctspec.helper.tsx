@@ -82,17 +82,6 @@ export class IssuesTableViewHelper {
     }
   }
 
-  // First data row numeric cells (for alignment checks)
-  get firstRowNumeric() {
-    return {
-      input: this.root.getByTestId(ids.inputTokensId).first(),
-      output: this.root.getByTestId(ids.outputTokensId).first(),
-      cache: this.root.getByTestId(ids.cacheTokensId).first(),
-      cost: this.root.getByTestId(ids.costId).first(),
-      time: this.root.getByTestId(ids.timeId).first(),
-    }
-  }
-
   // Messages
   get noDataMessage() { return this.root.getByTestId(ids.noDataMessageId) }
   get errorMessage() { return this.root.getByTestId(ids.errorMessageId) }

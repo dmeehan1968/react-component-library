@@ -14,9 +14,9 @@ export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
   children,
   dataSource = { fetch },
 }) => {
-  const [fetchedProjects, setFetchedProjects] = React.useState<Project[]>([])
-  const [projects, setProjects] = React.useState<Project[]>(fetchedProjects)
-  const [sort, setSort] = React.useState<{ column: 'name' | 'lastUpdated', order: 'asc' | 'desc' }>({
+  const [fetchedProjects, setFetchedProjects] = React.useState([] as Project[])
+  const [projects, setProjects] = React.useState(fetchedProjects)
+  const [sort, setSort] = React.useState<{ column: SortableColumns, order: SortOrder }>({
     column: 'name',
     order: 'asc',
   })

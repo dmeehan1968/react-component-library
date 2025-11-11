@@ -1,7 +1,12 @@
 import type { ComponentFixtures, MountResult } from "@playwright/experimental-ct-react"
 import type { Locator } from "@playwright/test"
 import type { Project } from "../../providers/projectsContext.tsx"
-import { ProjectsProvider, type ProjectsProviderProps } from "../../providers/projectsProvider.tsx"
+import {
+  ProjectsProvider,
+  type ProjectsProviderProps,
+  type SortableColumns,
+  type SortOrder,
+} from "../../providers/projectsProvider.tsx"
 
 import {
   errorMessageId,
@@ -15,8 +20,6 @@ import {
 } from "./index.testids.ts"
 import { ProjectTableView } from "./index.tsx"
 
-type sortableColumns = 'name' | 'lastUpdated'
-type sortOrder = 'asc' | 'desc'
 export const upArrow = '↑' as const
 export const downArrow = '↓' as const
 
@@ -52,7 +55,7 @@ export class ProjectTableViewHelper {
     return this.root.getByTestId(projectId).locator('td:first-child').allTextContents()
   }
 
-  projectNamesInOrder(by: sortableColumns, order: sortOrder) {
+  projectNamesInOrder(by: SortableColumns, order: SortOrder) {
     return [...this.fixtures].sort((a, b) => {
       if (by === 'name') {
         return order === 'asc'

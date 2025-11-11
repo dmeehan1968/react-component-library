@@ -1,6 +1,9 @@
 import * as React from "react"
 import { type Project, ProjectsContext, type ProjectsContextType } from "./projectsContext.tsx"
 
+export type SortableColumns = 'name' | 'lastUpdated'
+export type SortOrder = 'asc' | 'desc'
+
 export interface ProjectsProviderProps {
   children?: React.ReactNode
   dataSource?: { projects: Project[], error?: never, fetch?: never } | { error: string, projects?: never, fetch?: never } | { fetch: typeof fetch, projects?: never, error?: never }
@@ -38,7 +41,6 @@ export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
       try {
         setIsLoading(true)
         setError(undefined)
-        console.log(dataSource)
         if (dataSource.projects) {
           // add a small delay to simulate a network request
           setTimeout(() => setFetchedProjects(dataSource.projects!), 10)
@@ -65,17 +67,9 @@ export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
 
   React.useEffect(() => {
     if (sort.column === 'name') {
-      setProjects([...fetchedProjects].sort((a, b) => {
-        return sort.order === 'asc'
-          ? a.name.localeCompare(b.name)
-          : b.name.localeCompare(a.name)
-      }))
+      setProjects(byName(fetchedProjects, sort.order))
     } else if (sort.column === 'lastUpdated') {
-      setProjects([...fetchedProjects].sort((a, b) => {
-        return sort.order === 'asc'
-          ? a.lastUpdated.getTime() - b.lastUpdated.getTime()
-          : b.lastUpdated.getTime() - a.lastUpdated.getTime()
-      }))
+      setProjects(byLastUpdated(fetchedProjects, sort.order))
     }
   }, [fetchedProjects, sort])
 
@@ -101,3 +95,6 @@ export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
   )
 
 }
+
+const byName = (projects: Project[], order: SortOrder) => [...projects].sort((a, b) => a.name.localeCompare(b.name) * (order === 'asc' ? 1 : -1))
+const byLastUpdated = (projects: Project[], order: SortOrder) => [...projects].sort((a, b) => (a.lastUpdated.getTime() - b.lastUpdated.getTime()) * (order === 'asc' ? 1 : -1))

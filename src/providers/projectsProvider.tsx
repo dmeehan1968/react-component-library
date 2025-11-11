@@ -40,20 +40,13 @@ export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
         setError(undefined)
         console.log(dataSource)
         if (dataSource.projects) {
-          setFetchedProjects(await new Promise(resolve => {
-            setTimeout(() => {
-              resolve(dataSource.projects!)
-            }, 10)
-          }))
+          // add a small delay to simulate a network request
+          setTimeout(() => setFetchedProjects(dataSource.projects!), 10)
         } else if (dataSource.error) {
-          setError(await new Promise(resolve => {
-            setTimeout(() => {
-              resolve(new Error(dataSource.error))
-            }, 10)
-          }))
+          // add a small delay to simulate a network request
+          setTimeout(() => setError(new Error(dataSource.error)), 10)
         } else if (dataSource.fetch) {
           const res = await dataSource.fetch!('/api/projects')
-          console.log({ fetchImpl: dataSource, res })
           if (res.ok) {
             setFetchedProjects(await res.json())
           }

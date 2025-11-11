@@ -5,8 +5,8 @@ import {
   ProjectsProvider,
   type ProjectsProviderProps,
   type SortableColumns,
-  type SortOrder,
 } from "../../providers/projectsProvider.tsx"
+import type { SortOrder } from "../../hooks/useColumnSort.ts"
 import { projectSort } from "../../providers/sortHelpers.tsx"
 
 import {

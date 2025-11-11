@@ -1,9 +1,9 @@
 import * as React from "react"
 import { type Project, ProjectsContext, type ProjectsContextType } from "./projectsContext.tsx"
-import { projectSort } from "./sortHelpers.tsx"
+import { projectSort, type ProjectSortableColumns } from "./sortHelpers.tsx"
+import { useColumnSort } from "../hooks/useColumnSort.ts"
 
-export type SortableColumns = 'name' | 'lastUpdated'
-export type SortOrder = 'asc' | 'desc'
+export type SortableColumns = ProjectSortableColumns
 
 export interface ProjectsProviderProps {
   children?: React.ReactNode
@@ -15,27 +15,21 @@ export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
   dataSource = { fetch },
 }) => {
   const [fetchedProjects, setFetchedProjects] = React.useState([] as Project[])
-  const [projects, setProjects] = React.useState(fetchedProjects)
-  const [sort, setSort] = React.useState<{ column: SortableColumns, order: SortOrder }>({
-    column: 'name',
-    order: 'asc',
-  })
-  const [sortIndicator, setSortIndicator] = React.useState<{ name: string, lastUpdated: string }>({
-    name: '',
-    lastUpdated: '',
-  })
+  const columns = React.useMemo(() => ['name', 'lastUpdated'] as const satisfies readonly SortableColumns[], [])
+  const { sorted: projects, handleSort, indicator } = useColumnSort<Project, SortableColumns>(
+    fetchedProjects,
+    columns,
+    projectSort,
+    {
+      initial: { column: 'name', order: 'asc' },
+      // example configuration; can be overridden later if needed
+      indicators: { asc: '↑', desc: '↓', none: '' },
+    },
+  )
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [error, setError] = React.useState<Error | undefined>(undefined)
 
-  const handleSort = (column: 'name' | 'lastUpdated') => {
-    return () => {
-      if (sort.column === column) {
-        setSort({ column, order: sort.order === 'asc' ? 'desc' : 'asc' })
-      } else {
-        setSort({ column, order: 'asc' })
-      }
-    }
-  }
+  // sorting handled by useSort
 
   React.useEffect(() => {
     const loadProjects = async () => {
@@ -66,21 +60,14 @@ export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
     void loadProjects()
   }, [dataSource])
 
-  React.useEffect(() => {
-    setProjects(projectSort(fetchedProjects, sort.column, sort.order))
-  }, [fetchedProjects, sort])
+  // projects are derived via useSort
 
-  React.useEffect(() => {
-    setSortIndicator({
-      name: sort.column === 'name' ? sort.order === 'asc' ? '↑' : '↓' : '',
-      lastUpdated: sort.column === 'lastUpdated' ? sort.order === 'asc' ? '↑' : '↓' : '',
-    })
-  }, [sort])
+  // indicators provided by useSort
 
   const value: ProjectsContextType = {
     projects,
     handleSort,
-    indicator: sortIndicator,
+    indicator: { name: indicator.name, lastUpdated: indicator.lastUpdated },
     isLoading,
     error,
   }

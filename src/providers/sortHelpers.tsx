@@ -1,19 +1,21 @@
 import type { Project } from "./projectsContext.tsx"
-import type { SortableColumns, SortOrder } from "./projectsProvider.tsx"
+import type { SortOrder } from "../hooks/useColumnSort.ts"
 
-const byName = (projects: Project[], order: SortOrder) =>
+export type ProjectSortableColumns = 'name' | 'lastUpdated'
+
+const byName = (projects: readonly Project[], order: SortOrder) =>
   [...projects].sort((a, b) => a.name.localeCompare(b.name) * (order === 'asc' ? 1 : -1))
 
-const byLastUpdated = (projects: Project[], order: SortOrder) =>
+const byLastUpdated = (projects: readonly Project[], order: SortOrder) =>
   [...projects].sort((a, b) => (a.lastUpdated.getTime() - b.lastUpdated.getTime()) * (order === 'asc' ? 1 : -1))
 
-export const projectSort = (projects: Project[], by: SortableColumns, order: SortOrder) => {
+export const projectSort = (projects: readonly Project[], by: ProjectSortableColumns, order: SortOrder) => {
   switch (by) {
     case 'name':
       return byName(projects, order)
     case 'lastUpdated':
       return byLastUpdated(projects, order)
     default:
-      return projects
+      throw new Error(`invalid sort by: ${by}`)
   }
 }

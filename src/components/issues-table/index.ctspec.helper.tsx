@@ -3,45 +3,7 @@ import type { Locator } from "@playwright/test"
 import type { Issue } from "../../providers/issuesContext.tsx"
 import { IssuesProvider, type IssuesProviderProps } from "../../providers/issuesProvider.tsx"
 
-import {
-  cacheTokensColumnId,
-  costColumnId,
-  descriptionColumnId,
-  errorMessageId,
-  headerSelectCheckboxId,
-  inputTokensColumnId,
-  issueColumnId,
-  issueId,
-  issueRowId,
-  loadingMessageId,
-  noDataMessageId,
-  outputTokensColumnId,
-  descriptionId,
-  inputTokensId,
-  outputTokensId,
-  cacheTokensId,
-  costId,
-  timeId,
-  timestampId,
-  rowSelectCheckboxId,
-  selectColumnId,
-  statusColumnId,
-  statusId,
-  timeColumnId,
-  timestampColumnId,
-  totalsFooterCacheId,
-  totalsFooterCostId,
-  totalsFooterInputId,
-  totalsFooterOutputId,
-  totalsFooterRowId,
-  totalsFooterTimeId,
-  totalsHeaderCacheId,
-  totalsHeaderCostId,
-  totalsHeaderInputId,
-  totalsHeaderOutputId,
-  totalsHeaderRowId,
-  totalsHeaderTimeId,
-} from "./index.testids.ts"
+import * as ids from "./index.testids.ts"
 import { IssuesTableView } from "./index.tsx"
 
 export class IssuesTableViewHelper {
@@ -77,67 +39,63 @@ export class IssuesTableViewHelper {
   }
 
   // Column headers
-  get selectColumn() { return this.root.getByTestId(selectColumnId) }
-  get issueColumn() { return this.root.getByTestId(issueColumnId) }
-  get descriptionColumn() { return this.root.getByTestId(descriptionColumnId) }
-  get timestampColumn() { return this.root.getByTestId(timestampColumnId) }
-  get inputTokensColumn() { return this.root.getByTestId(inputTokensColumnId) }
-  get outputTokensColumn() { return this.root.getByTestId(outputTokensColumnId) }
-  get cacheTokensColumn() { return this.root.getByTestId(cacheTokensColumnId) }
-  get costColumn() { return this.root.getByTestId(costColumnId) }
-  get timeColumn() { return this.root.getByTestId(timeColumnId) }
-  get statusColumn() { return this.root.getByTestId(statusColumnId) }
+  get selectColumn() { return this.root.getByTestId(ids.selectColumnId) }
+  get issueColumn() { return this.root.getByTestId(ids.issueColumnId) }
+  get descriptionColumn() { return this.root.getByTestId(ids.descriptionColumnId) }
+  get timestampColumn() { return this.root.getByTestId(ids.timestampColumnId) }
+  get inputTokensColumn() { return this.root.getByTestId(ids.inputTokensColumnId) }
+  get outputTokensColumn() { return this.root.getByTestId(ids.outputTokensColumnId) }
+  get cacheTokensColumn() { return this.root.getByTestId(ids.cacheTokensColumnId) }
+  get costColumn() { return this.root.getByTestId(ids.costColumnId) }
+  get timeColumn() { return this.root.getByTestId(ids.timeColumnId) }
+  get statusColumn() { return this.root.getByTestId(ids.statusColumnId) }
 
   // Rows and cells
-  get issueRows() { return this.root.getByTestId(issueRowId) }
-  issueTitlesAsRendered() { return this.root.getByTestId(issueRowId).locator(`[data-testid="${issueId}"]`).allTextContents() }
-  issueLinksAsRendered() { return this.root.getByTestId(issueRowId).locator(`[data-testid="${issueId}"] a`) }
+  get issueRows() { return this.root.getByTestId(ids.issueRowId) }
+  issueLinksAsRendered() { return this.root.getByTestId(ids.issueRowId).locator(`[data-testid="${ids.issueId}"] a`) }
   async issueLinkHrefsAsRendered() {
     const links = this.issueLinksAsRendered()
     return links.evaluateAll(els => els.map(el => el.getAttribute('href') ?? ''))
   }
 
   // Selection
-  get headerCheckbox() { return this.root.getByTestId(headerSelectCheckboxId) }
-  rowCheckboxes() { return this.root.getByTestId(issueRowId).getByTestId(rowSelectCheckboxId) }
+  get headerCheckbox() { return this.root.getByTestId(ids.headerSelectCheckboxId) }
+  rowCheckboxes() { return this.root.getByTestId(ids.issueRowId).getByTestId(ids.rowSelectCheckboxId) }
 
   // Totals
-  get totalsHeaderRow() { return this.root.getByTestId(totalsHeaderRowId) }
-  get totalsFooterRow() { return this.root.getByTestId(totalsFooterRowId) }
   get totalsHeader() {
     return {
-      input: this.root.getByTestId(totalsHeaderInputId),
-      output: this.root.getByTestId(totalsHeaderOutputId),
-      cache: this.root.getByTestId(totalsHeaderCacheId),
-      cost: this.root.getByTestId(totalsHeaderCostId),
-      time: this.root.getByTestId(totalsHeaderTimeId),
+      input: this.root.getByTestId(ids.totalsHeaderInputId),
+      output: this.root.getByTestId(ids.totalsHeaderOutputId),
+      cache: this.root.getByTestId(ids.totalsHeaderCacheId),
+      cost: this.root.getByTestId(ids.totalsHeaderCostId),
+      time: this.root.getByTestId(ids.totalsHeaderTimeId),
     }
   }
   get totalsFooter() {
     return {
-      input: this.root.getByTestId(totalsFooterInputId),
-      output: this.root.getByTestId(totalsFooterOutputId),
-      cache: this.root.getByTestId(totalsFooterCacheId),
-      cost: this.root.getByTestId(totalsFooterCostId),
-      time: this.root.getByTestId(totalsFooterTimeId),
+      input: this.root.getByTestId(ids.totalsFooterInputId),
+      output: this.root.getByTestId(ids.totalsFooterOutputId),
+      cache: this.root.getByTestId(ids.totalsFooterCacheId),
+      cost: this.root.getByTestId(ids.totalsFooterCostId),
+      time: this.root.getByTestId(ids.totalsFooterTimeId),
     }
   }
 
   // First data row numeric cells (for alignment checks)
   get firstRowNumeric() {
     return {
-      input: this.root.getByTestId(inputTokensId).first(),
-      output: this.root.getByTestId(outputTokensId).first(),
-      cache: this.root.getByTestId(cacheTokensId).first(),
-      cost: this.root.getByTestId(costId).first(),
-      time: this.root.getByTestId(timeId).first(),
+      input: this.root.getByTestId(ids.inputTokensId).first(),
+      output: this.root.getByTestId(ids.outputTokensId).first(),
+      cache: this.root.getByTestId(ids.cacheTokensId).first(),
+      cost: this.root.getByTestId(ids.costId).first(),
+      time: this.root.getByTestId(ids.timeId).first(),
     }
   }
 
   // Messages
-  get noDataMessage() { return this.root.getByTestId(noDataMessageId) }
-  get loadingMessage() { return this.root.getByTestId(loadingMessageId) }
-  get errorMessage() { return this.root.getByTestId(errorMessageId) }
+  get noDataMessage() { return this.root.getByTestId(ids.noDataMessageId) }
+  get errorMessage() { return this.root.getByTestId(ids.errorMessageId) }
 
   // Utilities
   fixturesInTimestampDesc() {
@@ -145,26 +103,18 @@ export class IssuesTableViewHelper {
   }
 
   // Row-level cell accessors by index (rendered order)
-  row(i: number) {
-    const row = this.issueRows.nth(i)
-    return {
-      link: row.getByTestId(issueId).locator('a'),
-      issue: row.getByTestId(issueId),
-      description: row.getByTestId(descriptionId),
-      timestamp: row.getByTestId(timestampId)
-    }
-  }
+  // Removed unused row-level accessor in favor of `cellsAt()`
 
   // Individual cell collections (so we can nth() them by row index)
-  private get _issueCells() { return this.root.getByTestId(issueId) }
-  private get _descriptionCells() { return this.root.getByTestId(descriptionId) }
-  private get _timestampCells() { return this.root.getByTestId(timestampId) }
-  private get _inputCells() { return this.root.getByTestId(inputTokensId) }
-  private get _outputCells() { return this.root.getByTestId(outputTokensId) }
-  private get _cacheCells() { return this.root.getByTestId(cacheTokensId) }
-  private get _costCells() { return this.root.getByTestId(costId) }
-  private get _timeCells() { return this.root.getByTestId(timeId) }
-  private get _statusCells() { return this.root.getByTestId(statusId) }
+  private get _issueCells() { return this.root.getByTestId(ids.issueId) }
+  private get _descriptionCells() { return this.root.getByTestId(ids.descriptionId) }
+  private get _timestampCells() { return this.root.getByTestId(ids.timestampId) }
+  private get _inputCells() { return this.root.getByTestId(ids.inputTokensId) }
+  private get _outputCells() { return this.root.getByTestId(ids.outputTokensId) }
+  private get _cacheCells() { return this.root.getByTestId(ids.cacheTokensId) }
+  private get _costCells() { return this.root.getByTestId(ids.costId) }
+  private get _timeCells() { return this.root.getByTestId(ids.timeId) }
+  private get _statusCells() { return this.root.getByTestId(ids.statusId) }
 
   cellsAt(index: number) {
     return {

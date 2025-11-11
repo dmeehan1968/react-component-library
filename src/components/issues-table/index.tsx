@@ -1,45 +1,7 @@
 import * as React from "react"
 import { useIssues } from "../../hooks/useIssues.tsx"
 import { TableMessage } from "../project-table/table-message"
-import {
-  cacheTokensColumnId,
-  cacheTokensId,
-  costColumnId,
-  costId,
-  descriptionColumnId,
-  descriptionId,
-  errorMessageId,
-  headerSelectCheckboxId,
-  inputTokensColumnId,
-  inputTokensId,
-  issueColumnId,
-  issueId,
-  issueRowId,
-  loadingMessageId,
-  noDataMessageId,
-  outputTokensColumnId,
-  outputTokensId,
-  rowSelectCheckboxId,
-  selectColumnId,
-  statusColumnId,
-  statusId,
-  timeColumnId,
-  timeId,
-  timestampColumnId,
-  timestampId,
-  totalsFooterCacheId,
-  totalsFooterCostId,
-  totalsFooterInputId,
-  totalsFooterOutputId,
-  totalsFooterRowId,
-  totalsFooterTimeId,
-  totalsHeaderCacheId,
-  totalsHeaderCostId,
-  totalsHeaderInputId,
-  totalsHeaderOutputId,
-  totalsHeaderRowId,
-  totalsHeaderTimeId,
-} from "./index.testids.ts"
+import * as ids from "./index.testids.ts"
 
 const useLocale = () => {
   const [locale, setLocale] = React.useState<string>('en-US')
@@ -122,87 +84,87 @@ export const IssuesTableView: React.FC = () => {
       <thead>
       {/* Column labels row with header checkbox */}
       <tr>
-        <th data-testid={selectColumnId}>
+        <th data-testid={ids.selectColumnId}>
           <input
             type="checkbox"
             ref={headerCheckboxRef}
             checked={allSelected}
             onChange={toggleAll}
-            data-testid={headerSelectCheckboxId}
+            data-testid={ids.headerSelectCheckboxId}
             className="checkbox"
           />
         </th>
-        <th data-testid={issueColumnId}>Issue</th>
-        <th data-testid={descriptionColumnId}>Description</th>
-        <th data-testid={timestampColumnId}>Timestamp</th>
-        <th data-testid={inputTokensColumnId} className="text-right">Input Tokens</th>
-        <th data-testid={outputTokensColumnId} className="text-right">Output Tokens</th>
-        <th data-testid={cacheTokensColumnId} className="text-right">Cache Tokens</th>
-        <th data-testid={costColumnId} className="text-right">Cost</th>
-        <th data-testid={timeColumnId} className="text-right">Time</th>
-        <th data-testid={statusColumnId}>Status</th>
+        <th data-testid={ids.issueColumnId}>Issue</th>
+        <th data-testid={ids.descriptionColumnId}>Description</th>
+        <th data-testid={ids.timestampColumnId}>Timestamp</th>
+        <th data-testid={ids.inputTokensColumnId} className="text-right">Input Tokens</th>
+        <th data-testid={ids.outputTokensColumnId} className="text-right">Output Tokens</th>
+        <th data-testid={ids.cacheTokensColumnId} className="text-right">Cache Tokens</th>
+        <th data-testid={ids.costColumnId} className="text-right">Cost</th>
+        <th data-testid={ids.timeColumnId} className="text-right">Time</th>
+        <th data-testid={ids.statusColumnId}>Status</th>
       </tr>
       {/* Totals header row (no checkbox) should appear between headers and data rows */}
-      <tr className="bg-base-200 font-semibold" data-testid={totalsHeaderRowId}>
+      <tr className="bg-base-200 font-semibold" data-testid={ids.totalsHeaderRowId}>
         {/* Blank cells spanning Select + Issue + Description + Timestamp */}
         <th colSpan={4}></th>
         {/* Totals aligned under token/cost/time columns */}
-        <th data-testid={totalsHeaderInputId} className="text-right">{formatTokens(totals.input)}</th>
-        <th data-testid={totalsHeaderOutputId} className="text-right">{formatTokens(totals.output)}</th>
-        <th data-testid={totalsHeaderCacheId} className="text-right">{formatTokens(totals.cache)}</th>
-        <th data-testid={totalsHeaderCostId} className="text-right">{formatCost(totals.cost)}</th>
-        <th data-testid={totalsHeaderTimeId} className="text-right">{formatHMS(totals.time)}</th>
+        <th data-testid={ids.totalsHeaderInputId} className="text-right">{formatTokens(totals.input)}</th>
+        <th data-testid={ids.totalsHeaderOutputId} className="text-right">{formatTokens(totals.output)}</th>
+        <th data-testid={ids.totalsHeaderCacheId} className="text-right">{formatTokens(totals.cache)}</th>
+        <th data-testid={ids.totalsHeaderCostId} className="text-right">{formatCost(totals.cost)}</th>
+        <th data-testid={ids.totalsHeaderTimeId} className="text-right">{formatHMS(totals.time)}</th>
         {/* Trailing blank for Status */}
         <th></th>
       </tr>
       </thead>
       <tbody>
       {isLoading && (
-        <TableMessage message="Loading..." testId={loadingMessageId} colSpan={colCount} />
+        <TableMessage message="Loading..." testId={ids.loadingMessageId} colSpan={colCount} />
       )}
       {error && (
-        <TableMessage message={`Error: ${error.message}`} testId={errorMessageId} className="text-error" colSpan={colCount} />
+        <TableMessage message={`Error: ${error.message}`} testId={ids.errorMessageId} className="text-error" colSpan={colCount} />
       )}
       {!isLoading && !error && issues.length === 0 && (
-        <TableMessage message="No issues found" testId={noDataMessageId} colSpan={colCount} />
+        <TableMessage message="No issues found" testId={ids.noDataMessageId} colSpan={colCount} />
       )}
       {!isLoading && !error && issues.map((issue) => (
-        <tr key={issue.id} data-testid={issueRowId}>
+        <tr key={issue.id} data-testid={ids.issueRowId}>
           <td>
             <input
               type="checkbox"
               className="checkbox"
               checked={selected.has(issue.id)}
               onChange={toggleOne(issue.id)}
-              data-testid={rowSelectCheckboxId}
+              data-testid={ids.rowSelectCheckboxId}
             />
           </td>
-          <td data-testid={issueId}>
+          <td data-testid={ids.issueId}>
             <a href={issue.url} rel="noopener noreferrer" target="_blank" className="link link-primary">
               {issue.title}
             </a>
           </td>
-          <td data-testid={descriptionId}>{issue.description}</td>
-          <td data-testid={timestampId}>{formatTimestamp(issue.timestamp)}</td>
-          <td data-testid={inputTokensId} className="text-right">{formatTokens(issue.inputTokens)}</td>
-          <td data-testid={outputTokensId} className="text-right">{formatTokens(issue.outputTokens)}</td>
-          <td data-testid={cacheTokensId} className="text-right">{formatTokens(issue.cacheTokens)}</td>
-          <td data-testid={costId} className="text-right">{formatCost(issue.cost)}</td>
-          <td data-testid={timeId} className="text-right">{formatHMS(issue.time)}</td>
-          <td data-testid={statusId}>{issue.status}</td>
+          <td data-testid={ids.descriptionId}>{issue.description}</td>
+          <td data-testid={ids.timestampId}>{formatTimestamp(issue.timestamp)}</td>
+          <td data-testid={ids.inputTokensId} className="text-right">{formatTokens(issue.inputTokens)}</td>
+          <td data-testid={ids.outputTokensId} className="text-right">{formatTokens(issue.outputTokens)}</td>
+          <td data-testid={ids.cacheTokensId} className="text-right">{formatTokens(issue.cacheTokens)}</td>
+          <td data-testid={ids.costId} className="text-right">{formatCost(issue.cost)}</td>
+          <td data-testid={ids.timeId} className="text-right">{formatHMS(issue.time)}</td>
+          <td data-testid={ids.statusId}>{issue.status}</td>
         </tr>
       ))}
       </tbody>
       <tfoot>
-      <tr className="bg-base-200 font-semibold" data-testid={totalsFooterRowId}>
+      <tr className="bg-base-200 font-semibold" data-testid={ids.totalsFooterRowId}>
         {/* Blank cells spanning Select + Issue + Description + Timestamp */}
         <th colSpan={4}></th>
         {/* Totals aligned under token/cost/time columns */}
-        <th data-testid={totalsFooterInputId} className="text-right">{formatTokens(totals.input)}</th>
-        <th data-testid={totalsFooterOutputId} className="text-right">{formatTokens(totals.output)}</th>
-        <th data-testid={totalsFooterCacheId} className="text-right">{formatTokens(totals.cache)}</th>
-        <th data-testid={totalsFooterCostId} className="text-right">{formatCost(totals.cost)}</th>
-        <th data-testid={totalsFooterTimeId} className="text-right">{formatHMS(totals.time)}</th>
+        <th data-testid={ids.totalsFooterInputId} className="text-right">{formatTokens(totals.input)}</th>
+        <th data-testid={ids.totalsFooterOutputId} className="text-right">{formatTokens(totals.output)}</th>
+        <th data-testid={ids.totalsFooterCacheId} className="text-right">{formatTokens(totals.cache)}</th>
+        <th data-testid={ids.totalsFooterCostId} className="text-right">{formatCost(totals.cost)}</th>
+        <th data-testid={ids.totalsFooterTimeId} className="text-right">{formatHMS(totals.time)}</th>
         {/* Trailing blank for Status */}
         <th></th>
       </tr>

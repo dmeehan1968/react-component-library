@@ -3,7 +3,7 @@ import { type ComponentFixtures, expect, test as baseTest } from "@playwright/ex
 import type { Issue } from "../../providers/issuesContext.tsx"
 
 import { IssuesTableViewHelper } from "./index.ctspec.helper.tsx"
-import { selectColumnId, totalsHeaderRowId } from "./index.testids.ts"
+import * as ids from "./index.testids.ts"
 
 baseTest.describe("IssuesTableView", () => {
 
@@ -171,9 +171,9 @@ baseTest.describe("IssuesTableView", () => {
     test('totals header row appears between column headers and data rows', async ({ table }) => {
       const headerRows = table.root.locator('thead tr')
       // First row should be the column headers containing the select-column checkbox header
-      await expect(headerRows.nth(0).getByTestId(selectColumnId)).toHaveCount(1)
+      await expect(headerRows.nth(0).getByTestId(ids.selectColumnId)).toHaveCount(1)
       // Second row should be the totals header row
-      await expect(headerRows.nth(1)).toHaveAttribute('data-testid', totalsHeaderRowId)
+      await expect(headerRows.nth(1)).toHaveAttribute('data-testid', ids.totalsHeaderRowId)
     })
 
     test('header checkbox selects all and toggles indeterminate', async ({ table }) => {

@@ -60,7 +60,7 @@ export class ProjectTableViewHelper {
     return this.root.getByTestId(projectId).locator('td:first-child a')
   }
 
-  projectNamesInOrder(by: SortableColumns, order: SortOrder) {
+  fixtureNamesInOrder(by: SortableColumns, order: SortOrder) {
     return projectSort(this.fixtures, by, order).map(p => p.name)
   }
 

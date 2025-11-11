@@ -52,7 +52,7 @@ baseTest.describe("ProjectTableView", () => {
       await expect(links).toHaveCount(table.fixtures.length)
 
       // default sort is by name asc
-      const expectedNames = table.projectNamesInOrder('name', 'asc')
+      const expectedNames = table.fixtureNamesInOrder('name', 'asc')
       const expectedUrls = table.projectUrlsInOrder('name', 'asc')
 
       await expect(links).toHaveText(expectedNames)
@@ -102,29 +102,29 @@ function commonProjectTableSuite<T extends TestType<ComponentFixtures & {
 
   test('name column header should be sortable', async ({ table }) => {
 
-    await expect.poll(() => table.projectNamesAsRendered()).toEqual(table.projectNamesInOrder('name', 'asc'))
+    await expect.poll(() => table.projectNamesAsRendered()).toEqual(table.fixtureNamesInOrder('name', 'asc'))
     await expect.poll(() => table.sortIndicators).toEqual({ name: upArrow, lastUpdated: undefined })
 
     await table.nameColumn.click()
 
-    await expect.poll(() => table.projectNamesAsRendered()).toEqual(table.projectNamesInOrder('name', 'desc'))
+    await expect.poll(() => table.projectNamesAsRendered()).toEqual(table.fixtureNamesInOrder('name', 'desc'))
     await expect.poll(() => table.sortIndicators).toEqual({ name: downArrow, lastUpdated: undefined })
 
   })
 
   test('lastUpdated column header should be sortable', async ({ table }) => {
 
-    await expect.poll(() => table.projectNamesAsRendered()).toEqual(table.projectNamesInOrder('name', 'asc'))
+    await expect.poll(() => table.projectNamesAsRendered()).toEqual(table.fixtureNamesInOrder('name', 'asc'))
     await expect.poll(() => table.sortIndicators).toEqual({ name: upArrow, lastUpdated: undefined })
 
     await table.lastUpdatedColumn.click()
 
-    await expect.poll(() => table.projectNamesAsRendered()).toEqual(table.projectNamesInOrder('lastUpdated', 'asc'))
+    await expect.poll(() => table.projectNamesAsRendered()).toEqual(table.fixtureNamesInOrder('lastUpdated', 'asc'))
     await expect.poll(() => table.sortIndicators).toEqual({ name: undefined, lastUpdated: upArrow })
 
     await table.lastUpdatedColumn.click()
 
-    await expect.poll(() => table.projectNamesAsRendered()).toEqual(table.projectNamesInOrder('lastUpdated', 'desc'))
+    await expect.poll(() => table.projectNamesAsRendered()).toEqual(table.fixtureNamesInOrder('lastUpdated', 'desc'))
     await expect.poll(() => table.sortIndicators).toEqual({ name: undefined, lastUpdated: downArrow })
 
   })

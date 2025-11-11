@@ -56,8 +56,21 @@ export class ProjectTableViewHelper {
     return this.root.getByTestId(projectId).locator('td:first-child').allTextContents()
   }
 
+  projectLinksAsRendered() {
+    return this.root.getByTestId(projectId).locator('td:first-child a')
+  }
+
   projectNamesInOrder(by: SortableColumns, order: SortOrder) {
     return projectSort(this.fixtures, by, order).map(p => p.name)
+  }
+
+  projectUrlsInOrder(by: SortableColumns, order: SortOrder) {
+    return projectSort(this.fixtures, by, order).map(p => p.url)
+  }
+
+  async projectLinkHrefsAsRendered() {
+    const links = this.projectLinksAsRendered()
+    return links.evaluateAll(els => els.map(el => el.getAttribute('href') ?? ''))
   }
 
   get nameColumn() {

@@ -28,9 +28,9 @@ baseTest.describe("ProjectTableView", () => {
 
   baseTest.describe("with data", () => {
     const projects: Project[] = [
-      { name: 'Project 1', lastUpdated: new Date('2025/01/02 12:00:00'), issueCount: 10 },
-      { name: 'Project 2', lastUpdated: new Date('2025/01/01 12:00:00'), issueCount: 5 },
-      { name: 'Project 3', lastUpdated: new Date('2025/01/03 12:00:00'), issueCount: 0 },
+      { name: 'Project 1', url: '/p1', lastUpdated: new Date('2025/01/02 12:00:00'), issueCount: 10 },
+      { name: 'Project 2', url: '/p2', lastUpdated: new Date('2025/01/01 12:00:00'), issueCount: 5 },
+      { name: 'Project 3', url: '/p3', lastUpdated: new Date('2025/01/03 12:00:00'), issueCount: 0 },
     ]
 
     const test = baseTest.extend<{ table: ProjectTableViewHelper }>({
@@ -45,6 +45,18 @@ baseTest.describe("ProjectTableView", () => {
 
     test('should contain rows for each project', async ({ table }) => {
       await expect(table.projectRows).toHaveCount(table.fixtures.length)
+    })
+
+    test('should render project names as links with correct href', async ({ table }) => {
+      const links = table.projectLinksAsRendered()
+      await expect(links).toHaveCount(table.fixtures.length)
+
+      // default sort is by name asc
+      const expectedNames = table.projectNamesInOrder('name', 'asc')
+      const expectedUrls = table.projectUrlsInOrder('name', 'asc')
+
+      await expect(links).toHaveText(expectedNames)
+      await expect.poll(() => table.projectLinkHrefsAsRendered()).toEqual(expectedUrls)
     })
 
   })

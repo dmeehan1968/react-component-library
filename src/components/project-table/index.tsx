@@ -65,7 +65,16 @@ export const ProjectTableView: React.FC = () => {
       )}
       {!isLoading && !error && projects.map((project) => (
         <tr key={project.name} data-testid={projectId}>
-          <td data-testid={nameId}>{project.name}</td>
+          <td data-testid={nameId}>
+            <a
+              href={project.url}
+              rel="noopener noreferrer"
+              target="_blank"
+              className="link link-primary"
+            >
+              {project.name}
+            </a>
+          </td>
           <td data-testid={lastUpdatedId}>{project.lastUpdated.toLocaleString()}</td>
           <td data-testid={issueCountId}>{project.issueCount}</td>
         </tr>

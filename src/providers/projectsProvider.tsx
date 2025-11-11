@@ -1,5 +1,6 @@
 import * as React from "react"
 import { type Project, ProjectsContext, type ProjectsContextType } from "./projectsContext.tsx"
+import { byLastUpdated, byName } from "./sortHelpers.tsx"
 
 export type SortableColumns = 'name' | 'lastUpdated'
 export type SortOrder = 'asc' | 'desc'
@@ -96,5 +97,3 @@ export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
 
 }
 
-const byName = (projects: Project[], order: SortOrder) => [...projects].sort((a, b) => a.name.localeCompare(b.name) * (order === 'asc' ? 1 : -1))
-const byLastUpdated = (projects: Project[], order: SortOrder) => [...projects].sort((a, b) => (a.lastUpdated.getTime() - b.lastUpdated.getTime()) * (order === 'asc' ? 1 : -1))

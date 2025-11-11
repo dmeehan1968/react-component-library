@@ -35,10 +35,21 @@ export const IssuesTableView: React.FC = () => {
 
   const [selected, setSelected] = React.useState<Set<string>>(new Set())
   const headerCheckboxRef = React.useRef<HTMLInputElement>(null)
+  const headerRowRef = React.useRef<HTMLTableRowElement | null>(null)
+  const [columnCount, setColumnCount] = React.useState(1)
 
   const allIds = React.useMemo(() => issues.map(i => i.id), [issues])
   const allSelected = selected.size > 0 && selected.size === allIds.length
   const someSelected = selected.size > 0 && selected.size < allIds.length
+
+  React.useEffect(() => {
+    if (!headerRowRef.current) return
+
+    const cells = Array.from(headerRowRef.current.cells)
+    const count = cells.reduce((sum, cell) => sum + (cell.colSpan || 1), 0)
+
+    setColumnCount(count)
+  }, [])
 
   React.useEffect(() => {
     if (headerCheckboxRef.current) {
@@ -77,13 +88,11 @@ export const IssuesTableView: React.FC = () => {
     }, { input: 0, output: 0, cache: 0, cost: 0, time: 0 })
   }, [issues])
 
-  const colCount = 10
-
   return (
     <table className="table table-zebra h-full">
       <thead>
       {/* Column labels row with header checkbox */}
-      <tr>
+      <tr ref={headerRowRef}>
         <th data-testid={ids.selectColumnId}>
           <input
             type="checkbox"
@@ -108,7 +117,8 @@ export const IssuesTableView: React.FC = () => {
       {issues.length > 0 && (
         <tr className="bg-base-200 font-semibold" data-testid={ids.totalsHeaderRowId}>
           {/* Blank cells spanning Select + Issue + Description + Timestamp */}
-          <th colSpan={4}></th>
+          <th></th>
+          <th colSpan={3}>Project Summary</th>
           {/* Totals aligned under token/cost/time columns */}
           <th data-testid={ids.totalsHeaderInputId} className="text-right">{formatTokens(totals.input)}</th>
           <th data-testid={ids.totalsHeaderOutputId} className="text-right">{formatTokens(totals.output)}</th>
@@ -122,13 +132,13 @@ export const IssuesTableView: React.FC = () => {
       </thead>
       <tbody>
       {isLoading && (
-        <TableMessage message="Loading..." testId={ids.loadingMessageId} colSpan={colCount} />
+        <TableMessage message="Loading..." testId={ids.loadingMessageId} colSpan={columnCount} />
       )}
       {error && (
-        <TableMessage message={`Error: ${error.message}`} testId={ids.errorMessageId} className="text-error" colSpan={colCount} />
+        <TableMessage message={`Error: ${error.message}`} testId={ids.errorMessageId} className="text-error" colSpan={columnCount} />
       )}
       {!isLoading && !error && issues.length === 0 && (
-        <TableMessage message="No issues found" testId={ids.noDataMessageId} colSpan={colCount} />
+        <TableMessage message="No issues found" testId={ids.noDataMessageId} colSpan={columnCount} />
       )}
       {!isLoading && !error && issues.map((issue) => (
         <tr key={issue.id} data-testid={ids.issueRowId}>
@@ -162,7 +172,8 @@ export const IssuesTableView: React.FC = () => {
         <tfoot>
         <tr className="bg-base-200 font-semibold" data-testid={ids.totalsFooterRowId}>
           {/* Blank cells spanning Select + Issue + Description + Timestamp */}
-          <th colSpan={4}></th>
+          <th></th>
+          <th colSpan={3}>Project Summary</th>
           {/* Totals aligned under token/cost/time columns */}
           <th data-testid={ids.totalsFooterInputId} className="text-right">{formatTokens(totals.input)}</th>
           <th data-testid={ids.totalsFooterOutputId} className="text-right">{formatTokens(totals.output)}</th>

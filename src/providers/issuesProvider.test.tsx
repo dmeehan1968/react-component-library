@@ -1,37 +1,9 @@
-import { describe, it, expect, mock } from "bun:test"
+import { describe, it, expect } from "bun:test"
 import { screen, waitFor, render } from "@testing-library/react"
-import type { FetchImpl } from "./projectsProvider.tsx"
 import { IssuesProvider } from "./issuesProvider.tsx"
 import { IssuesProviderHelper } from "./issuesProvider.test.helper.tsx"
 import { useIssues } from "../hooks/useIssues.tsx"
-
-function deferred<T>() {
-  let resolve!: (v: T) => void
-  let reject!: (e: unknown) => void
-  const promise = new Promise<T>((res, rej) => {
-    resolve = res
-    reject = rej
-  })
-  return { promise, resolve, reject }
-}
-
-function okResponse(data: unknown) {
-  return {
-    ok: true,
-    json: async () => data,
-  } as Response
-}
-
-function notOkResponse() {
-  return {
-    ok: false,
-    json: async () => ({}),
-  } as Response
-}
-
-function createFetchMock(impl: FetchImpl) {
-  return mock<FetchImpl>(impl)
-}
+import { deferred, okResponse, notOkResponse, createFetchMock } from "./testShared.ts"
 
 function makeIssue(overrides: Partial<Record<string, unknown>> = {}) {
   return {

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react"
+import { render, screen, within } from "@testing-library/react"
 import { type IssuesProviderProps, IssuesProvider } from "./issuesProvider.tsx"
 import { useIssues } from "../hooks/useIssues.tsx"
 
@@ -18,15 +18,21 @@ function IssuesStateProbe() {
 }
 
 export class IssuesProviderHelper {
+  private static lastRender: ReturnType<typeof render> | null = null
+
   static renderWithProvider(fetchImpl: NonNullable<IssuesProviderProps["fetchImpl"]>, projectId = "proj-1") {
-    return render(
+    this.lastRender = render(
       <IssuesProvider fetchImpl={fetchImpl} projectId={projectId}>
         <IssuesStateProbe />
       </IssuesProvider>
     )
+    return this.lastRender
   }
 
   static get state() {
+    if (this.lastRender) {
+      return within(this.lastRender.container).getByTestId("state")
+    }
     return screen.getByTestId("state")
   }
 }

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react"
+import { render, screen, within } from "@testing-library/react"
 import { type FetchImpl, ProjectsProvider } from "./projectsProvider.tsx"
 import { useProjects } from "../hooks/useProjects.tsx"
 
@@ -18,15 +18,23 @@ function ProjectsStateProbe() {
 }
 
 export class ProjectsProviderHelper {
+  private static lastRender: ReturnType<typeof render> | null = null
+
   static renderWithProvider(fetchImpl: FetchImpl) {
-    return render(
+    this.lastRender = render(
       <ProjectsProvider fetchImpl={fetchImpl}>
         <ProjectsStateProbe />
       </ProjectsProvider>
     )
+    return this.lastRender
   }
 
   static get state() {
+    // Prefer container-scoped query to avoid collisions with prior renders
+    if (this.lastRender) {
+      return within(this.lastRender.container).getByTestId("state")
+    }
+    // Fallback to global in case tests render outside helper
     return screen.getByTestId("state")
   }
 }

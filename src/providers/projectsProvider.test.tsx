@@ -1,38 +1,16 @@
-import { describe, it, expect, mock } from "bun:test"
-import { screen, waitFor, render } from "@testing-library/react"
+import { describe, it, expect, afterEach } from "bun:test"
+import { screen, waitFor, render, cleanup } from "@testing-library/react"
 import { type FetchImpl, ProjectsProvider } from "./projectsProvider.tsx"
 import { ProjectsProviderHelper } from "./projectsProvider.test.helper.tsx"
 import { useProjects } from "../hooks/useProjects.tsx"
-
-function deferred<T>() {
-  let resolve!: (v: T) => void
-  let reject!: (e: unknown) => void
-  const promise = new Promise<T>((res, rej) => {
-    resolve = res
-    reject = rej
-  })
-  return { promise, resolve, reject }
-}
-
-function okResponse(data: unknown) {
-  return {
-    ok: true,
-    json: async () => data,
-  } as Response
-}
-
-function notOkResponse() {
-  return {
-    ok: false,
-    json: async () => ({}),
-  } as Response
-}
-
-function createFetchMock(impl: FetchImpl) {
-  return mock<FetchImpl>(impl)
-}
+import { deferred, okResponse, notOkResponse, createFetchMock } from "./testShared.ts"
 
 describe("ProjectsProvider", () => {
+  // Ensure we cleanup between tests since Bun doesn't auto-clean by default
+  afterEach(() => {
+    cleanup()
+  })
+
   it("shows loading while fetching and then sets projects on success", async () => {
     const d = deferred<Response>()
 

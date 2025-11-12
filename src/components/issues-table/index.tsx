@@ -5,7 +5,7 @@ import { useTableRowColumnCount } from "../../hooks/useTableRowColumnCount.tsx"
 import type { IssuesContextType } from "../../providers/issuesContext.tsx"
 import { sortByTimestampDesc } from "../../providers/sortByTimestampDesc.tsx"
 import { TableMessage } from "../project-table/table-message"
-import * as ids from "./index.testids.ts"
+import { T as ids } from "./index.testids.ts"
 import { TotalsRow } from "./TotalsRow.tsx"
 
 const useFormatters = () => {
@@ -84,25 +84,25 @@ export const IssuesTableView: React.FC = () => {
       <thead>
       {/* Column labels row with header checkbox */}
       <tr ref={headerRowRef}>
-        <th data-testid={ids.selectColumnId}>
+        <th data-testid={ids.columns.select.header}>
           <input
             type="checkbox"
             ref={headerCheckboxRef}
             checked={allSelected}
             onChange={toggleAll}
-            data-testid={ids.headerSelectCheckboxId}
+            data-testid={ids.checkbox.header}
             className="checkbox"
           />
         </th>
-        <th data-testid={ids.issueColumnId}>Issue</th>
-        <th data-testid={ids.descriptionColumnId}>Description</th>
-        <th data-testid={ids.timestampColumnId} className="text-right">Timestamp</th>
-        <th data-testid={ids.inputTokensColumnId} className="text-right">Input Tokens</th>
-        <th data-testid={ids.outputTokensColumnId} className="text-right">Output Tokens</th>
-        <th data-testid={ids.cacheTokensColumnId} className="text-right">Cache Tokens</th>
-        <th data-testid={ids.costColumnId} className="text-right">Cost</th>
-        <th data-testid={ids.timeColumnId} className="text-right">Time</th>
-        <th data-testid={ids.statusColumnId}>Status</th>
+        <th data-testid={ids.columns.issue.header}>Issue</th>
+        <th data-testid={ids.columns.description.header}>Description</th>
+        <th data-testid={ids.columns.timestamp.header} className="text-right">Timestamp</th>
+        <th data-testid={ids.columns.inputTokens.header} className="text-right">Input Tokens</th>
+        <th data-testid={ids.columns.outputTokens.header} className="text-right">Output Tokens</th>
+        <th data-testid={ids.columns.cacheTokens.header} className="text-right">Cache Tokens</th>
+        <th data-testid={ids.columns.cost.header} className="text-right">Cost</th>
+        <th data-testid={ids.columns.time.header} className="text-right">Time</th>
+        <th data-testid={ids.columns.status.header}>Status</th>
       </tr>
       {/* Totals header row (no checkbox) appears only when there is at least one issue */}
       {(issues ?? []).length > 0 && (
@@ -111,44 +111,44 @@ export const IssuesTableView: React.FC = () => {
           formatTokens={formatTokens}
           formatCost={formatCost}
           formatHMS={formatHMS}
-          rowId={ids.totalsHeaderRowId}
+          rowId={ids.rows.totalsHeader}
         />
       )}
       </thead>
       <tbody>
       {isLoading && (
-        <TableMessage message="Loading..." testId={ids.loadingMessageId} colSpan={columnCount} />
+        <TableMessage message="Loading..." testId={ids.messages.loading} colSpan={columnCount} />
       )}
       {error && (
-        <TableMessage message={`Error: ${error}`} testId={ids.errorMessageId} className="text-error" colSpan={columnCount} />
+        <TableMessage message={`Error: ${error}`} testId={ids.messages.error} className="text-error" colSpan={columnCount} />
       )}
       {!isLoading && !error && (issues ?? []).length === 0 && (
-        <TableMessage message="No issues found" testId={ids.noDataMessageId} colSpan={columnCount} />
+        <TableMessage message="No issues found" testId={ids.messages.noData} colSpan={columnCount} />
       )}
       {!isLoading && !error && (issues ?? []).map((issue) => (
-        <tr key={issue.id} data-testid={ids.issueRowId}>
+        <tr key={issue.id} data-testid={ids.rows.bodyIssue}>
           <td>
             <input
               type="checkbox"
               className="checkbox"
               checked={selected.has(issue.id)}
               onChange={toggleOne(issue.id)}
-              data-testid={ids.rowSelectCheckboxId}
+              data-testid={ids.checkbox.row}
             />
           </td>
-          <td data-testid={ids.issueId}>
+          <td data-testid={ids.columns.issue.cell}>
             <a href={issue.url} rel="noopener noreferrer" target="_blank" className="link link-primary">
               {issue.title}
             </a>
           </td>
-          <td data-testid={ids.descriptionId}>{issue.description}</td>
-          <td data-testid={ids.timestampId} className="text-right">{formatTimestamp(issue.timestamp)}</td>
-          <td data-testid={ids.inputTokensId} className="text-right">{formatTokens(issue.inputTokens)}</td>
-          <td data-testid={ids.outputTokensId} className="text-right">{formatTokens(issue.outputTokens)}</td>
-          <td data-testid={ids.cacheTokensId} className="text-right">{formatTokens(issue.cacheTokens)}</td>
-          <td data-testid={ids.costId} className="text-right">{formatCost(issue.cost)}</td>
-          <td data-testid={ids.timeId} className="text-right">{formatHMS(issue.time)}</td>
-          <td data-testid={ids.statusId}>{issue.status}</td>
+          <td data-testid={ids.columns.description.cell}>{issue.description}</td>
+          <td data-testid={ids.columns.timestamp.cell} className="text-right">{formatTimestamp(issue.timestamp)}</td>
+          <td data-testid={ids.columns.inputTokens.cell} className="text-right">{formatTokens(issue.inputTokens)}</td>
+          <td data-testid={ids.columns.outputTokens.cell} className="text-right">{formatTokens(issue.outputTokens)}</td>
+          <td data-testid={ids.columns.cacheTokens.cell} className="text-right">{formatTokens(issue.cacheTokens)}</td>
+          <td data-testid={ids.columns.cost.cell} className="text-right">{formatCost(issue.cost)}</td>
+          <td data-testid={ids.columns.time.cell} className="text-right">{formatHMS(issue.time)}</td>
+          <td data-testid={ids.columns.status.cell}>{issue.status}</td>
         </tr>
       ))}
       </tbody>
@@ -160,7 +160,7 @@ export const IssuesTableView: React.FC = () => {
             formatTokens={formatTokens}
             formatCost={formatCost}
             formatHMS={formatHMS}
-            rowId={ids.totalsFooterRowId}
+            rowId={ids.rows.totalsFooter}
           />
         </tfoot>
       )}

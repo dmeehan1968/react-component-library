@@ -3,7 +3,7 @@ import { type ComponentFixtures, expect, test as baseTest } from "@playwright/ex
 import type { Issue } from "../../providers/issuesContext.tsx"
 
 import { IssuesTableViewHelper } from "./index.ctspec.helper.tsx"
-import * as ids from "./index.testids.ts"
+import { T as ids } from "./index.testids.ts"
 
 baseTest.describe("IssuesTableView", () => {
 
@@ -27,8 +27,8 @@ baseTest.describe("IssuesTableView", () => {
 
     test('should not render totals header or footer when there are no issues', async ({ table }) => {
       // Totals header/footer rows should not exist
-      await expect(table.root.getByTestId(ids.totalsHeaderRowId)).toBeHidden()
-      await expect(table.root.getByTestId(ids.totalsFooterRowId)).toBeHidden()
+      await expect(table.root.getByTestId(ids.rows.totalsHeader)).toBeHidden()
+      await expect(table.root.getByTestId(ids.rows.totalsFooter)).toBeHidden()
     })
 
   })
@@ -190,9 +190,9 @@ baseTest.describe("IssuesTableView", () => {
     test('totals header row appears between column headers and data rows', async ({ table }) => {
       const headerRows = table.root.locator('thead tr')
       // First row should be the column headers containing the select-column checkbox header
-      await expect(headerRows.nth(0).getByTestId(ids.selectColumnId)).toBeVisible()
+      await expect(headerRows.nth(0).getByTestId(ids.columns.select.header)).toBeVisible()
       // Second row should be the totals header row
-      await expect(headerRows.nth(1)).toHaveAttribute('data-testid', ids.totalsHeaderRowId)
+      await expect(headerRows.nth(1)).toHaveAttribute('data-testid', ids.rows.totalsHeader)
     })
 
     test('header checkbox selects all and toggles indeterminate', async ({ table }) => {
@@ -240,8 +240,8 @@ baseTest.describe("IssuesTableView", () => {
     })
 
     test('should not render totals header or footer when there is an error', async ({ table }) => {
-      await expect(table.root.getByTestId(ids.totalsHeaderRowId)).toBeHidden()
-      await expect(table.root.getByTestId(ids.totalsFooterRowId)).toBeHidden()
+      await expect(table.root.getByTestId(ids.rows.totalsHeader)).toBeHidden()
+      await expect(table.root.getByTestId(ids.rows.totalsFooter)).toBeHidden()
     })
 
   })

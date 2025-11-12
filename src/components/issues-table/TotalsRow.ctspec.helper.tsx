@@ -1,6 +1,6 @@
 import type { ComponentFixtures, MountResult } from "@playwright/experimental-ct-react"
 import type { Locator } from "@playwright/test"
-import * as ids from "./index.testids.ts"
+import { T as ids } from "./index.testids.ts"
 import type { TotalsRowProp } from "./TotalsRow.tsx"
 import { TotalsRow } from "./TotalsRow.tsx"
 
@@ -45,7 +45,7 @@ export class TotalsRowHelper {
           formatTokens={formatTokens}
           formatCost={formatCost}
           formatHMS={formatHMS}
-          rowId={rowId ?? ids.totalsHeaderRowId}
+          rowId={rowId ?? ids.rows.totalsHeader}
         />
         </thead>
       </table>,
@@ -54,17 +54,17 @@ export class TotalsRowHelper {
 
   // Accessors
   get row() {
-    return this.root.getByTestId(ids.totalsHeaderRowId)
+    return this.root.getByTestId(ids.rows.totalsHeader)
   }
 
   get cells() {
     const r = this.row
     return {
-      input: r.getByTestId(ids.inputTokensId),
-      output: r.getByTestId(ids.outputTokensId),
-      cache: r.getByTestId(ids.cacheTokensId),
-      cost: r.getByTestId(ids.costId),
-      time: r.getByTestId(ids.timeId),
+      input: r.getByTestId(ids.columns.inputTokens.cell),
+      output: r.getByTestId(ids.columns.outputTokens.cell),
+      cache: r.getByTestId(ids.columns.cacheTokens.cell),
+      cost: r.getByTestId(ids.columns.cost.cell),
+      time: r.getByTestId(ids.columns.time.cell),
     }
   }
 

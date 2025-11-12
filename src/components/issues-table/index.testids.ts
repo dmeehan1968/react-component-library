@@ -1,31 +1,33 @@
-export const selectColumnId = 'select-column'
-export const headerSelectCheckboxId = 'header-select-checkbox'
-export const rowSelectCheckboxId = 'row-select-checkbox'
+// Issues-table test IDs — generated via shared `createTestIds` util.
+// NOTE: Values kept identical to previous constants to avoid DOM changes.
+import { createTestIds } from "../../testing/ids.ts"
 
-export const issueColumnId = 'issue-column'
-export const descriptionColumnId = 'description-column'
-export const timestampColumnId = 'timestamp-column'
-export const inputTokensColumnId = 'input-tokens-column'
-export const outputTokensColumnId = 'output-tokens-column'
-export const cacheTokensColumnId = 'cache-tokens-column'
-export const costColumnId = 'cost-column'
-export const timeColumnId = 'time-column'
-export const statusColumnId = 'status-column'
+export const T = createTestIds(
+  'issues-table',
+  {
+    columns: [
+      'select',
+      'issue',
+      'description',
+      'timestamp',
+      'inputTokens',
+      'outputTokens',
+      'cacheTokens',
+      'cost',
+      'time',
+      'status',
+    ],
+    rows: {
+      bodyIssue: 'issue',
+      totalsHeader: 'totals-header',
+      totalsFooter: 'totals-footer',
+    },
+    messages: ['loading', 'error', 'noData'],
+    checkbox: ['header', 'row'],
+  },
+  {
+    columnCellExclusions: ['select'],
+  },
+)
 
-export const issueId = 'issue'
-export const descriptionId = 'description'
-export const timestampId = 'timestamp'
-export const inputTokensId = 'input-tokens'
-export const outputTokensId = 'output-tokens'
-export const cacheTokensId = 'cache-tokens'
-export const costId = 'cost'
-export const timeId = 'time'
-export const statusId = 'status'
-export const issueRowId = 'issue-row'
-
-export const totalsHeaderRowId = 'totals-header-row'
-export const totalsFooterRowId = 'totals-footer-row'
-
-export const noDataMessageId = 'no-data-message'
-export const loadingMessageId = 'loading-message'
-export const errorMessageId = 'error-message'
+export type IssuesTableTestIds = typeof T

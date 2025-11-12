@@ -1,6 +1,6 @@
 import { expect, test as baseTest } from "@playwright/experimental-ct-react"
 
-import * as ids from "./index.testids.ts"
+import { T as ids } from "./index.testids.ts"
 import { TotalsRowHelper } from "./TotalsRow.ctspec.helper.tsx"
 
 baseTest.describe("TotalsRow", () => {
@@ -23,7 +23,7 @@ baseTest.describe("TotalsRow", () => {
   const test = baseTest.extend<{ totalsRow: TotalsRowHelper }>({
     totalsRow: async ({ mount }, provide) => {
       const helper = new TotalsRowHelper(mount)
-      await helper.mount({ totals, formatTokens, formatCost, formatHMS, rowId: ids.totalsHeaderRowId })
+      await helper.mount({ totals, formatTokens, formatCost, formatHMS, rowId: ids.rows.totalsHeader })
       await provide(helper)
     },
   })
@@ -35,10 +35,10 @@ baseTest.describe("TotalsRow", () => {
   })
 
   test("exposes standardized child test ids under header row", async ({ totalsRow }) => {
-    await expect(totalsRow.row.getByTestId(ids.inputTokensId)).toBeVisible()
-    await expect(totalsRow.row.getByTestId(ids.outputTokensId)).toBeVisible()
-    await expect(totalsRow.row.getByTestId(ids.cacheTokensId)).toBeVisible()
-    await expect(totalsRow.row.getByTestId(ids.costId)).toBeVisible()
-    await expect(totalsRow.row.getByTestId(ids.timeId)).toBeVisible()
+    await expect(totalsRow.row.getByTestId(ids.columns.inputTokens.cell)).toBeVisible()
+    await expect(totalsRow.row.getByTestId(ids.columns.outputTokens.cell)).toBeVisible()
+    await expect(totalsRow.row.getByTestId(ids.columns.cacheTokens.cell)).toBeVisible()
+    await expect(totalsRow.row.getByTestId(ids.columns.cost.cell)).toBeVisible()
+    await expect(totalsRow.row.getByTestId(ids.columns.time.cell)).toBeVisible()
   })
 })

@@ -1,4 +1,5 @@
 import * as React from "react"
+import * as ids from "./index.testids.ts"
 
 type Totals = {
   input: number
@@ -33,11 +34,11 @@ export const TotalsRow: React.FC<Props> = ({
       <th></th>
       <th colSpan={3}>{label}</th>
       {/* Totals aligned under token/cost/time columns */}
-      <th data-testid="input" className="text-right">{formatTokens(totals.input)}</th>
-      <th data-testid="output" className="text-right">{formatTokens(totals.output)}</th>
-      <th data-testid="cache" className="text-right">{formatTokens(totals.cache)}</th>
-      <th data-testid="cost" className="text-right">{formatCost(totals.cost)}</th>
-      <th data-testid="time" className="text-right">{formatHMS(totals.time)}</th>
+      <th data-testid={ids.inputTokensId} className="text-right">{formatTokens(totals.input)}</th>
+      <th data-testid={ids.outputTokensId} className="text-right">{formatTokens(totals.output)}</th>
+      <th data-testid={ids.cacheTokensId} className="text-right">{formatTokens(totals.cache)}</th>
+      <th data-testid={ids.costId} className="text-right">{formatCost(totals.cost)}</th>
+      <th data-testid={ids.timeId} className="text-right">{formatHMS(totals.time)}</th>
       {/* Trailing blank for Status */}
       <th></th>
     </tr>

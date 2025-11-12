@@ -64,20 +64,20 @@ export class IssuesTableViewHelper {
   // Totals
   get totalsHeader() {
     return {
-      input: this.root.getByTestId(ids.totalsHeaderRowId).getByTestId(ids.totalsCellInputId),
-      output: this.root.getByTestId(ids.totalsHeaderRowId).getByTestId(ids.totalsCellOutputId),
-      cache: this.root.getByTestId(ids.totalsHeaderRowId).getByTestId(ids.totalsCellCacheId),
-      cost: this.root.getByTestId(ids.totalsHeaderRowId).getByTestId(ids.totalsCellCostId),
-      time: this.root.getByTestId(ids.totalsHeaderRowId).getByTestId(ids.totalsCellTimeId),
+      input: this.root.getByTestId(ids.totalsHeaderRowId).getByTestId(ids.inputTokensId),
+      output: this.root.getByTestId(ids.totalsHeaderRowId).getByTestId(ids.outputTokensId),
+      cache: this.root.getByTestId(ids.totalsHeaderRowId).getByTestId(ids.cacheTokensId),
+      cost: this.root.getByTestId(ids.totalsHeaderRowId).getByTestId(ids.costId),
+      time: this.root.getByTestId(ids.totalsHeaderRowId).getByTestId(ids.timeId),
     }
   }
   get totalsFooter() {
     return {
-      input: this.root.getByTestId(ids.totalsFooterRowId).getByTestId(ids.totalsCellInputId),
-      output: this.root.getByTestId(ids.totalsFooterRowId).getByTestId(ids.totalsCellOutputId),
-      cache: this.root.getByTestId(ids.totalsFooterRowId).getByTestId(ids.totalsCellCacheId),
-      cost: this.root.getByTestId(ids.totalsFooterRowId).getByTestId(ids.totalsCellCostId),
-      time: this.root.getByTestId(ids.totalsFooterRowId).getByTestId(ids.totalsCellTimeId),
+      input: this.root.getByTestId(ids.totalsFooterRowId).getByTestId(ids.inputTokensId),
+      output: this.root.getByTestId(ids.totalsFooterRowId).getByTestId(ids.outputTokensId),
+      cache: this.root.getByTestId(ids.totalsFooterRowId).getByTestId(ids.cacheTokensId),
+      cost: this.root.getByTestId(ids.totalsFooterRowId).getByTestId(ids.costId),
+      time: this.root.getByTestId(ids.totalsFooterRowId).getByTestId(ids.timeId),
     }
   }
 

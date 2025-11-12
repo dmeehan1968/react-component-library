@@ -25,12 +25,6 @@ export const issueRowId = 'issue-row'
 
 export const totalsHeaderRowId = 'totals-header-row'
 export const totalsFooterRowId = 'totals-footer-row'
-// Standardised totals cell ids (used within the row via nested getByTestId)
-export const totalsCellInputId = 'input'
-export const totalsCellOutputId = 'output'
-export const totalsCellCacheId = 'cache'
-export const totalsCellCostId = 'cost'
-export const totalsCellTimeId = 'time'
 
 export const noDataMessageId = 'no-data-message'
 export const loadingMessageId = 'loading-message'

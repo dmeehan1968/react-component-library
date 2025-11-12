@@ -111,9 +111,7 @@ export const IssuesTableView: React.FC = () => {
           formatTokens={formatTokens}
           formatCost={formatCost}
           formatHMS={formatHMS}
-          ids={{
-            rowId: ids.totalsHeaderRowId,
-          }}
+          rowId={ids.totalsHeaderRowId}
         />
       )}
       </thead>
@@ -162,9 +160,7 @@ export const IssuesTableView: React.FC = () => {
             formatTokens={formatTokens}
             formatCost={formatCost}
             formatHMS={formatHMS}
-            ids={{
-              rowId: ids.totalsFooterRowId,
-            }}
+            rowId={ids.totalsFooterRowId}
           />
         </tfoot>
       )}

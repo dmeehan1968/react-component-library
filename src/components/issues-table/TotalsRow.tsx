@@ -8,10 +8,6 @@ type Totals = {
   time: number
 }
 
-type TotalsIds = {
-  rowId: string
-}
-
 type Props = {
   totals: Totals
   label?: string
@@ -19,7 +15,8 @@ type Props = {
   formatTokens: (n: number) => string
   formatCost: (n: number) => string
   formatHMS: (n: number) => string
-  ids: TotalsIds
+  // test id for the <tr> element; child cell ids are standardized (input|output|cache|cost|time)
+  rowId: string
 }
 
 export const TotalsRow: React.FC<Props> = ({
@@ -28,10 +25,10 @@ export const TotalsRow: React.FC<Props> = ({
   formatTokens,
   formatCost,
   formatHMS,
-  ids,
+  rowId,
 }) => {
   return (
-    <tr className="bg-base-200 font-semibold" data-testid={ids.rowId}>
+    <tr className="bg-base-200 font-semibold" data-testid={rowId}>
       {/* Blank cells spanning Select + Issue + Description + Timestamp */}
       <th></th>
       <th colSpan={3}>{label}</th>

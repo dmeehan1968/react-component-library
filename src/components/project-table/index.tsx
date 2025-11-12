@@ -26,7 +26,7 @@ export const ProjectTableView: React.FC = () => {
   })
 
   return (
-    <table className="table table-zebra h-full" data-testid={projectsTableId}>
+    <table className="table table-zebra w-full h-full" data-testid={projectsTableId}>
       <thead>
       <tr>
         <th

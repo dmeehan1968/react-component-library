@@ -17,12 +17,4 @@ export class AppHelper {
     return this.root.getByTestId('projects-table')
   }
 
-  get viteLink() {
-    return this.root.getByRole('link', { name: /vite/i })
-  }
-
-  get reactLink() {
-    return this.root.getByRole('link', { name: /react/i })
-  }
-
 }

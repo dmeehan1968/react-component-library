@@ -32,7 +32,7 @@ function createFetchMock(impl: FetchImpl) {
   return mock<FetchImpl>(impl)
 }
 
-describe("<ProjectsProvider>", () => {
+describe("ProjectsProvider", () => {
   it("shows loading while fetching and then sets projects on success", async () => {
     const d = deferred<Response>()
 

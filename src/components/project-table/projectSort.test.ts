@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test'
-import type { Project } from "./projectsContext.tsx"
-import { projectSort } from './sortHelpers.tsx'
+import type { Project } from "../../providers/projectsContext.tsx"
+import { projectSort } from './projectSort.tsx'
 
 const fixtures = (): Project[] => [
   {

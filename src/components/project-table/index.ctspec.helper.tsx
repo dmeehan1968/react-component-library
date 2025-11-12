@@ -1,13 +1,9 @@
 import type { ComponentFixtures, MountResult } from "@playwright/experimental-ct-react"
 import type { Locator } from "@playwright/test"
-import type { Project } from "../../providers/projectsContext.tsx"
-import {
-  ProjectsProvider,
-  type ProjectsProviderProps,
-  type SortableColumns,
-} from "../../providers/projectsProvider.tsx"
+import { type Project, ProjectsContext, type ProjectsContextType } from "../../providers/projectsContext.tsx"
+import type { ProjectSortableColumns as SortableColumns } from "./projectSort.tsx"
 import type { SortOrder } from "../../hooks/useColumnSort.ts"
-import { projectSort } from "../../providers/sortHelpers.tsx"
+import { projectSort } from "./projectSort.tsx"
 
 import {
   errorMessageId,
@@ -41,14 +37,14 @@ export class ProjectTableViewHelper {
     return this._root
   }
 
-  async mount(props: ProjectsProviderProps) {
+  async mount(props: ProjectsContextType) {
     if (this._root) {
       await this._root.unmount()
     }
     this._root = await this._mount(
-      <ProjectsProvider {...props}>
+      <ProjectsContext value={props}>
         <ProjectTableView/>
-      </ProjectsProvider>
+      </ProjectsContext>
     )
   }
 

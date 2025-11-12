@@ -1,5 +1,5 @@
-import type { Project } from "./projectsContext.tsx"
-import type { SortOrder } from "../hooks/useColumnSort.ts"
+import type { Project } from "../../providers/projectsContext.tsx"
+import type { SortOrder } from "../../hooks/useColumnSort.ts"
 
 export type ProjectSortableColumns = 'name' | 'lastUpdated'
 

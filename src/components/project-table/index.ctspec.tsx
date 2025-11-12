@@ -12,7 +12,7 @@ baseTest.describe("ProjectTableView", () => {
     const test = baseTest.extend<{ table: ProjectTableViewHelper }>({
       table: async ({ mount }, provide) => {
         const helper = new ProjectTableViewHelper(mount, projects)
-        await helper.mount({ dataSource: { projects } })
+        await helper.mount({ projects })
         await provide(helper)
       },
     })
@@ -36,7 +36,7 @@ baseTest.describe("ProjectTableView", () => {
     const test = baseTest.extend<{ table: ProjectTableViewHelper }>({
       table: async ({ mount }, provide) => {
         const helper = new ProjectTableViewHelper(mount, projects)
-        await helper.mount({ dataSource: { projects } })
+        await helper.mount({ projects })
         await provide(helper)
       },
     })
@@ -66,7 +66,7 @@ baseTest.describe("ProjectTableView", () => {
     const test = baseTest.extend<{ table: ProjectTableViewHelper }>({
       table: async ({ mount }, provide) => {
         const helper = new ProjectTableViewHelper(mount, [])
-        await helper.mount({ dataSource: { error: 'fetch failed' } })
+        await helper.mount({ error: 'fetch failed' })
         await provide(helper)
       },
     })
@@ -76,6 +76,25 @@ baseTest.describe("ProjectTableView", () => {
     test('error is shown when fetching projects fails', async ({ table }) => {
       await expect(table.errorMessage).toBeVisible()
       await expect(table.errorMessage).toHaveText(/fetch failed/i)
+    })
+
+  })
+
+  baseTest.describe('when loading', () => {
+
+    const test = baseTest.extend<{ table: ProjectTableViewHelper }>({
+      table: async ({ mount }, provide) => {
+        const helper = new ProjectTableViewHelper(mount, [])
+        await helper.mount({ isLoading: true })
+        await provide(helper)
+      },
+    })
+
+    commonProjectTableSuite(test)
+
+    test('loading is shown when fetching projects in progress', async ({ table }) => {
+      await expect(table.loadingMessage).toBeVisible()
+      await expect(table.loadingMessage).toHaveText(/loading/i)
     })
 
   })

@@ -14,9 +14,16 @@ import {
   sortIndicatorId,
 } from "./index.testids.ts"
 import { TableMessage } from "./table-message"
+import { useColumnSort } from "../../hooks/useColumnSort.ts"
+import { projectSort } from "./projectSort.tsx"
 
 export const ProjectTableView: React.FC = () => {
-  const { projects, handleSort, indicator, isLoading, error } = useProjects()
+  const { projects, isLoading, error } = useProjects()
+  const columns = React.useMemo(() => ['name', 'lastUpdated'] as const, [])
+  const { sorted, handleSort, indicator } = useColumnSort(projects ?? [], columns, projectSort, {
+    initial: { column: 'name', order: 'asc' },
+    indicators: { asc: '↑', desc: '↓', none: '' },
+  })
 
   return (
     <table className="table table-zebra h-full">
@@ -52,18 +59,18 @@ export const ProjectTableView: React.FC = () => {
       )}
       {error && (
         <TableMessage
-          message={`Error: ${error.message}`}
+          message={`Error: ${error}`}
           testId={errorMessageId}
           className="text-error"
         />
       )}
-      {!isLoading && !error && projects.length === 0 && (
+      {!isLoading && !error && sorted.length === 0 && (
         <TableMessage
           message="No projects found"
           testId={noDataMessageId}
         />
       )}
-      {!isLoading && !error && projects.map((project) => (
+      {!isLoading && !error && sorted.map((project) => (
         <tr key={project.name} data-testid={projectId}>
           <td data-testid={nameId}>
             <a

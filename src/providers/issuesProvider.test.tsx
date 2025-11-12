@@ -50,14 +50,14 @@ describe("IssuesProvider", () => {
   })
 
   it("leaves issues empty when response is not ok", async () => {
-    const d = deferred<Response>()
-    const fetchSpy = createFetchMock(() => d.promise)
+    const { promise, resolve } = deferred<Response>()
+    const fetchSpy = createFetchMock(() => promise)
     IssuesProviderHelper.renderWithProvider(fetchSpy, "p-1")
 
     // in-flight
     expect(IssuesProviderHelper.state.textContent).toBe("loading:true")
 
-    d.resolve(notOkResponse())
+    resolve(notOkResponse())
 
     await waitFor(() => {
       expect(IssuesProviderHelper.state.textContent).toBe("issues:[]")
@@ -65,13 +65,13 @@ describe("IssuesProvider", () => {
   })
 
   it("sets error when fetch throws", async () => {
-    const d = deferred<Response>()
-    const fetchSpy = createFetchMock(() => d.promise)
+    const { promise, reject } = deferred<Response>()
+    const fetchSpy = createFetchMock(() => promise)
     IssuesProviderHelper.renderWithProvider(fetchSpy, "p-1")
 
     // trigger rejection
     const err = new Error("network down")
-    d.reject(err)
+    reject(err)
 
     await waitFor(() => {
       expect(IssuesProviderHelper.state.textContent).toBe(`error:${err.message}`)
@@ -80,8 +80,8 @@ describe("IssuesProvider", () => {
 
   it("re-fetches when fetchImpl reference changes", async () => {
     // first fetch resolves to []
-    const d1 = deferred<Response>()
-    const fetch1 = createFetchMock(() => d1.promise)
+    const deferred1 = deferred<Response>()
+    const fetch1 = createFetchMock(() => deferred1.promise)
 
     function Probe() {
       const ctx = useIssues()
@@ -97,15 +97,15 @@ describe("IssuesProvider", () => {
       </IssuesProvider>
     )
 
-    d1.resolve(okResponse([]))
+    deferred1.resolve(okResponse([]))
     await waitFor(() => {
       expect(screen.getByTestId('state').textContent).toBe('issues:0')
     })
 
     // Now rerender with a new fetch impl
-    const d2 = deferred<Response>()
+    const deferred2 = deferred<Response>()
     const issues = [makeIssue({ id: "i-2" })]
-    const fetch2 = createFetchMock(() => d2.promise)
+    const fetch2 = createFetchMock(() => deferred2.promise)
 
     r.rerender(
       <IssuesProvider fetchImpl={fetch2} projectId={projectId}>
@@ -116,7 +116,7 @@ describe("IssuesProvider", () => {
     // Should enter loading again after fetchImpl changed
     expect(screen.getByTestId('state').textContent).toBe('loading')
 
-    d2.resolve(okResponse(issues))
+    deferred2.resolve(okResponse(issues))
     await waitFor(() => {
       expect(screen.getByTestId('state').textContent).toBe('issues:1')
     })

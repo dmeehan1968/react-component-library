@@ -1,16 +1,15 @@
 import * as React from "react"
 import { type Issue, IssuesContext, type IssuesContextType } from "./issuesContext.tsx"
 import { parseIssues } from "../schemas/issue.ts"
-import { sortByTimestampDesc } from "./sortByTimestampDesc.tsx"
+import type { FetchImpl } from "./projectsProvider.tsx"
 
 export interface IssuesProviderProps {
   children?: React.ReactNode
-  dataSource?: { issues: Issue[], error?: never, fetch?: never } | { error: string, issues?: never, fetch?: never } | { fetch: typeof fetch, issues?: never, error?: never }
+  fetchImpl: FetchImpl
 }
 
-export const IssuesProvider: React.FC<IssuesProviderProps> = ({ children, dataSource = { fetch } }) => {
+export const IssuesProvider: React.FC<IssuesProviderProps> = ({ children, fetchImpl }) => {
   const [fetchedIssues, setFetchedIssues] = React.useState([] as Issue[])
-  const [issues, setIssues] = React.useState<Issue[]>([])
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [error, setError] = React.useState<Error | undefined>(undefined)
 
@@ -19,7 +18,7 @@ export const IssuesProvider: React.FC<IssuesProviderProps> = ({ children, dataSo
       try {
         setIsLoading(true)
         setError(undefined)
-        const res = await dataSource.fetch!('/api/issues')
+        const res = await fetchImpl('/api/issues')
         if (res.ok) {
           const raw = await res.json()
           const parsed = parseIssues(raw) as Issue[]
@@ -33,17 +32,10 @@ export const IssuesProvider: React.FC<IssuesProviderProps> = ({ children, dataSo
     }
 
     void loadIssues()
-  }, [dataSource])
+  }, [fetchImpl])
 
-  React.useEffect(() => {
-    setIssues(sortByTimestampDesc(fetchedIssues))
-  }, [fetchedIssues])
-
-  const value: IssuesContextType = {
-    issues,
-    isLoading,
-    error,
-  }
+  const value: IssuesContextType =
+    error ? { error: error.message ?? 'Unexpected error in fetch' } : isLoading ? { isLoading } : { issues: fetchedIssues }
 
   return (
     <IssuesContext value={value}>

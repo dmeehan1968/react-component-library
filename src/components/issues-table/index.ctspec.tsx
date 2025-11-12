@@ -13,7 +13,7 @@ baseTest.describe("IssuesTableView", () => {
     const test = baseTest.extend<{ table: IssuesTableViewHelper }>({
       table: async ({ mount }, provide) => {
         const helper = new IssuesTableViewHelper(mount, issues)
-        await helper.mount({ dataSource: { issues } })
+        await helper.mount({ issues })
         await provide(helper)
       },
     })
@@ -55,7 +55,7 @@ baseTest.describe("IssuesTableView", () => {
     const test = baseTest.extend<{ table: IssuesTableViewHelper }>({
       table: async ({ mount }, provide) => {
         const helper = new IssuesTableViewHelper(mount, issues)
-        await helper.mount({ dataSource: { issues } })
+        await helper.mount({ issues })
         await provide(helper)
       },
     })
@@ -239,7 +239,7 @@ baseTest.describe("IssuesTableView", () => {
     const test = baseTest.extend<{ table: IssuesTableViewHelper }>({
       table: async ({ mount }, provide) => {
         const helper = new IssuesTableViewHelper(mount, [])
-        await helper.mount({ dataSource: { error: 'fetch failed' } })
+        await helper.mount({ error: 'fetch failed' })
         await provide(helper)
       },
     })

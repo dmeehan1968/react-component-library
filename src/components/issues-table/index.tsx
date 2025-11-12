@@ -2,6 +2,8 @@ import * as React from "react"
 import { useIssues } from "../../hooks/useIssues.tsx"
 import { useLocale } from "../../hooks/useLocale.tsx"
 import { useTableRowColumnCount } from "../../hooks/useTableRowColumnCount.tsx"
+import type { IssuesContextType } from "../../providers/issuesContext.tsx"
+import { sortByTimestampDesc } from "../../providers/sortByTimestampDesc.tsx"
 import { TableMessage } from "../project-table/table-message"
 import * as ids from "./index.testids.ts"
 
@@ -24,14 +26,14 @@ const useFormatters = () => {
 }
 
 export const IssuesTableView: React.FC = () => {
-  const { issues, isLoading, error } = useIssues()
+  const { issues: fetchedIssues, isLoading, error } = useIssues()
+  const [issues, setIssues] = React.useState<IssuesContextType['issues']>(fetchedIssues ?? [])
   const { formatTokens, formatCost, formatHMS, formatTimestamp } = useFormatters()
-
   const [selected, setSelected] = React.useState<Set<string>>(new Set())
   const { headerRowRef, columnCount } = useTableRowColumnCount()
   const headerCheckboxRef = React.useRef<HTMLInputElement>(null)
 
-  const allIds = React.useMemo(() => issues.map(i => i.id), [issues])
+  const allIds = React.useMemo(() => (fetchedIssues ?? []).map(i => i.id), [fetchedIssues])
   const allSelected = selected.size > 0 && selected.size === allIds.length
   const someSelected = selected.size > 0 && selected.size < allIds.length
 
@@ -62,7 +64,7 @@ export const IssuesTableView: React.FC = () => {
   }
 
   const totals = React.useMemo(() => {
-    return issues.reduce((acc, i) => {
+    return (fetchedIssues ?? []).reduce((acc, i) => {
       acc.input += i.inputTokens
       acc.output += i.outputTokens
       acc.cache += i.cacheTokens
@@ -70,7 +72,11 @@ export const IssuesTableView: React.FC = () => {
       acc.time += i.time
       return acc
     }, { input: 0, output: 0, cache: 0, cost: 0, time: 0 })
-  }, [issues])
+  }, [fetchedIssues])
+
+  React.useEffect(() => {
+    setIssues(sortByTimestampDesc(fetchedIssues ?? []))
+  }, [fetchedIssues])
 
   return (
     <table className="table table-zebra h-full">
@@ -98,7 +104,7 @@ export const IssuesTableView: React.FC = () => {
         <th data-testid={ids.statusColumnId}>Status</th>
       </tr>
       {/* Totals header row (no checkbox) appears only when there is at least one issue */}
-      {issues.length > 0 && (
+      {(issues ?? []).length > 0 && (
         <tr className="bg-base-200 font-semibold" data-testid={ids.totalsHeaderRowId}>
           {/* Blank cells spanning Select + Issue + Description + Timestamp */}
           <th></th>
@@ -119,12 +125,12 @@ export const IssuesTableView: React.FC = () => {
         <TableMessage message="Loading..." testId={ids.loadingMessageId} colSpan={columnCount} />
       )}
       {error && (
-        <TableMessage message={`Error: ${error.message}`} testId={ids.errorMessageId} className="text-error" colSpan={columnCount} />
+        <TableMessage message={`Error: ${error}`} testId={ids.errorMessageId} className="text-error" colSpan={columnCount} />
       )}
-      {!isLoading && !error && issues.length === 0 && (
+      {!isLoading && !error && (issues ?? []).length === 0 && (
         <TableMessage message="No issues found" testId={ids.noDataMessageId} colSpan={columnCount} />
       )}
-      {!isLoading && !error && issues.map((issue) => (
+      {!isLoading && !error && (issues ?? []).map((issue) => (
         <tr key={issue.id} data-testid={ids.issueRowId}>
           <td>
             <input
@@ -152,7 +158,7 @@ export const IssuesTableView: React.FC = () => {
       ))}
       </tbody>
       {/* Totals footer row appears only when there is at least one issue */}
-      {issues.length > 0 && (
+      {(issues ?? []).length > 0 && (
         <tfoot>
         <tr className="bg-base-200 font-semibold" data-testid={ids.totalsFooterRowId}>
           {/* Blank cells spanning Select + Issue + Description + Timestamp */}

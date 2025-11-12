@@ -14,12 +14,12 @@ export type ProjectsContextType =
     error?: never
   }
   | {
-    projects?: never[]
+    projects?: never
     isLoading: boolean
     error?: never
   }
   | {
-    projects?: never[]
+    projects?: never
     isLoading?: never
     error: string
   }

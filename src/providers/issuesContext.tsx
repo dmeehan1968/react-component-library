@@ -16,10 +16,17 @@ export interface Issue {
   status: 'queued' | 'running' | 'succeeded' | 'failed'
 }
 
-export interface IssuesContextType {
-  issues: Issue[]
-  isLoading: boolean
-  error: Error | undefined
-}
-
+export type IssuesContextType = {
+    issues: Issue[]
+    isLoading?: never
+    error?: never
+  } | {
+    issues?: never
+    isLoading: boolean
+    error?: never
+  } | {
+    issues?: never
+    isLoading?: never
+    error: string
+  }
 export const IssuesContext = React.createContext<IssuesContextType | undefined>(undefined)

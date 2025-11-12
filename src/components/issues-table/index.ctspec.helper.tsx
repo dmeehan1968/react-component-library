@@ -1,7 +1,6 @@
 import type { ComponentFixtures, MountResult } from "@playwright/experimental-ct-react"
 import type { Locator } from "@playwright/test"
-import type { Issue } from "../../providers/issuesContext.tsx"
-import { IssuesProvider, type IssuesProviderProps } from "../../providers/issuesProvider.tsx"
+import { type Issue, IssuesContext, type IssuesContextType } from "../../providers/issuesContext.tsx"
 
 import * as ids from "./index.testids.ts"
 import { IssuesTableView } from "./index.tsx"
@@ -23,14 +22,14 @@ export class IssuesTableViewHelper {
     return this._root
   }
 
-  async mount(props: IssuesProviderProps) {
+  async mount(props: IssuesContextType) {
     if (this._root) {
       await this._root.unmount()
     }
     this._root = await this._mount(
-      <IssuesProvider {...props}>
+      <IssuesContext value={props}>
         <IssuesTableView/>
-      </IssuesProvider>
+      </IssuesContext>
     )
   }
 

@@ -1,5 +1,16 @@
 Project: react-component-library — Guidelines (2025-11-12)
 
+- Important
+  - In this document, be extremely concise.  Sacrifice grammar for the sake of concision.
+  
+- Post-edit protocol
+  - After completing edits, propose refactors (see refactor protocol).
+  - List concrete suggestions; explain impact briefly.
+  - Ask for approval before implementing any refactor. Do not change code until approved.
+  
+- Refactor protocol
+  - semantics↑, duplication↓, modularity↑
+
 - Toolchain
   - Runtime: Bun ≥1.3.x only. `packageManager: bun@1.3.0`.
   - Dev server: Vite + React + Tailwind v4 plugin; custom `apiPlugin` mounts mock routes.

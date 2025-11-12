@@ -35,9 +35,9 @@ baseTest.describe("IssuesTableView", () => {
 
   baseTest.describe("with data", () => {
     const issues: Issue[] = [
-      { id: 'i1', title: 'Issue 1', url: '/i1', project: 'Project A', description: 'Desc 1', timestamp: new Date('2025/01/02 12:00:00'), inputTokens: 1200, outputTokens: 3500, cacheTokens: 0, cost: 1.234, time: 65, status: 'succeeded' },
-      { id: 'i2', title: 'Issue 2', url: '/i2', project: 'Project B', description: 'Desc 2', timestamp: new Date('2025/01/01 12:00:00'), inputTokens: 8000, outputTokens: 120, cacheTokens: 12, cost: 0.4, time: 5, status: 'running' },
-      { id: 'i3', title: 'Issue 3', url: '/i3', project: 'Project C', description: 'Desc 3', timestamp: new Date('2025/01/03 12:00:00'), inputTokens: 50, outputTokens: 75, cacheTokens: 25, cost: 10, time: 3605, status: 'failed' },
+      { id: 'i1', title: 'Issue 1', url: '/i1', project: 'Project A', timestamp: new Date('2025/01/02 12:00:00'), inputTokens: 1200, outputTokens: 3500, cacheTokens: 0, cost: 1.234, time: 65, status: 'succeeded' },
+      { id: 'i2', title: 'Issue 2', url: '/i2', project: 'Project B', timestamp: new Date('2025/01/01 12:00:00'), inputTokens: 8000, outputTokens: 120, cacheTokens: 12, cost: 0.4, time: 5, status: 'running' },
+      { id: 'i3', title: 'Issue 3', url: '/i3', project: 'Project C', timestamp: new Date('2025/01/03 12:00:00'), inputTokens: 50, outputTokens: 75, cacheTokens: 25, cost: 10, time: 3605, status: 'failed' },
     ]
 
     const test = baseTest.extend<{ table: IssuesTableViewHelper }>({
@@ -109,9 +109,6 @@ baseTest.describe("IssuesTableView", () => {
         // Issue link text and href
         await expect(cells.issueLink).toHaveText(exp.title)
         await expect.poll(() => cells.issueLink.getAttribute('href')).toEqual(exp.url)
-
-        // Description
-        await expect(cells.description).toHaveText(exp.description)
 
         // Timestamp (locale-formatted)
         await expect(cells.timestamp).toHaveText(exp.timestamp)
@@ -255,7 +252,6 @@ function commonIssuesTableSuite<T extends TestType<ComponentFixtures & { table: 
   test('should contain all required columns', async ({ table }) => {
     await expect(table.selectColumn).toBeVisible()
     await expect(table.issueColumn).toBeVisible()
-    await expect(table.descriptionColumn).toBeVisible()
     await expect(table.timestampColumn).toBeVisible()
     await expect(table.inputTokensColumn).toBeVisible()
     await expect(table.outputTokensColumn).toBeVisible()

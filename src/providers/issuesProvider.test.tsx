@@ -10,7 +10,6 @@ function makeIssue(overrides: Partial<Record<string, unknown>> = {}) {
     title: "Issue 1",
     url: "/issues/1",
     project: "proj-1",
-    description: "desc",
     timestamp: new Date().toISOString(),
     inputTokens: 10,
     outputTokens: 20,

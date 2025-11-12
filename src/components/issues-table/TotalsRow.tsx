@@ -30,7 +30,7 @@ export const TotalsRow: React.FC<TotalsRowProp> = ({
     <tr className="bg-base-200 font-semibold" data-testid={rowId}>
       {/* Blank cells spanning Select + Issue + Description + Timestamp */}
       <th></th>
-      <th colSpan={3}>Project Summary</th>
+      <th colSpan={2}>Project Summary</th>
       {/* Totals aligned under token/cost/time columns */}
       <th data-testid={ids.columns.inputTokens.cell} className="text-right">{formatTokens(totals.input)}</th>
       <th data-testid={ids.columns.outputTokens.cell} className="text-right">{formatTokens(totals.output)}</th>

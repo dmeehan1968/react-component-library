@@ -12,7 +12,6 @@ export const IssueSchema = z.object({
   title: z.string(),
   url: z.string(),
   project: z.string(),
-  description: z.string(),
   timestamp: z.union([z.string(), z.date(), z.number()])
     .transform((v) => (v instanceof Date ? v : new Date(v)))
     .refine((d) => d instanceof Date && !Number.isNaN(d.getTime()), {

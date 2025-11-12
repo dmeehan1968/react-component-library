@@ -5,7 +5,6 @@ export interface Issue {
   title: string
   url: string
   project: string
-  description: string
   // Normalized as Date via zod when fetched from the API
   timestamp: Date
   inputTokens: number

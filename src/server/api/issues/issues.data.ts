@@ -1,9 +1,9 @@
+// Raw fixtures include description, but the exported dataset omits it.
 export interface IssueDTO {
   id: string
   title: string
   url: string
   project: string
-  description: string
   timestamp: string
   inputTokens: number
   outputTokens: number
@@ -13,8 +13,12 @@ export interface IssueDTO {
   status: 'queued' | 'running' | 'succeeded' | 'failed'
 }
 
+export interface IssueDTORaw extends IssueDTO {
+  description: string
+}
+
 // Simple text fixtures keyed by project slug
-export const issuesByProject: Record<string, IssueDTO[]> = {
+const issuesByProjectRaw: Record<string, IssueDTORaw[]> = {
   'react-component-library': [
     {
       id: 'rcl-1',
@@ -868,3 +872,11 @@ export const issuesByProject: Record<string, IssueDTO[]> = {
     },
   ],
 }
+
+// Export sanitized fixtures without `description`
+export const issuesByProject: Record<string, IssueDTO[]> = Object.fromEntries(
+  Object.entries(issuesByProjectRaw).map(([project, issues]) => [
+    project,
+    issues.map(({ description: _omit, ...rest }) => rest),
+  ])
+)

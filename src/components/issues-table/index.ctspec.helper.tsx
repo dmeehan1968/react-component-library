@@ -40,7 +40,6 @@ export class IssuesTableViewHelper {
   // Column headers
   get selectColumn() { return this.root.getByTestId(ids.columns.select.header) }
   get issueColumn() { return this.root.getByTestId(ids.columns.issue.header) }
-  get descriptionColumn() { return this.root.getByTestId(ids.columns.description.header) }
   get timestampColumn() { return this.root.getByTestId(ids.columns.timestamp.header) }
   get inputTokensColumn() { return this.root.getByTestId(ids.columns.inputTokens.header) }
   get outputTokensColumn() { return this.root.getByTestId(ids.columns.outputTokens.header) }
@@ -95,7 +94,6 @@ export class IssuesTableViewHelper {
 
   // Individual cell collections (so we can nth() them by row index)
   private get _issueCells() { return this.issueRows.getByTestId(ids.columns.issue.cell) }
-  private get _descriptionCells() { return this.issueRows.getByTestId(ids.columns.description.cell) }
   private get _timestampCells() { return this.issueRows.getByTestId(ids.columns.timestamp.cell) }
   private get _inputCells() { return this.issueRows.getByTestId(ids.columns.inputTokens.cell) }
   private get _outputCells() { return this.issueRows.getByTestId(ids.columns.outputTokens.cell) }
@@ -107,7 +105,6 @@ export class IssuesTableViewHelper {
   cellsAt(index: number) {
     return {
       issueLink: this._issueCells.nth(index).locator('a'),
-      description: this._descriptionCells.nth(index),
       timestamp: this._timestampCells.nth(index),
       input: this._inputCells.nth(index),
       output: this._outputCells.nth(index),
@@ -148,7 +145,6 @@ export class IssuesTableViewHelper {
     const results: Array<{
       title: string
       url: string
-      description: string
       timestamp: string
       input: string
       output: string
@@ -161,7 +157,6 @@ export class IssuesTableViewHelper {
       results.push({
         title: i.title,
         url: i.url,
-        description: i.description,
         timestamp: await this.fmtTimestamp(i.timestamp.getTime()),
         input: await this.fmtTokens(i.inputTokens),
         output: await this.fmtTokens(i.outputTokens),

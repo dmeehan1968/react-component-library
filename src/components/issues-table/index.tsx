@@ -95,7 +95,6 @@ export const IssuesTableView: React.FC = () => {
           />
         </th>
         <th data-testid={ids.columns.issue.header}>Issue</th>
-        <th data-testid={ids.columns.description.header}>Description</th>
         <th data-testid={ids.columns.timestamp.header} className="text-right">Timestamp</th>
         <th data-testid={ids.columns.inputTokens.header} className="text-right">Input Tokens</th>
         <th data-testid={ids.columns.outputTokens.header} className="text-right">Output Tokens</th>
@@ -141,7 +140,6 @@ export const IssuesTableView: React.FC = () => {
               {issue.title}
             </a>
           </td>
-          <td data-testid={ids.columns.description.cell}>{issue.description}</td>
           <td data-testid={ids.columns.timestamp.cell} className="text-right">{formatTimestamp(issue.timestamp)}</td>
           <td data-testid={ids.columns.inputTokens.cell} className="text-right">{formatTokens(issue.inputTokens)}</td>
           <td data-testid={ids.columns.outputTokens.cell} className="text-right">{formatTokens(issue.outputTokens)}</td>

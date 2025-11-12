@@ -17,7 +17,6 @@ describe('createTestIds', () => {
       columns: [
         'select',
         'issue',
-        'description',
         'timestamp',
         'inputTokens',
         'outputTokens',
@@ -41,7 +40,6 @@ describe('createTestIds', () => {
     // columns headers
     expect(ids.columns.select.header).toBe('select-column')
     expect(ids.columns.issue.header).toBe('issue-column')
-    expect(ids.columns.description.header).toBe('description-column')
     expect(ids.columns.timestamp.header).toBe('timestamp-column')
     expect(ids.columns.inputTokens.header).toBe('input-tokens-column')
     expect(ids.columns.outputTokens.header).toBe('output-tokens-column')
@@ -52,7 +50,6 @@ describe('createTestIds', () => {
 
     // column cells (select omitted)
     expect(ids.columns.issue.cell).toBe('issue')
-    expect(ids.columns.description.cell).toBe('description')
     expect(ids.columns.timestamp.cell).toBe('timestamp')
     expect(ids.columns.inputTokens.cell).toBe('input-tokens')
     expect(ids.columns.outputTokens.cell).toBe('output-tokens')

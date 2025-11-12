@@ -8,7 +8,6 @@ export const T = createTestIds(
     columns: [
       'select',
       'issue',
-      'description',
       'timestamp',
       'inputTokens',
       'outputTokens',

@@ -6,7 +6,8 @@ import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  // Ignore build output, Playwright component testing cache artifacts, and transient test results
+  globalIgnores(['dist', 'playwright/.cache/**', 'test-results/**']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

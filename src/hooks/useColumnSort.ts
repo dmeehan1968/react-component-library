@@ -18,6 +18,14 @@ export interface UseSortResult<T, K extends string> {
   sorted: T[]
 }
 
+// Type guards to discriminate `indicators` union without using `any`
+const hasIndicatorKeys = (i: unknown): i is IndicatorTriple =>
+  typeof i === 'object' && i !== null && ('asc' in i || 'desc' in i || 'none' in i)
+
+function isPerColumnIndicators<K extends string>(i: unknown): i is Partial<Record<K, IndicatorTriple>> {
+  return typeof i === 'object' && i !== null && !hasIndicatorKeys(i)
+}
+
 /**
  * Generic sorting hook.
  * - Strongly types `handleSort` to accepted column keys.
@@ -53,10 +61,10 @@ export function useColumnSort<T, const K extends string>(
   const indicator = React.useMemo(() => {
     const compute = (col: K): string => {
       const base: IndicatorTriple = Array.isArray(columns)
-        ? typeof indicators === 'object' && !('asc' in (indicators as any))
-          ? (indicators as Partial<Record<K, IndicatorTriple>>)[col] ?? {}
-          : ((indicators as IndicatorTriple) ?? {})
-        : ((indicators as IndicatorTriple) ?? {})
+        ? isPerColumnIndicators(indicators)
+          ? indicators[col] ?? {}
+          : (indicators ?? {})
+        : (indicators ?? {})
       const asc = base.asc ?? '↑'
       const desc = base.desc ?? '↓'
       const none = base.none ?? ''

@@ -33,7 +33,7 @@ export const IssuesProvider: React.FC<IssuesProviderProps> = ({ children, projec
     }
 
     void loadIssues()
-  }, [fetchImpl])
+  }, [fetchImpl, projectId])
 
   const value: IssuesContextType =
     error ? { error: error.message ?? 'Unexpected error in fetch' } : isLoading ? { isLoading } : { issues: fetchedIssues }

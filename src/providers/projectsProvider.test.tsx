@@ -1,6 +1,6 @@
 import { describe, it, expect, afterEach } from "bun:test"
 import { screen, waitFor, render, cleanup } from "@testing-library/react"
-import { type FetchImpl, ProjectsProvider } from "./projectsProvider.tsx"
+import { ProjectsProvider } from "./projectsProvider.tsx"
 import { ProjectsProviderHelper } from "./projectsProvider.test.helper.tsx"
 import { useProjects } from "../hooks/useProjects.tsx"
 import { deferred, okResponse, notOkResponse, createFetchMock } from "./testShared.ts"

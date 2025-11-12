@@ -4,6 +4,7 @@ import { type Project, ProjectsContext, type ProjectsContextType } from "../../p
 import type { ProjectSortableColumns as SortableColumns } from "./projectSort.tsx"
 import type { SortOrder } from "../../hooks/useColumnSort.ts"
 import { projectSort } from "./projectSort.tsx"
+import { MemoryRouter } from 'react-router-dom'
 
 import {
   errorMessageId,
@@ -42,9 +43,11 @@ export class ProjectTableViewHelper {
       await this._root.unmount()
     }
     this._root = await this._mount(
-      <ProjectsContext value={props}>
-        <ProjectTableView/>
-      </ProjectsContext>
+      <MemoryRouter initialEntries={["/"]}>
+        <ProjectsContext value={props}>
+          <ProjectTableView/>
+        </ProjectsContext>
+      </MemoryRouter>
     )
   }
 

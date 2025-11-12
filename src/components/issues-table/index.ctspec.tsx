@@ -26,21 +26,9 @@ baseTest.describe("IssuesTableView", () => {
     })
 
     test('should not render totals header or footer when there are no issues', async ({ table }) => {
-      // Totals header cells should not exist
+      // Totals header/footer rows should not exist
       await expect(table.root.getByTestId(ids.totalsHeaderRowId)).toBeHidden()
-      await expect(table.root.getByTestId(ids.totalsHeaderInputId)).toBeHidden()
-      await expect(table.root.getByTestId(ids.totalsHeaderOutputId)).toBeHidden()
-      await expect(table.root.getByTestId(ids.totalsHeaderCacheId)).toBeHidden()
-      await expect(table.root.getByTestId(ids.totalsHeaderCostId)).toBeHidden()
-      await expect(table.root.getByTestId(ids.totalsHeaderTimeId)).toBeHidden()
-
-      // Totals footer cells should not exist
       await expect(table.root.getByTestId(ids.totalsFooterRowId)).toBeHidden()
-      await expect(table.root.getByTestId(ids.totalsFooterInputId)).toBeHidden()
-      await expect(table.root.getByTestId(ids.totalsFooterOutputId)).toBeHidden()
-      await expect(table.root.getByTestId(ids.totalsFooterCacheId)).toBeHidden()
-      await expect(table.root.getByTestId(ids.totalsFooterCostId)).toBeHidden()
-      await expect(table.root.getByTestId(ids.totalsFooterTimeId)).toBeHidden()
     })
 
   })

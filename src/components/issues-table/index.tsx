@@ -113,11 +113,6 @@ export const IssuesTableView: React.FC = () => {
           formatHMS={formatHMS}
           ids={{
             rowId: ids.totalsHeaderRowId,
-            inputId: ids.totalsHeaderInputId,
-            outputId: ids.totalsHeaderOutputId,
-            cacheId: ids.totalsHeaderCacheId,
-            costId: ids.totalsHeaderCostId,
-            timeId: ids.totalsHeaderTimeId,
           }}
         />
       )}
@@ -169,11 +164,6 @@ export const IssuesTableView: React.FC = () => {
             formatHMS={formatHMS}
             ids={{
               rowId: ids.totalsFooterRowId,
-              inputId: ids.totalsFooterInputId,
-              outputId: ids.totalsFooterOutputId,
-              cacheId: ids.totalsFooterCacheId,
-              costId: ids.totalsFooterCostId,
-              timeId: ids.totalsFooterTimeId,
             }}
           />
         </tfoot>

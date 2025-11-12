@@ -64,20 +64,20 @@ export class IssuesTableViewHelper {
   // Totals
   get totalsHeader() {
     return {
-      input: this.root.getByTestId(ids.totalsHeaderInputId),
-      output: this.root.getByTestId(ids.totalsHeaderOutputId),
-      cache: this.root.getByTestId(ids.totalsHeaderCacheId),
-      cost: this.root.getByTestId(ids.totalsHeaderCostId),
-      time: this.root.getByTestId(ids.totalsHeaderTimeId),
+      input: this.root.getByTestId(ids.totalsHeaderRowId).getByTestId(ids.totalsCellInputId),
+      output: this.root.getByTestId(ids.totalsHeaderRowId).getByTestId(ids.totalsCellOutputId),
+      cache: this.root.getByTestId(ids.totalsHeaderRowId).getByTestId(ids.totalsCellCacheId),
+      cost: this.root.getByTestId(ids.totalsHeaderRowId).getByTestId(ids.totalsCellCostId),
+      time: this.root.getByTestId(ids.totalsHeaderRowId).getByTestId(ids.totalsCellTimeId),
     }
   }
   get totalsFooter() {
     return {
-      input: this.root.getByTestId(ids.totalsFooterInputId),
-      output: this.root.getByTestId(ids.totalsFooterOutputId),
-      cache: this.root.getByTestId(ids.totalsFooterCacheId),
-      cost: this.root.getByTestId(ids.totalsFooterCostId),
-      time: this.root.getByTestId(ids.totalsFooterTimeId),
+      input: this.root.getByTestId(ids.totalsFooterRowId).getByTestId(ids.totalsCellInputId),
+      output: this.root.getByTestId(ids.totalsFooterRowId).getByTestId(ids.totalsCellOutputId),
+      cache: this.root.getByTestId(ids.totalsFooterRowId).getByTestId(ids.totalsCellCacheId),
+      cost: this.root.getByTestId(ids.totalsFooterRowId).getByTestId(ids.totalsCellCostId),
+      time: this.root.getByTestId(ids.totalsFooterRowId).getByTestId(ids.totalsCellTimeId),
     }
   }
 
@@ -94,15 +94,15 @@ export class IssuesTableViewHelper {
   // Removed unused row-level accessor in favor of `cellsAt()`
 
   // Individual cell collections (so we can nth() them by row index)
-  private get _issueCells() { return this.root.getByTestId(ids.issueId) }
-  private get _descriptionCells() { return this.root.getByTestId(ids.descriptionId) }
-  private get _timestampCells() { return this.root.getByTestId(ids.timestampId) }
-  private get _inputCells() { return this.root.getByTestId(ids.inputTokensId) }
-  private get _outputCells() { return this.root.getByTestId(ids.outputTokensId) }
-  private get _cacheCells() { return this.root.getByTestId(ids.cacheTokensId) }
-  private get _costCells() { return this.root.getByTestId(ids.costId) }
-  private get _timeCells() { return this.root.getByTestId(ids.timeId) }
-  private get _statusCells() { return this.root.getByTestId(ids.statusId) }
+  private get _issueCells() { return this.issueRows.getByTestId(ids.issueId) }
+  private get _descriptionCells() { return this.issueRows.getByTestId(ids.descriptionId) }
+  private get _timestampCells() { return this.issueRows.getByTestId(ids.timestampId) }
+  private get _inputCells() { return this.issueRows.getByTestId(ids.inputTokensId) }
+  private get _outputCells() { return this.issueRows.getByTestId(ids.outputTokensId) }
+  private get _cacheCells() { return this.issueRows.getByTestId(ids.cacheTokensId) }
+  private get _costCells() { return this.issueRows.getByTestId(ids.costId) }
+  private get _timeCells() { return this.issueRows.getByTestId(ids.timeId) }
+  private get _statusCells() { return this.issueRows.getByTestId(ids.statusId) }
 
   cellsAt(index: number) {
     return {

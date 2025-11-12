@@ -1,6 +1,6 @@
-import { describe, it, expect } from "bun:test"
+import { describe, it, expect, mock } from "bun:test"
 import { screen, waitFor, render } from "@testing-library/react"
-import { ProjectsProvider } from "./projectsProvider.tsx"
+import { type FetchImpl, ProjectsProvider } from "./projectsProvider.tsx"
 import { ProjectsProviderHelper } from "./projectsProvider.test.helper.tsx"
 import { useProjects } from "../hooks/useProjects.tsx"
 
@@ -28,14 +28,15 @@ function notOkResponse() {
   } as Response
 }
 
+function createFetchMock(impl: FetchImpl) {
+  return mock<FetchImpl>(impl)
+}
+
 describe("<ProjectsProvider>", () => {
   it("shows loading while fetching and then sets projects on success", async () => {
     const d = deferred<Response>()
-    const calls: unknown[] = []
-    const fetchSpy = ((...args: unknown[]) => {
-      calls.push(args)
-      return d.promise
-    }) as unknown as typeof fetch
+
+    const fetchSpy = createFetchMock(() => d.promise)
 
     const { container } = ProjectsProviderHelper.renderWithProvider(fetchSpy)
 
@@ -52,12 +53,12 @@ describe("<ProjectsProvider>", () => {
 
     // loading should be false now and no residual nodes
     expect(container.textContent?.includes("loading:true")).toBe(false)
-    expect((calls[0] as unknown[])[0]).toBe('/api/projects')
+    expect(fetchSpy.mock.calls).toEqual([['/api/projects']])
   })
 
   it("leaves projects empty when response is not ok", async () => {
     const d = deferred<Response>()
-    const fetchSpy = (() => d.promise) as unknown as typeof fetch
+    const fetchSpy = createFetchMock(() => d.promise)
     ProjectsProviderHelper.renderWithProvider(fetchSpy)
 
     // in-flight
@@ -72,7 +73,7 @@ describe("<ProjectsProvider>", () => {
 
   it("sets error when fetch throws", async () => {
     const d = deferred<Response>()
-    const fetchSpy = (() => d.promise) as unknown as typeof fetch
+    const fetchSpy = createFetchMock(() => d.promise)
     ProjectsProviderHelper.renderWithProvider(fetchSpy)
 
     // trigger rejection
@@ -87,7 +88,7 @@ describe("<ProjectsProvider>", () => {
   it("re-fetches when fetchImpl reference changes", async () => {
     // first fetch resolves to []
     const d1 = deferred<Response>()
-    const fetch1 = (() => d1.promise) as unknown as typeof fetch
+    const fetch1 = createFetchMock(() => d1.promise)
 
     function Probe() {
       const ctx = useProjects()
@@ -110,7 +111,7 @@ describe("<ProjectsProvider>", () => {
     // Now rerender with a new fetch impl
     const d2 = deferred<Response>()
     const projects = [{ name: "B", url: "/b", lastUpdated: new Date().toISOString(), issueCount: 2 }]
-    const fetch2 = (() => d2.promise) as unknown as typeof fetch
+    const fetch2 = createFetchMock(() => d2.promise)
 
     r.rerender(
       <ProjectsProvider fetchImpl={fetch2}>

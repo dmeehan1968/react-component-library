@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react"
-import { ProjectsProvider } from "./projectsProvider.tsx"
+import { type FetchImpl, ProjectsProvider } from "./projectsProvider.tsx"
 import { useProjects } from "../hooks/useProjects.tsx"
 
 // A small test consumer that renders the context state in the DOM so tests can assert easily
@@ -18,7 +18,7 @@ function ProjectsStateProbe() {
 }
 
 export class ProjectsProviderHelper {
-  static renderWithProvider(fetchImpl: typeof fetch) {
+  static renderWithProvider(fetchImpl: FetchImpl) {
     return render(
       <ProjectsProvider fetchImpl={fetchImpl}>
         <ProjectsStateProbe />

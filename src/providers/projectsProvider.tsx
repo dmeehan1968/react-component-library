@@ -1,9 +1,11 @@
 import * as React from "react"
 import { type Project, ProjectsContext, type ProjectsContextType } from "./projectsContext.tsx"
 
+export type FetchImpl = (req: RequestInfo| string, init?: RequestInit) => Promise<Response>
+
 export interface ProjectsProviderProps {
   children?: React.ReactNode
-  fetchImpl: typeof fetch
+  fetchImpl: FetchImpl
 }
 
 export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({

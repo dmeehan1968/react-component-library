@@ -6,8 +6,21 @@ export interface IssuesProviderProps {
   dataSource?: { issues: Issue[], error?: never, fetch?: never } | { error: string, issues?: never, fetch?: never } | { fetch: typeof fetch, issues?: never, error?: never }
 }
 
-const sortByTimestampDesc = (issues: Issue[]) =>
-  [...issues].sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
+// Convert various timestamp shapes to epoch milliseconds safely.
+// - ISO string → parsed ms (or 0 if invalid)
+// - Date instance → getTime()
+// - anything else → 0
+export const toTime = (value: unknown): number => {
+  if (value instanceof Date) return value.getTime()
+  if (typeof value === 'string') {
+    const t = Date.parse(value)
+    return Number.isFinite(t) ? t : 0
+  }
+  return 0
+}
+
+export const sortByTimestampDesc = (issues: Issue[]) =>
+  [...issues].sort((a, b) => toTime(b.timestamp) - toTime(a.timestamp))
 
 export const IssuesProvider: React.FC<IssuesProviderProps> = ({ children, dataSource = { fetch } }) => {
   const [fetchedIssues, setFetchedIssues] = React.useState([] as Issue[])

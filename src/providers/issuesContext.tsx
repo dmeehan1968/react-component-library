@@ -6,7 +6,9 @@ export interface Issue {
   url: string
   project: string
   description: string
-  timestamp: Date
+  // API returns ISO 8601 string timestamps. Keep as string in the shared type
+  // to avoid client/server drift. Convert to numbers/dates only at usage sites.
+  timestamp: string
   inputTokens: number
   outputTokens: number
   cacheTokens: number

@@ -7,7 +7,10 @@ baseTest.describe("TotalsRow", () => {
   const totals = { input: 1200, output: 3500, cache: 25, cost: 12.345, time: 3665 }
   // Browser-locale formatters to mirror app behavior
   const formatTokens = (n: number) => new Intl.NumberFormat(navigator.language).format(n)
-  const formatCost = (n: number) => new Intl.NumberFormat(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n)
+  const formatCost = (n: number) => new Intl.NumberFormat(navigator.language, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(n)
   const formatHMS = (totalSeconds: number) => {
     const seconds = Math.max(0, Math.floor(totalSeconds))
     const h = Math.floor(seconds / 3600)

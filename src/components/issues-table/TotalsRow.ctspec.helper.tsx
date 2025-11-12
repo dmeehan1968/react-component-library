@@ -1,9 +1,8 @@
 import type { ComponentFixtures, MountResult } from "@playwright/experimental-ct-react"
 import type { Locator } from "@playwright/test"
-
-import { TotalsRow } from "./TotalsRow.tsx"
-import type { TotalsRowProp } from "./TotalsRow.tsx"
 import * as ids from "./index.testids.ts"
+import type { TotalsRowProp } from "./TotalsRow.tsx"
+import { TotalsRow } from "./TotalsRow.tsx"
 
 export class TotalsRowHelper {
   private _root: MountResult | undefined
@@ -28,33 +27,36 @@ export class TotalsRowHelper {
     this._root = await this._mount(
       <table className="table">
         <thead>
-          {/* Minimal header row to mirror real table structure */}
-          <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-          </tr>
-          <TotalsRow
-            totals={totals}
-            formatTokens={formatTokens}
-            formatCost={formatCost}
-            formatHMS={formatHMS}
-            rowId={rowId ?? ids.totalsHeaderRowId}
-          />
+        {/* Minimal header row to mirror real table structure */}
+        <tr>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+        <TotalsRow
+          totals={totals}
+          formatTokens={formatTokens}
+          formatCost={formatCost}
+          formatHMS={formatHMS}
+          rowId={rowId ?? ids.totalsHeaderRowId}
+        />
         </thead>
-      </table>
+      </table>,
     )
   }
 
   // Accessors
-  get row() { return this.root.getByTestId(ids.totalsHeaderRowId) }
+  get row() {
+    return this.root.getByTestId(ids.totalsHeaderRowId)
+  }
+
   get cells() {
     const r = this.row
     return {
@@ -70,9 +72,14 @@ export class TotalsRowHelper {
   async fmtTokens(n: number) {
     return this.root.evaluate((_el, v) => new Intl.NumberFormat(navigator.language).format(v as number), n)
   }
+
   async fmtCost(n: number) {
-    return this.root.evaluate((_el, v) => new Intl.NumberFormat(navigator.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v as number), n)
+    return this.root.evaluate((_el, v) => new Intl.NumberFormat(navigator.language, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(v as number), n)
   }
+
   async fmtHMS(totalSeconds: number) {
     return this.root.evaluate((_el, v) => {
       const seconds = Math.max(0, Math.floor(v as number))

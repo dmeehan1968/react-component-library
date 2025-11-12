@@ -41,6 +41,7 @@ Project: react-component-library — Guidelines (2025-11-12)
 - Component tests (Playwright Component Testing)
   - Install once: `bun run pw:install` (downloads browsers).
   - Run all: `bun run pw:ct` | UI mode: `bun run pw:ct:ui`.
+  - Run focussed test: `bun run pw:ct --grep <pattern>`
   - Config: `playwright-ct.config.ts`
     - `testDir: ./src`, `testMatch: **/*.ctspec.(ts|tsx)`
     - `use.ctTemplateDir: playwright/` (HTML template, global styles)

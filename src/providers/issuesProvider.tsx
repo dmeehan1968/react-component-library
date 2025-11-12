@@ -5,10 +5,11 @@ import type { FetchImpl } from "./projectsProvider.tsx"
 
 export interface IssuesProviderProps {
   children?: React.ReactNode
+  projectId: string
   fetchImpl?: FetchImpl
 }
 
-export const IssuesProvider: React.FC<IssuesProviderProps> = ({ children, fetchImpl = fetch }) => {
+export const IssuesProvider: React.FC<IssuesProviderProps> = ({ children, projectId, fetchImpl = fetch }) => {
   const [fetchedIssues, setFetchedIssues] = React.useState([] as Issue[])
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [error, setError] = React.useState<Error | undefined>(undefined)
@@ -18,7 +19,7 @@ export const IssuesProvider: React.FC<IssuesProviderProps> = ({ children, fetchI
       try {
         setIsLoading(true)
         setError(undefined)
-        const res = await fetchImpl('/api/issues')
+        const res = await fetchImpl(`/api/projects/${encodeURIComponent(projectId)}/issues`)
         if (res.ok) {
           const raw = await res.json()
           const parsed = parseIssues(raw) as Issue[]

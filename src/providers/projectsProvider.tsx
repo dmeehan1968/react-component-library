@@ -1,5 +1,6 @@
 import * as React from "react"
 import { type Project, ProjectsContext, type ProjectsContextType } from "./projectsContext.tsx"
+import { parseProjects } from "../schemas/project.ts"
 
 export type FetchImpl = (req: RequestInfo| string, init?: RequestInit) => Promise<Response>
 
@@ -28,18 +29,8 @@ export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
           setFetchedProjects([])
           return
         }
-        const raw = await res.json() as Array<{
-          name: string
-          url: string
-          lastUpdated: string | number | Date
-          issueCount: number | string
-        }>
-        const parsed: Project[] = raw.map((p) => ({
-          name: p.name,
-          url: p.url,
-          lastUpdated: new Date(p.lastUpdated),
-          issueCount: typeof p.issueCount === 'string' ? Number(p.issueCount) : p.issueCount,
-        }))
+        const raw = await res.json()
+        const parsed = parseProjects(raw) as Project[]
         setFetchedProjects(parsed)
       } catch (err) {
         setError(err instanceof Error ? err : new Error(String(err)))

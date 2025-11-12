@@ -6,15 +6,14 @@ export interface Issue {
   url: string
   project: string
   description: string
-  // API returns ISO 8601 string timestamps. Keep as string in the shared type
-  // to avoid client/server drift. Convert to numbers/dates only at usage sites.
-  timestamp: string
+  // Normalized as Date via zod when fetched from the API
+  timestamp: Date
   inputTokens: number
   outputTokens: number
   cacheTokens: number
   cost: number
   time: number
-  status: 'queued' | 'running' | 'succeeded' | 'failed' | (string & {})
+  status: 'queued' | 'running' | 'succeeded' | 'failed'
 }
 
 export interface IssuesContextType {

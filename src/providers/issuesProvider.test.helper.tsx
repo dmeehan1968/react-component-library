@@ -3,7 +3,7 @@ import { type IssuesProviderProps, IssuesProvider } from "./issuesProvider.tsx"
 import { useIssues } from "../hooks/useIssues.tsx"
 
 // A small test consumer that renders the context state in the DOM so tests can assert easily
-function IssuesStateProbe() {
+export function IssuesStateProbe() {
   const ctx = useIssues()
 
   if ("isLoading" in ctx) {

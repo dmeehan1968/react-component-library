@@ -1,8 +1,7 @@
 import { describe, it, expect } from "bun:test"
 import { screen, waitFor, render } from "@testing-library/react"
 import { IssuesProvider } from "./issuesProvider.tsx"
-import { IssuesProviderHelper } from "./issuesProvider.test.helper.tsx"
-import { useIssues } from "../hooks/useIssues.tsx"
+import { IssuesProviderHelper, IssuesStateProbe } from "./issuesProvider.test.helper.tsx"
 import { deferred, okResponse, notOkResponse, createFetchMock } from "./testShared.ts"
 
 function makeIssue(overrides: Partial<Record<string, unknown>> = {}) {
@@ -25,8 +24,8 @@ function makeIssue(overrides: Partial<Record<string, unknown>> = {}) {
 
 describe("IssuesProvider", () => {
   it("shows loading while fetching and then sets issues on success", async () => {
-    const d = deferred<Response>()
-    const fetchSpy = createFetchMock(() => d.promise)
+    const { promise, resolve } = deferred<Response>()
+    const fetchSpy = createFetchMock(() => promise)
 
     const projectId = "proj X"
     const { container } = IssuesProviderHelper.renderWithProvider(fetchSpy, projectId)
@@ -36,7 +35,7 @@ describe("IssuesProvider", () => {
 
     // Resolve with a successful response
     const issues = [makeIssue({ id: "i1" })]
-    d.resolve(okResponse(issues))
+    resolve(okResponse(issues))
 
     await waitFor(() => {
       expect(IssuesProviderHelper.state.textContent).toBe(`issues:${JSON.stringify(issues)}`)
@@ -83,23 +82,16 @@ describe("IssuesProvider", () => {
     const deferred1 = deferred<Response>()
     const fetch1 = createFetchMock(() => deferred1.promise)
 
-    function Probe() {
-      const ctx = useIssues()
-      if ("isLoading" in ctx) return <div data-testid="state">loading</div>
-      if ("error" in ctx) return <div data-testid="state">error</div>
-      return <div data-testid="state">issues:{ctx.issues.length}</div>
-    }
-
     const projectId = "with spaces"
     const r = render(
       <IssuesProvider fetchImpl={fetch1} projectId={projectId}>
-        <Probe />
+        <IssuesStateProbe />
       </IssuesProvider>
     )
 
     deferred1.resolve(okResponse([]))
     await waitFor(() => {
-      expect(screen.getByTestId('state').textContent).toBe('issues:0')
+      expect(screen.getByTestId('state').textContent).toBe('issues:[]')
     })
 
     // Now rerender with a new fetch impl
@@ -109,16 +101,16 @@ describe("IssuesProvider", () => {
 
     r.rerender(
       <IssuesProvider fetchImpl={fetch2} projectId={projectId}>
-        <Probe />
+        <IssuesStateProbe />
       </IssuesProvider>
     )
 
     // Should enter loading again after fetchImpl changed
-    expect(screen.getByTestId('state').textContent).toBe('loading')
+    expect(screen.getByTestId('state').textContent).toBe('loading:true')
 
     deferred2.resolve(okResponse(issues))
     await waitFor(() => {
-      expect(screen.getByTestId('state').textContent).toBe('issues:1')
+      expect(screen.getByTestId('state').textContent).toBe(`issues:${JSON.stringify(issues)}`)
     })
 
     r.unmount()

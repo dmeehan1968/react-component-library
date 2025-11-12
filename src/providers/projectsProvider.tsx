@@ -5,7 +5,7 @@ export type FetchImpl = (req: RequestInfo| string, init?: RequestInit) => Promis
 
 export interface ProjectsProviderProps {
   children?: React.ReactNode
-  fetchImpl: FetchImpl
+  fetchImpl?: FetchImpl
 }
 
 export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
@@ -22,9 +22,22 @@ export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
         setIsLoading(true)
         setError(undefined)
         const res = await fetchImpl!('/api/projects')
-        if (res.ok) {
-          setFetchedProjects(await res.json())
+        if (!res.ok) {
+          throw new Error(`Failed to load projects: ${res.status} ${res.statusText}`)
         }
+        const raw = await res.json() as Array<{
+          name: string
+          url: string
+          lastUpdated: string | number | Date
+          issueCount: number | string
+        }>
+        const parsed: Project[] = raw.map((p) => ({
+          name: p.name,
+          url: p.url,
+          lastUpdated: new Date(p.lastUpdated),
+          issueCount: typeof p.issueCount === 'string' ? Number(p.issueCount) : p.issueCount,
+        }))
+        setFetchedProjects(parsed)
       } catch (err) {
         setError(err instanceof Error ? err : new Error(String(err)))
       } finally {

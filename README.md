@@ -19,6 +19,17 @@ Last updated: 2025-10-30 13:44 (local time)
 - Lint: `bunx eslint .`
 - Tests: `bun test` (watch: `bun test --watch`, coverage: `bun test --coverage`)
 
+## Dev/Preview API routes
+
+This app serves a small API for local development and preview builds using Vite middleware (no separate server).
+
+- Endpoint: `GET /api/projects`
+- Implementation: configured in `vite.config.ts` via `configureServer` (dev) and `configurePreviewServer` (preview).
+- Payload source of truth: `src/server/projects.data.ts` (ISO 8601 date strings).
+- The previous static files under `public/api/` were removed to avoid ambiguity.
+
+If you need to change the demo data, edit `src/server/projects.data.ts` and restart the dev server.
+
 ## Styling: Tailwind CSS + DaisyUI
 
 - Tailwind CSS v4 and DaisyUI are installed and configured. We rely on Tailwind Preflight for the CSS reset and avoid custom global CSS.

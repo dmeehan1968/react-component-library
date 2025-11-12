@@ -1,6 +1,7 @@
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
-import Counter from './components/counter'
+import { ProjectTableView } from './components/project-table'
+import { ProjectsProvider } from './providers/projectsProvider.tsx'
 
 function App() {
   return (
@@ -16,9 +17,11 @@ function App() {
 
       <h1 className="text-4xl font-bold">Vite + React</h1>
 
-      <div className="card bg-base-200 shadow-lg w-full max-w-md">
-        <div className="card-body items-center text-center">
-          <Counter />
+      <div className="card bg-base-200 shadow-lg w-full max-w-3xl">
+        <div className="card-body">
+          <ProjectsProvider>
+            <ProjectTableView />
+          </ProjectsProvider>
         </div>
       </div>
 

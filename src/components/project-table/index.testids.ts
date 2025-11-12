@@ -1,3 +1,4 @@
+export const projectsTableId = 'projects-table'
 export const nameColumnId = 'name-column'
 export const lastUpdatedColumnId = 'last-updated-column'
 export const issueCountColumnId = 'issue-count-column'

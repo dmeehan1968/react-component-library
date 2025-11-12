@@ -85,6 +85,10 @@ export class ProjectTableViewHelper {
     return this.root.evaluate(el => el.tagName)
   }
 
+  get testId() {
+    return this.root.evaluate(el => el.getAttribute('data-testid'))
+  }
+
   get projectRows() {
     return this.root.getByTestId(projectId)
   }

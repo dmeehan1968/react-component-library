@@ -12,8 +12,9 @@ export class AppHelper {
     return new AppHelper(await mount(<App />))
   }
 
-  get counter() {
-    return this.root.getByTestId('counter')
+  // Project table helpers
+  get projectsTable() {
+    return this.root.getByTestId('projects-table')
   }
 
   get viteLink() {

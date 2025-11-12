@@ -11,7 +11,7 @@ import {
   nameColumnId,
   noDataMessageId,
   projectId,
-  sortIndicatorId,
+  sortIndicatorId, projectsTableId,
 } from "./index.testids.ts"
 import { TableMessage } from "./table-message"
 import { useColumnSort } from "../../hooks/useColumnSort.ts"
@@ -26,7 +26,7 @@ export const ProjectTableView: React.FC = () => {
   })
 
   return (
-    <table className="table table-zebra h-full">
+    <table className="table table-zebra h-full" data-testid={projectsTableId}>
       <thead>
       <tr>
         <th

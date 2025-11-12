@@ -16,8 +16,8 @@ export const expect = ctReact.expect.extend({
 })
 
 test.describe('App', () => {
-  test('renders exactly one Counter component', async ({ app }) => {
-    await expect(app.counter).toHaveCount(1)
+  test('renders the project table', async ({ app }) => {
+    await expect(app.projectsTable).toBeVisible()
   })
 
   test('Vite logo links to the Vite website', async ({ app }) => {

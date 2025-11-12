@@ -3,6 +3,7 @@ import { type ComponentFixtures, expect, test as baseTest } from "@playwright/ex
 import type { Project } from "../../providers/projectsContext.tsx"
 
 import { downArrow, ProjectTableViewHelper, upArrow } from "./index.ctspec.helper.tsx"
+import { projectsTableId } from "./index.testids.ts"
 
 baseTest.describe("ProjectTableView", () => {
 
@@ -105,6 +106,7 @@ function commonProjectTableSuite<T extends TestType<ComponentFixtures & {
 }>>(test: T) {
   test('should render a table', async ({ table }) => {
     await expect(table.tagName).resolves.toEqual('TABLE')
+    await expect(table.testId).resolves.toEqual(projectsTableId)
   })
 
   test('should contain name column', async ({ table }) => {

@@ -1,180 +1,73 @@
-# Project Development Guidelines
+Project: react-component-library — Guidelines (2025-11-12)
 
-Last verified: 2025-10-30 13:44 (local time)
+- Toolchain
+  - Runtime: Bun ≥1.3.x only. `packageManager: bun@1.3.0`.
+  - Dev server: Vite + React + Tailwind v4 plugin; custom `apiPlugin` mounts mock routes.
 
-This repository is a React 19 + TypeScript + Vite 7 project managed with Bun. The guidance below documents the project-specific build, lint, and test setup, plus tips that help with day-to-day development and debugging.
+- Install / Build / Run
+  - Install: `bun install`
+  - Dev: `bun run dev` → Vite serves + mock API mounted
+  - Build: `bun run build` (TS project refs, then Vite)
+  - Preview: `bun run preview` (mock API mounted in preview too)
 
-## Build and Configuration
+- Mock API (dev/preview)
+  - Vite plugin `src/server/api/index.ts` mounts:
+    - GET `/api/projects` → enriched list (adds `issueCount`, `lastUpdated` from issues dataset)
+    - GET `/api/projects/:projectId/issues`
+  - Paths supported in both trimmed and full forms (middleware may trim prefix); handlers guard by method.
 
-- Runtime and package manager: Bun 1.3 (enforced).
-  - `package.json` contains `"packageManager": "bun@1.3.0"` and `"engines": { "bun": ">=1.3.0 <2" }`.
-- Dev server: Vite with `@vitejs/plugin-react`.
-- TypeScript: composite setup with project references.
-- ESM only: `package.json` has `"type": "module"`.
+- TypeScript config quirks (important)
+  - Root `tsconfig.json` exists solely to satisfy Playwright CT transpilation; sets `jsx: react-jsx` + `allowImportingTsExtensions: true` to avoid TS6142/TS5097 in CT.
+  - `tsconfig.app.json`: bundler resolution; strict; excludes `playwright/**` from app typecheck; includes `playwright-ct.config.ts` only for types.
+  - `tsconfig.node.json`: tooling (vite config) types.
 
-Key files and settings:
-- `package.json` scripts
-  - `dev`: `bunx vite`
-  - `build`: `bunx tsc -b && vite build`
-  - `preview`: `bunx vite preview`
-  - `lint`: `bunx eslint .`
-  - `test`: `bun test` (watch and coverage variants available)
-- TypeScript
-  - `tsconfig.json` references: `tsconfig.app.json`, `tsconfig.node.json`.
-  - `tsconfig.app.json` (browser bundle):
-    - `moduleResolution: bundler`, `noEmit: true`, `jsx: react-jsx`.
-    - Strictness: `strict`, `noUnusedLocals`, `noUnusedParameters`, `noUncheckedSideEffectImports`, `noFallthroughCasesInSwitch`, `erasableSyntaxOnly`.
-    - Includes only `src/`.
-  - `tsconfig.node.json` (tooling/Node): same strictness, includes `vite.config.ts`.
-  - Do not use access modifiers on constructor parameters, define the class property separately.
-- ESLint (`eslint.config.js`)
-  - Extends: `@eslint/js` recommended, `typescript-eslint` recommended, `eslint-plugin-react-hooks` latest recommended, `eslint-plugin-react-refresh` Vite preset.
-  - `globalIgnores(["dist"])` enabled.
+- Linting / Style
+  - ESLint (flat) extends: `@eslint/js` recommended, `typescript-eslint` recommended, `react-hooks` latest, `react-refresh` vite; ignores `dist`.
+  - TS strict on; `noUnused*`, `noUncheckedSideEffectImports`, `erasableSyntaxOnly` enabled.
+  - Prefer functional React components; hooks follow rules-of-hooks; use `clsx` + Tailwind utility classes; `tailwind-merge` where needed (already a dep).
 
-### Typical workflows
-- Install deps: `bun install`.
-- Start dev server (HMR): `bun run dev`.
-- Type check + production build: `bun run build`.
-- Preview production build: `bun run preview`.
-- Lint: `bunx eslint .`.
-- Typecheck: `bunx tsc --noEmit`.
-- GitHub
-  - `gh` is installed globally and pre-configured for the repo and authorisation.
-  - Use `gh issue create` to create a new issue.
-    - Use `--body-file` to pass a file containing the issue body instead of creating long command lines.
-    - Remove any temporary files used in the command line (e.g. `--body-file <tmp>`) after running the command
-  - Use `gh issue list` to list issues.
-  - Use `gh issue view` to view an issue.
-  - Use `gh issue close` to close an issue.
-  - Use `gh pr create` to create a new PR.
-    - Use `--body-file` to pass a file containing the PR body instead of creating long command lines.
-  - Use `gh pr list` to list PRs.
-  - Use `gh pr view` to view a PR.
-  - Use `gh pr close` to close a PR.
-  - Use markdown formatting for issues, comments etc.
-  - DO NOT escape newlines.
-  - Include the following sections in the issue body:
-    - Description
-    - Steps to reproduce (if a bug)
-    - Current Implementation
-    - Proposed Change
-    - Files to add, modify and remove (separate sections for each)
-    - Acceptance Criteria (include checkboxes)
-    - Additional Notes (if any)
+- Unit tests (Bun + happy-dom + Testing Library)
+  - Run: `bun test` | watch: `bun run test:watch` | coverage: `bun run test:coverage`.
+  - Env: Bun test runner with `happy-dom` (DOM API). No Jest.
+  - Location: `src/**/*.test.ts(x)`.
+  - Patterns/conventions:
+    - Use `@testing-library/react` render/query; no enzyme.
+    - Providers accept `fetchImpl` prop for DI; use `src/providers/testShared.ts` helpers:
+      - `deferred<T>()` for controllable promises
+      - `okResponse`, `notOkResponse`
+      - `createFetchMock` (Bun `mock`) to stub fetch-like fns
+    - Example: `IssuesProviderHelper` and `IssuesStateProbe` pattern to assert provider state via `data-testid`.
 
-Notes
-- The repo favors ESM and Vite’s bundler-mode TS settings; avoid CommonJS/`require`.
-- React Fast Refresh rules are enforced by `eslint-plugin-react-refresh`; avoid patterns that break HMR.
-- Vite env vars must be prefixed with `VITE_` to be exposed to client code.
+- Component tests (Playwright Component Testing)
+  - Install once: `bun run pw:install` (downloads browsers).
+  - Run all: `bun run pw:ct` | UI mode: `bun run pw:ct:ui`.
+  - Config: `playwright-ct.config.ts`
+    - `testDir: ./src`, `testMatch: **/*.ctspec.(ts|tsx)`
+    - `use.ctTemplateDir: playwright/` (HTML template, global styles)
+    - `use.ctViteConfig.plugins: [tailwindcss(), react()]` — CT runs with Tailwind + React plugins.
+  - Helpers live next to components, e.g. `src/components/project-table/index.ctspec.helper.tsx` exposes a page-object style API for mounting via `fixtures.mount` and querying via `Locator`s.
 
-### Styling
-- Tailwind CSS v4 + DaisyUI are used for styling. Tailwind Preflight provides the CSS reset; do not add custom global resets.
-- Global stylesheet is `src/index.css` and should only import Tailwind and the DaisyUI plugin:
-  ```css
-  @import "tailwindcss";
-  @plugin "daisyui";
-  ```
-- Prefer Tailwind utilities and DaisyUI component classes (`btn`, `card`, `badge`, etc.) over bespoke CSS. Avoid new `.css` files; use `className` utilities in components.
-- The legacy Vite starter styles were removed (`src/App.css`).
+- Component: Project Table (example-specific tips)
+  - Sorting logic: `src/components/project-table/projectSort.tsx` (locale-aware by name; dates; stable, non-mutating). Unit-tested by `projectSort.test.ts`.
+  - Test IDs centralized under `index.testids.ts` to keep selectors stable across TL and CT.
 
-## Unit Testing
+- Providers + Data Flow
+  - `ProjectsProvider` fetches `/api/projects`, enriches view; exposes loading/error/data.
+  - `IssuesProvider` fetches `/api/projects/:projectId/issues`.
+  - Both re-fetch when `fetchImpl` identity changes (covered by tests). Use this to force refresh in-dev.
 
-### Runner
-- Uses Bun’s built‑in test runner (`bun:test`). No extra script is required; invoke `bun test`.
+- Adding tests
+  - Unit: colocate `*.test.tsx` near subject; prefer Testing Library queries; drive via public props/context; inject `fetchImpl` rather than mocking global `fetch`.
+  - Component (CT): create a `*.ctspec.tsx`; if complex, add `*.ctspec.helper.tsx` with a small page-object to hide `mount`/router/context wiring (see project-table helper). Keep assertions via Playwright `Locator`s and `getByTestId`.
 
-### Structure and co-location
-- Co-locate each feature’s tests and a helper class next to the feature itself.
-  - App layer should only assert composition (that child features exist), not child behavior.
-  - Example layout:
-    - `src/<module>.ts` (feature component)
-    - `src/<module>.test.helper.ts` (`class <Module>Helper`: encapsulates render, queries, and user actions)
-    - `src/<module>.test.tsx` (behavior‑oriented tests for module)
+- Commands quick ref
+  - `bun install`
+  - `bun run dev` | `bun run build` | `bun run preview`
+  - `bun test` | `bun run test:watch` | `bun run test:coverage`
+  - `bun run pw:install` (once) → `bun run pw:ct` | `bun run pw:ct:ui`
+  - `bun run lint`
 
-### Writing tests
-- Import from Bun’s runner: `import { describe, it, expect } from 'bun:test'`.
-- Use the helper class to keep tests concise and intention‑revealing.
-
-### Coverage
-- Run `bun test --coverage`.
-- Goal is 100% statement/branch/function/line coverage across the repo. If we cannot meet 100%, please open an issue describing the gaps so we can agree on exclusions or additional tests.
-
-## Component Testing
-
-### Runner
-
-- Use playwright test runner (`bun run pw:ct`)
-- `import { expect, test } from '@playwright/experimental-ct-react'`
-
-### Structure and co-location
-- Co-locate each feature’s tests and a helper class next to the feature itself.
-- App layer should only assert composition (that child features exist), not child behavior.
-- Example layout:
-  - `src/components/<component>/index.tsx` (feature component)
-  - `src/components/<component>/index.ctspec.tsx` (behavior‑oriented tests for feature)
-  - `src/components/<component>/index.ctspec.helper.tsx` (`class <Component>Helper`: encapsulates render, queries, and user actions)
-
-### Writing component tests
-
-- Create a helper class to provide domain-specific-language (DSL) semantics for the test
-  - Add getters for common queries such as locators, text, etc.
-  - Add actions for user interactions (e.g. click, type, etc.)
-  - DO NOT Add assertions for expected state (e.g. text, visibility, etc.) - these should be implemented as custom expect matchers.
-- Create custom matchers (in `/playwright/matchers`) to improve test semantics
-  Example:
-
-```ts
-import ctReact from '@playwright/experimental-ct-react'
-import { FeatureHelper } from "./index.ctspec.helper.tsx"
-import { toHaveSomeValue } from "../../../playwright/matchers/toHaveSomeValue.tsx"
-
-const test = ctReact.test.extend<{ feature: FeatureHelper }>({
-  feature: async ({ mount }, provide) => {
-    const feature = await FeatureHelper.mount(mount)
-    await provide(feature)
-  },
-})
-
-const expect = ctReact.expect.extend({
-  toHaveSomeValue,
-})
-
-test.describe('<Feature>', () => {
-  test('should do something', async ({ fixture }) => {
-    await expect(fixture).toHaveSomeValue()
-  })
-})
-```
-
-## Additional Development Information
-
-- Code style and linting
-  - Follow rules from `eslint.config.js`.
-  - Hooks: `eslint-plugin-react-hooks` is active with latest recommended config; respect dependency arrays and rules-of-hooks.
-  - If you want type-aware linting, adopt the guidance in `README.md` to switch to `typescript-eslint`’s `recommendedTypeChecked`/`strictTypeChecked` configs and set `parserOptions.project` to `['./tsconfig.node.json', './tsconfig.app.json']`.
-- TypeScript patterns
-  - Use explicit exports and `verbatimModuleSyntax: true`; avoid default-import fallbacks for CJS modules.
-  - Because `moduleResolution: bundler` is used, prefer fully-specified ESM imports and avoid `require`.
-- Vite/React specifics
-  - `@vitejs/plugin-react` is enabled; keep components and hooks pure to benefit from Fast Refresh.
-  - Client entry is `src/main.tsx`; root DOM id is `#root` (see `index.html`).
-
-## Troubleshooting
-- JSX/TS types not found
-  - Ensure `types: ["vite/client"]` is present (it is in `tsconfig.app.json`).
-- Node-style imports fail
-  - Use ESM syntax and ensure paths/file extensions are resolvable under `moduleResolution: bundler`.
-- HMR not updating
-  - Check for side-effectful module top-level code; verify React Refresh ESLint rules aren’t violated.
-- DOM-related test failures
-  - Ensure `bunfig.toml` exists and `test/setup.ts` registers `@happy-dom/global-registrator`.
-- Sourcemaps/stack traces oddities in tests
-  - If required, keep tests pure and avoid browser-only APIs; `happy-dom` covers most basics.
-
-## Conventions
-- Keep components small and stateless where possible.
-- Co-locate tests and their helpers with features; use `tests/` only for larger integration suites.
-- Avoid adding global ambient types in `src/`.
-- Prefer Tailwind/DaisyUI utility classes; consult the DaisyUI docs when picking components, and keep markup semantic.
-
----
-This document is intentionally project-specific. If you adjust the setup, append the exact commands and minimal configs here.
+- Troubleshooting
+  - CT TS errors about JSX or `.tsx` imports → ensure root `tsconfig.json` is present (don’t delete) and `allowImportingTsExtensions: true` remains.
+  - Missing browsers for Playwright → run `bun run pw:install`.
+  - API 404s in dev/preview → check `apiPlugin` is included in `vite.config.ts` plugins and routes defined in `src/server/api/**`.

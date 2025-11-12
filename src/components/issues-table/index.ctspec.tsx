@@ -174,13 +174,13 @@ baseTest.describe("IssuesTableView", () => {
       await expect(table.totalsFooter.time).toHaveClass(/\btext-right\b/)
     })
 
-    test('timestamp column is right-aligned', async ({ table }) => {
+    test('timestamp column is left-aligned', async ({ table }) => {
       // Header
-      await expect(table.timestampColumn).toHaveClass(/\btext-right\b/)
+      await expect(table.timestampColumn).toHaveClass(/\btext-left\b/)
       // All data row cells
       for (let i = 0 ; i < table.fixtures.length ; i++) {
         const cells = table.cellsAt(i)
-        await expect(cells.timestamp).toHaveClass(/\btext-right\b/)
+        await expect(cells.timestamp).toHaveClass(/\btext-left\b/)
       }
     })
 

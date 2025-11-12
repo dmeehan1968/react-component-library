@@ -5,10 +5,10 @@ import type { FetchImpl } from "./projectsProvider.tsx"
 
 export interface IssuesProviderProps {
   children?: React.ReactNode
-  fetchImpl: FetchImpl
+  fetchImpl?: FetchImpl
 }
 
-export const IssuesProvider: React.FC<IssuesProviderProps> = ({ children, fetchImpl }) => {
+export const IssuesProvider: React.FC<IssuesProviderProps> = ({ children, fetchImpl = fetch }) => {
   const [fetchedIssues, setFetchedIssues] = React.useState([] as Issue[])
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [error, setError] = React.useState<Error | undefined>(undefined)

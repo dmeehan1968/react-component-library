@@ -9,9 +9,8 @@ type Totals = {
   time: number
 }
 
-type Props = {
+export type TotalsRowProp = {
   totals: Totals
-  label?: string
   // formatters are injected so we keep locale-aware formatting centralized
   formatTokens: (n: number) => string
   formatCost: (n: number) => string
@@ -20,9 +19,8 @@ type Props = {
   rowId: string
 }
 
-export const TotalsRow: React.FC<Props> = ({
+export const TotalsRow: React.FC<TotalsRowProp> = ({
   totals,
-  label = "Project Summary",
   formatTokens,
   formatCost,
   formatHMS,
@@ -32,7 +30,7 @@ export const TotalsRow: React.FC<Props> = ({
     <tr className="bg-base-200 font-semibold" data-testid={rowId}>
       {/* Blank cells spanning Select + Issue + Description + Timestamp */}
       <th></th>
-      <th colSpan={3}>{label}</th>
+      <th colSpan={3}>Project Summary</th>
       {/* Totals aligned under token/cost/time columns */}
       <th data-testid={ids.inputTokensId} className="text-right">{formatTokens(totals.input)}</th>
       <th data-testid={ids.outputTokensId} className="text-right">{formatTokens(totals.output)}</th>

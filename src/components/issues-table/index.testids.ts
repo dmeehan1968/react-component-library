@@ -26,7 +26,7 @@ export const T = createTestIds(
     checkbox: ['header', 'row'],
   },
   {
-    columnCellExclusions: ['select'],
+    columnCellExclusions: ['select'] as const,
   },
 )
 

@@ -18,9 +18,9 @@ export type CreateTestIdsSpec = {
   checkbox?: KeySpec
 }
 
-export type CreateTestIdsOptions = {
+export type CreateTestIdsOptions<TExcluded extends readonly string[] | undefined = readonly string[] | undefined> = {
   // Keys for which the column `cell` id should NOT be generated (e.g., 'select').
-  columnCellExclusions?: readonly string[]
+  columnCellExclusions?: TExcluded
   // Optional prefix strategy for values. Defaults to no prefix to preserve existing IDs.
   // Example future switch: valuePrefix: (group, token, variant?) => `issues-table__${group}--${token}`
   valuePrefix?: (group: string, token: string, variant?: string) => string
@@ -59,12 +59,42 @@ function withPrefix(
   return token
 }
 
-export function createTestIds<TSpec extends CreateTestIdsSpec>(
+// --- Type helpers to infer keys from specs and exclusion lists ---
+type KeysFromArray<T extends readonly string[]> = T[number]
+type KeysFromRecord<T extends Record<string, unknown>> = keyof T & string
+type KeysFromTuples<T extends readonly (readonly [string, unknown])[]> =
+  T[number] extends readonly [infer K, unknown]
+    ? K & string
+    : never
+
+export type KeysFromSpec<T extends KeySpec | undefined> =
+  T extends readonly string[]
+    ? KeysFromArray<T>
+    : T extends readonly (readonly [string, unknown])[]
+      ? KeysFromTuples<T>
+      : T extends Record<string, unknown>
+        ? KeysFromRecord<T>
+        : never
+
+type ExcludedFrom<T extends readonly string[] | undefined> = T extends readonly (infer S)[] ? (S & string) : never
+
+export function createTestIds<
+  TCols extends KeySpec | undefined,
+  TRows extends KeySpec | undefined,
+  TMsgs extends KeySpec | undefined,
+  TCbx extends KeySpec | undefined,
+  TExcluded extends readonly string[] | undefined = undefined,
+>(
   base: string, // reserved for future namespacing; not used in default strategy
-  spec: TSpec,
-  options: CreateTestIdsOptions = {},
+  spec: {
+    columns?: TCols
+    rows?: TRows
+    messages?: TMsgs
+    checkbox?: TCbx
+  },
+  options: CreateTestIdsOptions<TExcluded> = {},
 ) {
-  const { columnCellExclusions = [], valuePrefix } = options
+  const { columnCellExclusions = [] as unknown as TExcluded, valuePrefix } = options
   const excludeSet = new Set(columnCellExclusions)
 
   const colEntries = normalize(spec.columns)
@@ -96,7 +126,22 @@ export function createTestIds<TSpec extends CreateTestIdsSpec>(
   ) as Record<string, string>
 
   const result = Object.freeze({ base, columns, rows, messages, checkbox })
-  return result as Readonly<typeof result>
+  // Strongly typed return with conditional presence of `cell` based on exclusions
+  type ColumnKeys = KeysFromSpec<TCols>
+  type Excluded = ExcludedFrom<TExcluded>
+  type ColumnsMap = { [K in ColumnKeys]: K extends Excluded ? { header: string } : { header: string; cell: string } }
+  type RowsMap = Record<KeysFromSpec<TRows>, string>
+  type MsgsMap = Record<KeysFromSpec<TMsgs>, string>
+  type CbxMap = Record<KeysFromSpec<TCbx>, string>
+
+  return result as Readonly<{
+    base: string
+    columns: ColumnsMap
+    rows: RowsMap
+    messages: MsgsMap
+    checkbox: CbxMap
+  }>
 }
 
 export type CreateTestIdsReturn = ReturnType<typeof createTestIds>
+export type { KeysFromSpec as _KeysFromSpec }

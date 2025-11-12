@@ -47,6 +47,7 @@ Project: react-component-library — Guidelines (2025-11-12)
     - `use.ctTemplateDir: playwright/` (HTML template, global styles)
     - `use.ctViteConfig.plugins: [tailwindcss(), react()]` — CT runs with Tailwind + React plugins.
   - Helpers live next to components, e.g. `src/components/project-table/index.ctspec.helper.tsx` exposes a page-object style API for mounting via `fixtures.mount` and querying via `Locator`s.
+  - Helper mount API parity: helper `.mount()` must accept exactly the component’s props object and pass it through (`<Component {...props} />`). Example: `TotalsRowHelper.mount(props: TotalsRowProp)` mirrors `TotalsRow` props.
 
 - Component: Project Table (example-specific tips)
   - Sorting logic: `src/components/project-table/projectSort.tsx` (locale-aware by name; dates; stable, non-mutating). Unit-tested by `projectSort.test.ts`.

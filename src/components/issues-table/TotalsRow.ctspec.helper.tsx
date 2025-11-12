@@ -1,6 +1,5 @@
 import type { ComponentFixtures, MountResult } from "@playwright/experimental-ct-react"
 import type { Locator } from "@playwright/test"
-import * as React from "react"
 
 import { TotalsRow } from "./TotalsRow.tsx"
 import type { TotalsRowProp } from "./TotalsRow.tsx"

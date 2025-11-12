@@ -6,6 +6,7 @@ import type { IssuesContextType } from "../../providers/issuesContext.tsx"
 import { sortByTimestampDesc } from "../../providers/sortByTimestampDesc.tsx"
 import { TableMessage } from "../project-table/table-message"
 import * as ids from "./index.testids.ts"
+import { TotalsRow } from "./TotalsRow.tsx"
 
 const useFormatters = () => {
   const locale = useLocale()
@@ -105,19 +106,20 @@ export const IssuesTableView: React.FC = () => {
       </tr>
       {/* Totals header row (no checkbox) appears only when there is at least one issue */}
       {(issues ?? []).length > 0 && (
-        <tr className="bg-base-200 font-semibold" data-testid={ids.totalsHeaderRowId}>
-          {/* Blank cells spanning Select + Issue + Description + Timestamp */}
-          <th></th>
-          <th colSpan={3}>Project Summary</th>
-          {/* Totals aligned under token/cost/time columns */}
-          <th data-testid={ids.totalsHeaderInputId} className="text-right">{formatTokens(totals.input)}</th>
-          <th data-testid={ids.totalsHeaderOutputId} className="text-right">{formatTokens(totals.output)}</th>
-          <th data-testid={ids.totalsHeaderCacheId} className="text-right">{formatTokens(totals.cache)}</th>
-          <th data-testid={ids.totalsHeaderCostId} className="text-right">{formatCost(totals.cost)}</th>
-          <th data-testid={ids.totalsHeaderTimeId} className="text-right">{formatHMS(totals.time)}</th>
-          {/* Trailing blank for Status */}
-          <th></th>
-        </tr>
+        <TotalsRow
+          totals={totals}
+          formatTokens={formatTokens}
+          formatCost={formatCost}
+          formatHMS={formatHMS}
+          ids={{
+            rowId: ids.totalsHeaderRowId,
+            inputId: ids.totalsHeaderInputId,
+            outputId: ids.totalsHeaderOutputId,
+            cacheId: ids.totalsHeaderCacheId,
+            costId: ids.totalsHeaderCostId,
+            timeId: ids.totalsHeaderTimeId,
+          }}
+        />
       )}
       </thead>
       <tbody>
@@ -160,19 +162,20 @@ export const IssuesTableView: React.FC = () => {
       {/* Totals footer row appears only when there is at least one issue */}
       {(issues ?? []).length > 0 && (
         <tfoot>
-        <tr className="bg-base-200 font-semibold" data-testid={ids.totalsFooterRowId}>
-          {/* Blank cells spanning Select + Issue + Description + Timestamp */}
-          <th></th>
-          <th colSpan={3}>Project Summary</th>
-          {/* Totals aligned under token/cost/time columns */}
-          <th data-testid={ids.totalsFooterInputId} className="text-right">{formatTokens(totals.input)}</th>
-          <th data-testid={ids.totalsFooterOutputId} className="text-right">{formatTokens(totals.output)}</th>
-          <th data-testid={ids.totalsFooterCacheId} className="text-right">{formatTokens(totals.cache)}</th>
-          <th data-testid={ids.totalsFooterCostId} className="text-right">{formatCost(totals.cost)}</th>
-          <th data-testid={ids.totalsFooterTimeId} className="text-right">{formatHMS(totals.time)}</th>
-          {/* Trailing blank for Status */}
-          <th></th>
-        </tr>
+          <TotalsRow
+            totals={totals}
+            formatTokens={formatTokens}
+            formatCost={formatCost}
+            formatHMS={formatHMS}
+            ids={{
+              rowId: ids.totalsFooterRowId,
+              inputId: ids.totalsFooterInputId,
+              outputId: ids.totalsFooterOutputId,
+              cacheId: ids.totalsFooterCacheId,
+              costId: ids.totalsFooterCostId,
+              timeId: ids.totalsFooterTimeId,
+            }}
+          />
         </tfoot>
       )}
     </table>

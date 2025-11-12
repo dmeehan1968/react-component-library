@@ -16,6 +16,7 @@ import {
 import { TableMessage } from "./table-message"
 import { useColumnSort } from "../../hooks/useColumnSort.ts"
 import { projectSort } from "./projectSort.tsx"
+import { Link } from 'react-router-dom'
 
 export const ProjectTableView: React.FC = () => {
   const { projects, isLoading, error } = useProjects()
@@ -73,14 +74,12 @@ export const ProjectTableView: React.FC = () => {
       {!isLoading && !error && sorted.map((project) => (
         <tr key={project.name} data-testid={projectId}>
           <td data-testid={nameId}>
-            <a
-              href={project.url}
-              rel="noopener noreferrer"
-              target="_blank"
+            <Link
+              to={project.url}
               className="link link-primary"
             >
               {project.name}
-            </a>
+            </Link>
           </td>
           <td data-testid={lastUpdatedId}>{project.lastUpdated.toLocaleString()}</td>
           <td data-testid={issueCountId}>{project.issueCount}</td>

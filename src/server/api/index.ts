@@ -1,8 +1,9 @@
 import type { Plugin } from 'vite'
 import type { ApiRoute } from './lib'
 import { projectsRoute } from './projects'
+import { issuesRoute } from './issues'
 
-export function apiPlugin(routes: ApiRoute[] = [projectsRoute]): Plugin {
+export function apiPlugin(routes: ApiRoute[] = [projectsRoute, issuesRoute]): Plugin {
   return {
     name: 'api-routes',
     configureServer(server) {

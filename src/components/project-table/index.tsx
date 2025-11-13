@@ -83,7 +83,7 @@ export const ProjectTableView: React.FC = () => {
           <td data-testid={nameId} className="link link-primary no-underline font-bold">
             {project.name}
           </td>
-          <td data-testid={lastUpdatedId}>{project.lastUpdated.toLocaleString()}</td>
+          <td data-testid={lastUpdatedId} className="tabular-nums whitespace-nowrap">{project.lastUpdated.toLocaleString()}</td>
           <td data-testid={issueCountId}>{project.issueCount}</td>
         </tr>
       ))}

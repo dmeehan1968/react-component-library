@@ -127,7 +127,7 @@ export const IssuesTableView: React.FC = () => {
           <td data-testid={ids.columns.issue.cell} className="link link-primary no-underline font-bold">
             {issue.title}
           </td>
-          <td data-testid={ids.columns.timestamp.cell} className="text-left">{formatTimestamp(issue.timestamp)}</td>
+          <td data-testid={ids.columns.timestamp.cell} className="text-left whitespace-nowrap tabular-nums">{formatTimestamp(issue.timestamp)}</td>
           <td data-testid={ids.columns.inputTokens.cell} className="text-right">{formatTokens(issue.inputTokens)}</td>
           <td data-testid={ids.columns.outputTokens.cell} className="text-right">{formatTokens(issue.outputTokens)}</td>
           <td data-testid={ids.columns.cacheTokens.cell} className="text-right">{formatTokens(issue.cacheTokens)}</td>

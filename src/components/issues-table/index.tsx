@@ -112,8 +112,9 @@ export const IssuesTableView: React.FC = () => {
           key={issue.id}
           data-testid={ids.rows.bodyIssue}
           className="hover:bg-accent hover:shadow-md cursor-pointer"
-          onClick={() => navigateTo(issue.url)}
+          onClick={event => navigateTo(event.currentTarget.getAttribute('data-href') || '')}
           aria-label={`Navigate to ${issue.title} trajectories`}
+          data-href={issue.url}
         >
           <td onClick={(e) => e.stopPropagation()} className="bg-base-100">
             <input

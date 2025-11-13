@@ -49,14 +49,11 @@ baseTest.describe("ProjectTableView", () => {
     })
 
     test('should render project names as links with correct href', async ({ table }) => {
-      const links = table.projectLinksAsRendered()
-      await expect(links).toHaveCount(table.fixtures.length)
-
       // default sort is by name asc
       const expectedNames = table.fixtureNamesInOrder('name', 'asc')
-      const expectedUrls = table.projectUrlsInOrder('name', 'asc')
+      const expectedUrls = table.fixtureUrlsInOrder('name', 'asc')
 
-      await expect(links).toHaveText(expectedNames)
+      await expect.poll(() => table.projectNamesAsRendered()).toEqual(expectedNames)
       await expect.poll(() => table.projectLinkHrefsAsRendered()).toEqual(expectedUrls)
     })
 

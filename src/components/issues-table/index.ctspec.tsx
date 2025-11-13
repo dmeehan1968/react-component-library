@@ -59,9 +59,8 @@ baseTest.describe("IssuesTableView", () => {
       const expectedTitles = sorted.map(i => i.title)
       const expectedUrls = sorted.map(i => i.url)
 
-      const links = table.issueLinksAsRendered()
-      await expect(links).toHaveText(expectedTitles)
-      await expect.poll(() => table.issueLinkHrefsAsRendered()).toEqual(expectedUrls)
+      await expect.poll(async () => table.issueLinksAsRendered()).toEqual(expectedTitles)
+      await expect.poll(async () => table.issueLinkHrefsAsRendered()).toEqual(expectedUrls)
     })
 
     test('header totals equal footer totals', async ({ table }) => {
@@ -108,7 +107,7 @@ baseTest.describe("IssuesTableView", () => {
 
         // Issue link text and href
         await expect(cells.issueLink).toHaveText(exp.title)
-        await expect.poll(() => cells.issueLink.getAttribute('href')).toEqual(exp.url)
+        expect(await rows.nth(i).getAttribute('data-href')).toEqual(exp.url)
 
         // Timestamp (locale-formatted)
         await expect(cells.timestamp).toHaveText(exp.timestamp)
@@ -174,13 +173,15 @@ baseTest.describe("IssuesTableView", () => {
       await expect(table.totalsFooter.time).toHaveClass(/\btext-right\b/)
     })
 
-    test('timestamp column is left-aligned', async ({ table }) => {
+    test('timestamp column is left-aligned, nowrap and tabular', async ({ table }) => {
       // Header
       await expect(table.timestampColumn).toHaveClass(/\btext-left\b/)
       // All data row cells
       for (let i = 0 ; i < table.fixtures.length ; i++) {
         const cells = table.cellsAt(i)
         await expect(cells.timestamp).toHaveClass(/\btext-left\b/)
+        await expect(cells.timestamp).toHaveClass(/\btabular-nums\b/)
+        await expect(cells.timestamp).toHaveClass(/\bwhitespace-nowrap\b/)
       }
     })
 

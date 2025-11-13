@@ -76,9 +76,10 @@ export const ProjectTableView: React.FC = () => {
         <tr
           key={project.name}
           data-testid={projectId}
-          onClick={() => navigateTo(project.url)}
+          onClick={event => navigateTo(event.currentTarget.getAttribute('data-href') || '')}
           className="cursor-pointer hover:bg-accent hover:shadow-md"
           aria-label={`Navigate to ${project.name} issues page`}
+          data-href={project.url}
         >
           <td data-testid={nameId} className="link link-primary no-underline font-bold">
             {project.name}

@@ -1,5 +1,6 @@
 import type { ComponentFixtures, MountResult } from "@playwright/experimental-ct-react"
 import type { Locator } from "@playwright/test"
+import { BrowserRouter } from "react-router-dom"
 import { type Issue, IssuesContext, type IssuesContextType } from "../../providers/issuesContext.tsx"
 
 import { T as ids } from "./index.testids.ts"
@@ -27,9 +28,11 @@ export class IssuesTableViewHelper {
       await this._root.unmount()
     }
     this._root = await this._mount(
-      <IssuesContext value={props}>
-        <IssuesTableView/>
-      </IssuesContext>
+      <BrowserRouter>
+        <IssuesContext value={props}>
+          <IssuesTableView/>
+        </IssuesContext>
+      </BrowserRouter>,
     )
   }
 
@@ -50,10 +53,11 @@ export class IssuesTableViewHelper {
 
   // Rows and cells
   get issueRows() { return this.root.getByTestId(ids.rows.bodyIssue) }
-  issueLinksAsRendered() { return this.root.getByTestId(ids.rows.bodyIssue).locator(`[data-testid="${ids.columns.issue.cell}"] a`) }
+  async issueLinksAsRendered() {
+    return Promise.all((await this.issueRows.all()).map(row => row.getByTestId(ids.columns.issue.cell).textContent()))
+  }
   async issueLinkHrefsAsRendered() {
-    const links = this.issueLinksAsRendered()
-    return links.evaluateAll(els => els.map(el => el.getAttribute('href') ?? ''))
+    return Promise.all((await this.issueRows.all()).map(row => row.getAttribute('data-href')))
   }
 
   // Selection
@@ -70,6 +74,7 @@ export class IssuesTableViewHelper {
       time: this.root.getByTestId(ids.rows.totalsHeader).getByTestId(ids.columns.time.cell),
     }
   }
+
   get totalsFooter() {
     return {
       input: this.root.getByTestId(ids.rows.totalsFooter).getByTestId(ids.columns.inputTokens.cell),
@@ -104,7 +109,7 @@ export class IssuesTableViewHelper {
 
   cellsAt(index: number) {
     return {
-      issueLink: this._issueCells.nth(index).locator('a'),
+      issueLink: this._issueCells.nth(index),
       timestamp: this._timestampCells.nth(index),
       input: this._inputCells.nth(index),
       output: this._outputCells.nth(index),

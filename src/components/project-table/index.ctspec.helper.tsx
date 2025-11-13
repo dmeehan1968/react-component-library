@@ -11,7 +11,7 @@ import {
   issueCountColumnId,
   lastUpdatedColumnId,
   loadingMessageId,
-  nameColumnId,
+  nameColumnId, nameId,
   noDataMessageId,
   projectId,
   sortIndicatorId,
@@ -51,25 +51,20 @@ export class ProjectTableViewHelper {
     )
   }
 
-  projectNamesAsRendered() {
-    return this.root.getByTestId(projectId).locator('td:first-child').allTextContents()
-  }
-
-  projectLinksAsRendered() {
-    return this.root.getByTestId(projectId).locator('td:first-child a')
+  async projectNamesAsRendered() {
+    return this.projectRows.getByTestId(nameId).allTextContents()
   }
 
   fixtureNamesInOrder(by: SortableColumns, order: SortOrder) {
     return projectSort(this.fixtures, by, order).map(p => p.name)
   }
 
-  projectUrlsInOrder(by: SortableColumns, order: SortOrder) {
+  fixtureUrlsInOrder(by: SortableColumns, order: SortOrder) {
     return projectSort(this.fixtures, by, order).map(p => p.url)
   }
 
   async projectLinkHrefsAsRendered() {
-    const links = this.projectLinksAsRendered()
-    return links.evaluateAll(els => els.map(el => el.getAttribute('href') ?? ''))
+    return Promise.all((await this.projectRows.all()).map(row => row.getAttribute('data-href')))
   }
 
   get nameColumn() {

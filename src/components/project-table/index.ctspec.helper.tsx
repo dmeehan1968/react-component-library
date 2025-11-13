@@ -6,16 +6,7 @@ import type { SortOrder } from "../../hooks/useColumnSort.ts"
 import { projectSort } from "./projectSort.tsx"
 import { MemoryRouter } from 'react-router-dom'
 
-import {
-  errorMessageId,
-  issueCountColumnId,
-  lastUpdatedColumnId,
-  loadingMessageId,
-  nameColumnId, nameId,
-  noDataMessageId,
-  projectId,
-  sortIndicatorId,
-} from "./index.testids.ts"
+import { T as ids, sortIndicatorId } from "./index.testids.ts"
 import { ProjectTableView } from "./index.tsx"
 
 export const upArrow = '↑' as const
@@ -52,7 +43,7 @@ export class ProjectTableViewHelper {
   }
 
   async projectNamesAsRendered() {
-    return this.projectRows.getByTestId(nameId).allTextContents()
+    return this.projectRows.getByTestId(ids.columns.name.cell).allTextContents()
   }
 
   fixtureNamesInOrder(by: SortableColumns, order: SortOrder) {
@@ -68,15 +59,15 @@ export class ProjectTableViewHelper {
   }
 
   get nameColumn() {
-    return this.root.getByTestId(nameColumnId)
+    return this.root.getByTestId(ids.columns.name.header)
   }
 
   get lastUpdatedColumn() {
-    return this.root.getByTestId(lastUpdatedColumnId)
+    return this.root.getByTestId(ids.columns.lastUpdated.header)
   }
 
   get issueCountColumn() {
-    return this.root.getByTestId(issueCountColumnId)
+    return this.root.getByTestId(ids.columns.issueCount.header)
   }
 
   get tagName() {
@@ -88,7 +79,7 @@ export class ProjectTableViewHelper {
   }
 
   get projectRows() {
-    return this.root.getByTestId(projectId)
+    return this.root.getByTestId(ids.rows.project)
   }
 
   get sortIndicators(): Promise<{ name: string | undefined, lastUpdated: string | undefined }> {
@@ -103,14 +94,14 @@ export class ProjectTableViewHelper {
   }
 
   get noDataMessage() {
-    return this.root.getByTestId(noDataMessageId)
+    return this.root.getByTestId(ids.messages.noData)
   }
 
   get loadingMessage() {
-    return this.root.getByTestId(loadingMessageId)
+    return this.root.getByTestId(ids.messages.loading)
   }
 
   get errorMessage() {
-    return this.root.getByTestId(errorMessageId)
+    return this.root.getByTestId(ids.messages.error)
   }
 }

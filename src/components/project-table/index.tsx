@@ -1,18 +1,6 @@
 import * as React from "react"
 import { useProjects } from "../../hooks/useProjects.tsx"
-import {
-  errorMessageId,
-  issueCountId,
-  issueCountColumnId,
-  lastUpdatedId,
-  lastUpdatedColumnId,
-  loadingMessageId,
-  nameId,
-  nameColumnId,
-  noDataMessageId,
-  projectId,
-  sortIndicatorId, projectsTableId,
-} from "./index.testids.ts"
+import { T as ids, sortIndicatorId } from "./index.testids.ts"
 import { TableMessage } from "./table-message"
 import { useColumnSort } from "../../hooks/useColumnSort.ts"
 import { projectSort } from "./projectSort.tsx"
@@ -28,25 +16,25 @@ export const ProjectTableView: React.FC = () => {
   const navigateTo = useNavigate()
 
   return (
-    <table className="table table-zebra w-full h-full" data-testid={projectsTableId}>
+    <table className="table table-zebra w-full h-full" data-testid={ids.base}>
       <thead>
       <tr>
         <th
           className="cursor-pointer"
           onClick={handleSort('name')}
-          data-testid={nameColumnId}
+          data-testid={ids.columns.name.header}
         >
           Name <span data-testid={sortIndicatorId}>{indicator.name}</span>
         </th>
         <th
           className="cursor-pointer"
           onClick={handleSort('lastUpdated')}
-          data-testid={lastUpdatedColumnId}
+          data-testid={ids.columns.lastUpdated.header}
         >
           Last Updated <span data-testid={sortIndicatorId}>{indicator.lastUpdated}</span>
         </th>
         <th
-          data-testid={issueCountColumnId}
+          data-testid={ids.columns.issueCount.header}
         >
           Issues
         </th>
@@ -56,36 +44,36 @@ export const ProjectTableView: React.FC = () => {
       {isLoading && (
         <TableMessage
           message="Loading..."
-          testId={loadingMessageId}
+          testId={ids.messages.loading}
         />
       )}
       {error && (
         <TableMessage
           message={`Error: ${error}`}
-          testId={errorMessageId}
+          testId={ids.messages.error}
           className="text-error"
         />
       )}
       {!isLoading && !error && sorted.length === 0 && (
         <TableMessage
           message="No projects found"
-          testId={noDataMessageId}
+          testId={ids.messages.noData}
         />
       )}
       {!isLoading && !error && sorted.map((project) => (
         <tr
           key={project.name}
-          data-testid={projectId}
+          data-testid={ids.rows.project}
           onClick={event => navigateTo(event.currentTarget.getAttribute('data-href') || '')}
           className="cursor-pointer hover:bg-accent hover:shadow-md"
           aria-label={`Navigate to ${project.name} issues page`}
           data-href={project.url}
         >
-          <td data-testid={nameId} className="link link-primary no-underline font-bold">
+          <td data-testid={ids.columns.name.cell} className="link link-primary no-underline font-bold">
             {project.name}
           </td>
-          <td data-testid={lastUpdatedId} className="tabular-nums whitespace-nowrap">{project.lastUpdated.toLocaleString()}</td>
-          <td data-testid={issueCountId}>{project.issueCount}</td>
+          <td data-testid={ids.columns.lastUpdated.cell} className="tabular-nums whitespace-nowrap">{project.lastUpdated.toLocaleString()}</td>
+          <td data-testid={ids.columns.issueCount.cell}>{project.issueCount}</td>
         </tr>
       ))}
       </tbody>

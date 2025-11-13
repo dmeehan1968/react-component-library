@@ -1,12 +1,26 @@
-export const projectsTableId = 'projects-table'
-export const nameColumnId = 'name-column'
-export const lastUpdatedColumnId = 'last-updated-column'
-export const issueCountColumnId = 'issue-count-column'
-export const nameId = 'name'
-export const lastUpdatedId = 'last-updated'
-export const issueCountId = 'issue-count'
-export const noDataMessageId = 'no-data-message'
-export const projectId = 'project'
+// Project-table test IDs — generated via shared `createTestIds` util.
+// Keep values identical to previous constants to avoid DOM changes.
+import { createTestIds } from "../../testing/ids.ts"
+
+export const T = createTestIds(
+  'projects-table',
+  {
+    columns: [
+      'name',
+      'lastUpdated',
+      'issueCount',
+    ],
+    rows: {
+      project: 'project',
+    },
+    messages: ['loading', 'error', 'noData'],
+  },
+  {
+    // Preserve legacy IDs: remove "-row" suffix for rows only; leave others unchanged.
+    valuePrefix: (group, token) => group === 'row' ? token.replace(/-row$/, '') : token,
+  },
+)
+
 export const sortIndicatorId = 'sort-indicator'
-export const loadingMessageId = 'loading-message'
-export const errorMessageId = 'error-message'
+
+export type ProjectsTableTestIds = typeof T

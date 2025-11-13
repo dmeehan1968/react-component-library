@@ -1,4 +1,5 @@
 import * as React from "react"
+import { useNavigate } from "react-router-dom"
 import { useIssues } from "../../hooks/useIssues.tsx"
 import { useTableRowColumnCount } from "../../hooks/useTableRowColumnCount.tsx"
 import type { IssuesContextType } from "../../providers/issuesContext.tsx"
@@ -17,6 +18,7 @@ export const IssuesTableView: React.FC = () => {
   const [selected, setSelected] = React.useState<Set<string>>(new Set())
   const { headerRowRef, columnCount } = useTableRowColumnCount()
   const headerCheckboxRef = React.useRef<HTMLInputElement>(null)
+  const navigateTo = useNavigate()
 
   const allIds = React.useMemo(() => (fetchedIssues ?? []).map(i => i.id), [fetchedIssues])
   const allSelected = selected.size > 0 && selected.size === allIds.length
@@ -106,8 +108,14 @@ export const IssuesTableView: React.FC = () => {
         <TableMessage message="No issues found" testId={ids.messages.noData} colSpan={columnCount} />
       )}
       {!isLoading && !error && (issues ?? []).map((issue) => (
-        <tr key={issue.id} data-testid={ids.rows.bodyIssue} className="hover:bg-accent hover:shadow-md">
-          <td>
+        <tr
+          key={issue.id}
+          data-testid={ids.rows.bodyIssue}
+          className="hover:bg-accent hover:shadow-md cursor-pointer"
+          onClick={() => navigateTo(issue.url)}
+          aria-label={`Navigate to ${issue.title} trajectories`}
+        >
+          <td onClick={(e) => e.stopPropagation()} className="bg-base-100">
             <input
               type="checkbox"
               className="checkbox"
@@ -116,10 +124,8 @@ export const IssuesTableView: React.FC = () => {
               data-testid={ids.checkbox.row}
             />
           </td>
-          <td data-testid={ids.columns.issue.cell}>
-            <a href={issue.url} rel="noopener noreferrer" target="_blank" className="link link-primary no-underline font-bold">
-              {issue.title}
-            </a>
+          <td data-testid={ids.columns.issue.cell} className="link link-primary no-underline font-bold">
+            {issue.title}
           </td>
           <td data-testid={ids.columns.timestamp.cell} className="text-left">{formatTimestamp(issue.timestamp)}</td>
           <td data-testid={ids.columns.inputTokens.cell} className="text-right">{formatTokens(issue.inputTokens)}</td>

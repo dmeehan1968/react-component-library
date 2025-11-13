@@ -16,7 +16,7 @@ import {
 import { TableMessage } from "./table-message"
 import { useColumnSort } from "../../hooks/useColumnSort.ts"
 import { projectSort } from "./projectSort.tsx"
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 export const ProjectTableView: React.FC = () => {
   const { projects, isLoading, error } = useProjects()
@@ -25,6 +25,7 @@ export const ProjectTableView: React.FC = () => {
     initial: { column: 'name', order: 'asc' },
     indicators: { asc: '↑', desc: '↓', none: '' },
   })
+  const navigateTo = useNavigate()
 
   return (
     <table className="table table-zebra w-full h-full" data-testid={projectsTableId}>
@@ -72,14 +73,15 @@ export const ProjectTableView: React.FC = () => {
         />
       )}
       {!isLoading && !error && sorted.map((project) => (
-        <tr key={project.name} data-testid={projectId} className="hover:bg-accent hover:shadow-md">
-          <td data-testid={nameId}>
-            <Link
-              to={project.url}
-              className="link link-primary no-underline font-bold"
-            >
-              {project.name}
-            </Link>
+        <tr
+          key={project.name}
+          data-testid={projectId}
+          onClick={() => navigateTo(project.url)}
+          className="cursor-pointer hover:bg-accent hover:shadow-md"
+          aria-label={`Navigate to ${project.name} issues page`}
+        >
+          <td data-testid={nameId} className="link link-primary no-underline font-bold">
+            {project.name}
           </td>
           <td data-testid={lastUpdatedId}>{project.lastUpdated.toLocaleString()}</td>
           <td data-testid={issueCountId}>{project.issueCount}</td>

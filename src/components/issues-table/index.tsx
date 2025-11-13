@@ -1,6 +1,5 @@
 import * as React from "react"
 import { useIssues } from "../../hooks/useIssues.tsx"
-import { useLocale } from "../../hooks/useLocale.tsx"
 import { useTableRowColumnCount } from "../../hooks/useTableRowColumnCount.tsx"
 import type { IssuesContextType } from "../../providers/issuesContext.tsx"
 import { sortByTimestampDesc } from "../../providers/sortByTimestampDesc.tsx"
@@ -107,7 +106,7 @@ export const IssuesTableView: React.FC = () => {
         <TableMessage message="No issues found" testId={ids.messages.noData} colSpan={columnCount} />
       )}
       {!isLoading && !error && (issues ?? []).map((issue) => (
-        <tr key={issue.id} data-testid={ids.rows.bodyIssue}>
+        <tr key={issue.id} data-testid={ids.rows.bodyIssue} className="hover:bg-accent hover:shadow-md">
           <td>
             <input
               type="checkbox"
@@ -118,7 +117,7 @@ export const IssuesTableView: React.FC = () => {
             />
           </td>
           <td data-testid={ids.columns.issue.cell}>
-            <a href={issue.url} rel="noopener noreferrer" target="_blank" className="link link-primary">
+            <a href={issue.url} rel="noopener noreferrer" target="_blank" className="link link-primary no-underline font-bold">
               {issue.title}
             </a>
           </td>

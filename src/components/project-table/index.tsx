@@ -72,11 +72,11 @@ export const ProjectTableView: React.FC = () => {
         />
       )}
       {!isLoading && !error && sorted.map((project) => (
-        <tr key={project.name} data-testid={projectId}>
+        <tr key={project.name} data-testid={projectId} className="hover:bg-accent hover:shadow-md">
           <td data-testid={nameId}>
             <Link
               to={project.url}
-              className="link link-primary"
+              className="link link-primary no-underline font-bold"
             >
               {project.name}
             </Link>

@@ -1,7 +1,8 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { IssuesView } from './components/issues'
+import { NotFoundView } from "./components/NotFoundView.tsx"
 import { ProjectTableView } from './components/project-table'
 import { ProjectsProvider } from './providers/projectsProvider.tsx'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { IssuesView } from './components/issues'
 
 function App() {
   return (
@@ -11,7 +12,8 @@ function App() {
           <div className="w-full">
             <Routes>
               <Route path="/" element={<ProjectTableView/>} />
-              <Route path="/projects/:projectId/issues" element={<IssuesView/>} />
+              <Route path="/projects/:projectId/issues" element={<IssuesView/>}/>
+              <Route path="*" element={<NotFoundView/>}/>
             </Routes>
           </div>
         </div>

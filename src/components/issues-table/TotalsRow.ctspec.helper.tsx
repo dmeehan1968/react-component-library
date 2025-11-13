@@ -19,7 +19,6 @@ export class TotalsRowHelper {
 
   // Mount using exactly the TotalsRow component props for API parity
   async mount(props: TotalsRowProp) {
-    const { totals, formatTokens, formatCost, formatHMS, rowId } = props
 
     if (this._root) {
       await this._root.unmount()
@@ -27,26 +26,7 @@ export class TotalsRowHelper {
     this._root = await this._mount(
       <table className="table">
         <thead>
-        {/* Minimal header row to mirror real table structure */}
-        <tr>
-          <th></th>
-          <th></th>
-          <th></th>
-          <th></th>
-          <th></th>
-          <th></th>
-          <th></th>
-          <th></th>
-          <th></th>
-          <th></th>
-        </tr>
-        <TotalsRow
-          totals={totals}
-          formatTokens={formatTokens}
-          formatCost={formatCost}
-          formatHMS={formatHMS}
-          rowId={rowId ?? ids.rows.totalsHeader}
-        />
+          <TotalsRow {...props} />
         </thead>
       </table>,
     )

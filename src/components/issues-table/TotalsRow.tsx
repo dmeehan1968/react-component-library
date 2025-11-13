@@ -1,5 +1,6 @@
 import * as React from "react"
 import { T as ids } from "./index.testids.ts"
+import { useFormatters } from "../../hooks/useFormatters.ts"
 
 type Totals = {
   input: number
@@ -11,21 +12,15 @@ type Totals = {
 
 export type TotalsRowProp = {
   totals: Totals
-  // formatters are injected so we keep locale-aware formatting centralized
-  formatTokens: (n: number) => string
-  formatCost: (n: number) => string
-  formatHMS: (n: number) => string
   // test id for the <tr> element; child cell ids are standardized (input|output|cache|cost|time)
   rowId: string
 }
 
 export const TotalsRow: React.FC<TotalsRowProp> = ({
   totals,
-  formatTokens,
-  formatCost,
-  formatHMS,
   rowId,
 }) => {
+  const { formatTokens, formatCost, formatHMS } = useFormatters()
   return (
     <tr className="bg-base-200 font-semibold" data-testid={rowId}>
       {/* Blank cells spanning Select + Issue + Description + Timestamp */}

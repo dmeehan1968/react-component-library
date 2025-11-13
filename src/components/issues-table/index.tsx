@@ -7,24 +7,9 @@ import { sortByTimestampDesc } from "../../providers/sortByTimestampDesc.tsx"
 import { TableMessage } from "../project-table/table-message"
 import { T as ids } from "./index.testids.ts"
 import { TotalsRow } from "./TotalsRow.tsx"
+import { useFormatters } from "../../hooks/useFormatters.ts"
 
-const useFormatters = () => {
-  const locale = useLocale()
-  const intFmt = React.useMemo(() => new Intl.NumberFormat(locale), [locale])
-  const twoDpFmt = React.useMemo(() => new Intl.NumberFormat(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 }), [locale])
-  const formatTokens = React.useCallback((n: number) => intFmt.format(n), [intFmt])
-  const formatCost = React.useCallback((n: number) => twoDpFmt.format(n), [twoDpFmt])
-  const formatHMS = React.useCallback((totalSeconds: number) => {
-    const seconds = Math.max(0, Math.floor(totalSeconds))
-    const h = Math.floor(seconds / 3600)
-    const m = Math.floor((seconds % 3600) / 60)
-    const s = seconds % 60
-    const pad = (v: number) => v.toString().padStart(2, '0')
-    return `${pad(h)}:${pad(m)}:${pad(s)}`
-  }, [])
-  const formatTimestamp = React.useCallback((d: Date) => d.toLocaleString(locale), [locale])
-  return { formatTokens, formatCost, formatHMS, formatTimestamp }
-}
+// Note: keep `useLocale` import as it's used via formatters for timestamp; exported hook provides all formatters
 
 export const IssuesTableView: React.FC = () => {
   const { issues: fetchedIssues, isLoading, error } = useIssues()
@@ -107,9 +92,6 @@ export const IssuesTableView: React.FC = () => {
       {(issues ?? []).length > 0 && (
         <TotalsRow
           totals={totals}
-          formatTokens={formatTokens}
-          formatCost={formatCost}
-          formatHMS={formatHMS}
           rowId={ids.rows.totalsHeader}
         />
       )}
@@ -155,9 +137,6 @@ export const IssuesTableView: React.FC = () => {
         <tfoot>
           <TotalsRow
             totals={totals}
-            formatTokens={formatTokens}
-            formatCost={formatCost}
-            formatHMS={formatHMS}
             rowId={ids.rows.totalsFooter}
           />
         </tfoot>

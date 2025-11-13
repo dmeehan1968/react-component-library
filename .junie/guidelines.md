@@ -1,7 +1,7 @@
 Project: react-component-library — Guidelines (2025-11-12)
 
 - Important
-  - In this document, be extremely concise.  Sacrifice grammar for the sake of concision.
+  - When updating this file, .junie/guidelines.md, be extremely concise.  Sacrifice grammar for the sake of concision.
   
 - Post-edit protocol
   - After completing edits, propose refactors (see refactor protocol).

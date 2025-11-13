@@ -37,8 +37,12 @@ Project: react-component-library — Guidelines (2025-11-12)
   - TS strict on; `noUnused*`, `noUncheckedSideEffectImports`, `erasableSyntaxOnly` enabled.
   - Prefer functional React components; hooks follow rules-of-hooks; use `clsx` + Tailwind utility classes; `tailwind-merge` where needed (already a dep).
 
+- Testing Protocol
+  - Run tests after making changes
+  
 - Unit tests (Bun + happy-dom + Testing Library)
   - Run: `bun test` | watch: `bun run test:watch` | coverage: `bun run test:coverage`.
+  - Run focussed test: `bun run test --test-name-pattern <pattern>`
   - Env: Bun test runner with `happy-dom` (DOM API). No Jest.
   - Location: `src/**/*.test.ts(x)`.
   - Patterns/conventions:

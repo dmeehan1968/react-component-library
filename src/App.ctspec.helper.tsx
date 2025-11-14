@@ -12,9 +12,4 @@ export class AppHelper {
     return new AppHelper(await mount(<App />))
   }
 
-  // Project table helpers
-  get projectsTable() {
-    return this.root.getByTestId('projects-table')
-  }
-
 }

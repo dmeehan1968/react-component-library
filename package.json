@@ -24,6 +24,7 @@
     "@tailwindcss/vite": "^4.1.16",
     "clsx": "^2.1.1",
     "daisyui": "^5.3.10",
+    "recharts": "^2.15.0",
     "zod": "^4.0.0",
     "react-router-dom": "^7.1.1",
     "react": "^19.1.1",

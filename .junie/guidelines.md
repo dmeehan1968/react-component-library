@@ -78,6 +78,12 @@ Project: react-component-library — Guidelines (2025-11-12)
   - Sorting logic: `src/components/project-table/projectSort.tsx` (locale-aware by name; dates; stable, non-mutating). Unit-tested by `projectSort.test.ts`.
   - Test IDs centralized under `index.testids.ts` to keep selectors stable across TL and CT.
 
+- Custom Hooks (e.g. `use<Entity>`)
+  - Lift state into Provider/Context to avoid duplicate retrieval/persistence.
+  - See `useProjects`/`ProjectsProvider`/`ProjectsContext` for example.
+  - Providers should take `fetchImpl` as a prop to allow for `fetch` override
+  - Playwright limitations prevent passing custom fetchImpl.  Wrap components under test in entity context.
+  
 - Providers + Data Flow
   - `ProjectsProvider` fetches `/api/projects`, enriches view; exposes loading/error/data.
   - `IssuesProvider` fetches `/api/projects/:projectId/issues`.

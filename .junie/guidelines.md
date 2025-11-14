@@ -21,6 +21,9 @@ Project: react-component-library — Guidelines (2025-11-12)
   - Build: `bun run build` (TS project refs, then Vite)
   - Preview: `bun run preview` (mock API mounted in preview too)
 
+- Package Management
+  - Use bun CLI add/remove/update to manage deps
+  
 - Mock API (dev/preview)
   - Vite plugin `src/server/api/index.ts` mounts:
     - GET `/api/projects` → enriched list (adds `issueCount`, `lastUpdated` from issues dataset)

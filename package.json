@@ -11,6 +11,7 @@
     "dev": "bunx vite",
     "build": "bunx tsc -b && vite build",
     "lint": "bunx eslint .",
+    "typecheck": "bunx tsc --noEmit",
     "preview": "bunx vite preview",
     "test": "bun test",
     "test:watch": "bun test --watch",

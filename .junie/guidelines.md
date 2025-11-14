@@ -35,6 +35,10 @@ Project: react-component-library — Guidelines (2025-11-12)
   - `tsconfig.app.json`: bundler resolution; strict; excludes `playwright/**` from app typecheck; includes `playwright-ct.config.ts` only for types.
   - `tsconfig.node.json`: tooling (vite config) types.
 
+- Sanity Checks
+  - `bun run lint` to lint files
+  - `bun run typecheck` to typecheck files
+
 - Linting / Style
   - ESLint (flat) extends: `@eslint/js` recommended, `typescript-eslint` recommended, `react-hooks` latest, `react-refresh` vite; ignores `dist`.
   - TS strict on; `noUnused*`, `noUncheckedSideEffectImports`, `erasableSyntaxOnly` enabled.

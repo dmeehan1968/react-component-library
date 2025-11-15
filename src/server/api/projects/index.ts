@@ -1,6 +1,6 @@
 import { projectsData } from './projects.data.ts'
-import { issuesByProject } from '../issues/issues.data.ts'
-import { methodGuard, type ApiRoute } from '../lib'
+import { issuesByProject } from './[projectId]/issues/issues.data.ts'
+import type { RouteHandler } from '../router'
 
 /**
  * Derive per‑project stats from the issues dataset.
@@ -25,39 +25,23 @@ export function deriveProjectStats(
   return result
 }
 
-export const projectsRoute: ApiRoute = {
-  path: '/api/projects',
-  method: 'GET',
-  handler: methodGuard('GET', (_req, res) => {
-    // Only respond to the collection endpoint (no trailing path segments)
-    // When mounted at "/api/projects" via `server.middlewares.use(path, handler)`,
-    // Connect/Polka-style middleware trims the matched prefix from `req.url`.
-    // That means inside this handler `req.url` will often be "/" (or "" or "/?query")
-    // rather than the full "/api/projects" path. Support both forms.
-    const url = _req.url || ''
-    const isTrimmedCollection = url === '' || url === '/' || /^\/\?/.test(url)
-    const isFullCollection = /^\/api\/projects(?:\?.*)?$/.test(url)
-    const isCollection = isTrimmedCollection || isFullCollection
-    if (!isCollection) return
-    // Merge derived stats (issueCount, lastUpdated) into the static project list.
-    const stats = deriveProjectStats(issuesByProject)
-    const enriched = projectsData.map((p) => {
-      // Extract slug from "/projects/<slug>/issues"
-      const match = p.url.match(/^\/projects\/([^/]+)\/issues$/)
-      const slug = match ? match[1] : ''
-      const s = slug && stats[slug]
-      return s
-        ? {
-            ...p,
-            issueCount: s.issueCount,
-            lastUpdated: s.lastUpdated,
-          }
-        : { ...p, issueCount: 0, lastUpdated: '' }
-    })
-    res.statusCode = 200
-    res.setHeader('Content-Type', 'application/json; charset=utf-8')
-    res.end(JSON.stringify(enriched))
-  }),
+export const GET: RouteHandler = (_req, res) => {
+	// Merge derived stats (issueCount, lastUpdated) into the static project list.
+	const stats = deriveProjectStats(issuesByProject)
+	const enriched = projectsData.map((p) => {
+		// Extract slug from "/projects/<slug>/issues"
+		const match = p.url.match(/^\/projects\/([^/]+)\/issues$/)
+		const slug = match ? match[1] : ''
+		const s = slug && stats[slug]
+		return s
+			? {
+					...p,
+					issueCount: s.issueCount,
+					lastUpdated: s.lastUpdated,
+			  }
+			: { ...p, issueCount: 0, lastUpdated: '' }
+	})
+	res.statusCode = 200
+	res.setHeader('Content-Type', 'application/json; charset=utf-8')
+	res.end(JSON.stringify(enriched))
 }
-
-export default projectsRoute

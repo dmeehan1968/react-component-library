@@ -1,26 +1,23 @@
 import type { Plugin } from 'vite'
-import type { ApiRoute } from './lib'
-import { projectsRoute } from './projects'
-import { issuesRoute } from './issues'
+import { createApiRouter } from './router'
+import { compiledRoutes } from './routes'
 
-export function apiPlugin(routes: ApiRoute[] = [projectsRoute, issuesRoute]): Plugin {
+export function apiPlugin(): Plugin {
+  const router = createApiRouter(compiledRoutes)
+
   return {
     name: 'api-routes',
     configureServer(server) {
-      for (const route of routes) {
-        server.middlewares.use(route.path, (req, res, next) => {
-          route.handler(req, res)
-          if (!res.writableEnded) next?.()
-        })
-      }
+      server.middlewares.use('/api', (req, res, next) => {
+        void router.handle(req, res)
+        if (!res.writableEnded) next?.()
+      })
     },
     configurePreviewServer(server) {
-      for (const route of routes) {
-        server.middlewares.use(route.path, (req, res, next) => {
-          route.handler(req, res)
-          if (!res.writableEnded) next?.()
-        })
-      }
+      server.middlewares.use('/api', (req, res, next) => {
+        void router.handle(req, res)
+        if (!res.writableEnded) next?.()
+      })
     },
   }
 }

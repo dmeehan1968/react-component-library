@@ -9,6 +9,7 @@ export const T = createTestIds(
       'name',
       'lastUpdated',
       'issueCount',
+      'ideNames',
     ],
     rows: {
       project: 'project',

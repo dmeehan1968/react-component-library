@@ -5,16 +5,12 @@ import { promises as fs } from 'node:fs'
 import type { ProjectDTO } from './projects.data.ts'
 import type { RouteHandler } from '../router'
 
-function getUsername(): string {
-	return os.userInfo().username
-}
-
 function getLogPath(): string {
 	switch (os.platform()) {
 		case 'win32':
 			return path.join(process.env.APPDATA || '', '..', 'Local', 'JetBrains')
 		case 'darwin': {
-			const root = process.env.HOME || path.join('/Users', getUsername())
+			const root = process.env.HOME || path.join('/Users', os.userInfo().username)
 			return path.resolve(root, 'Library', 'Caches', 'JetBrains')
 		}
 		default:

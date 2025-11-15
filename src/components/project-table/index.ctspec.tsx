@@ -29,9 +29,9 @@ baseTest.describe("ProjectTableView", () => {
 
   baseTest.describe("with data", () => {
     const projects: Project[] = [
-      { name: 'Project 1', url: '/p1', lastUpdated: new Date('2025/01/02 12:00:00'), issueCount: 10 },
-      { name: 'Project 2', url: '/p2', lastUpdated: new Date('2025/01/01 12:00:00'), issueCount: 5 },
-      { name: 'Project 3', url: '/p3', lastUpdated: new Date('2025/01/03 12:00:00'), issueCount: 0 },
+	      { name: 'Project 1', url: '/p1', lastUpdated: new Date('2025/01/02 12:00:00'), issueCount: 10, ideNames: ['WebStorm', 'IntelliJ'] },
+	      { name: 'Project 2', url: '/p2', lastUpdated: new Date('2025/01/01 12:00:00'), issueCount: 5, ideNames: ['WebStorm'] },
+	      { name: 'Project 3', url: '/p3', lastUpdated: new Date('2025/01/03 12:00:00'), issueCount: 0, ideNames: ['PhpStorm'] },
     ]
 
     const test = baseTest.extend<{ table: ProjectTableViewHelper }>({
@@ -56,6 +56,12 @@ baseTest.describe("ProjectTableView", () => {
       await expect.poll(() => table.projectNamesAsRendered()).toEqual(expectedNames)
       await expect.poll(() => table.projectLinkHrefsAsRendered()).toEqual(expectedUrls)
     })
+
+		test('should render IDE names for each project', async ({ table }) => {
+      const expected = table.fixtures.map(p => p.ideNames.join(', '))
+
+			await expect.poll(() => table.projectIdeNamesAsRendered()).toEqual(expected)
+		})
 
   })
 
@@ -117,6 +123,10 @@ function commonProjectTableSuite<T extends TestType<ComponentFixtures & {
   test('should contain issue count column', async ({ table }) => {
     await expect(table.issueCountColumn).toHaveCount(1)
   })
+
+	test('should contain IDE column', async ({ table }) => {
+		await expect(table.ideNamesColumn).toHaveCount(1)
+	})
 
   test('name column header should be sortable', async ({ table }) => {
 

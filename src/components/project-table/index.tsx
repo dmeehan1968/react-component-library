@@ -38,6 +38,11 @@ export const ProjectTableView: React.FC = () => {
         >
           Issues
         </th>
+        <th
+          data-testid={ids.columns.ideNames.header}
+        >
+          IDE
+        </th>
       </tr>
       </thead>
       <tbody>
@@ -74,6 +79,7 @@ export const ProjectTableView: React.FC = () => {
           </td>
           <td data-testid={ids.columns.lastUpdated.cell} className="tabular-nums whitespace-nowrap">{project.lastUpdated.toLocaleString()}</td>
           <td data-testid={ids.columns.issueCount.cell}>{project.issueCount}</td>
+          <td data-testid={ids.columns.ideNames.cell}>{project.ideNames.join(', ')}</td>
         </tr>
       ))}
       </tbody>

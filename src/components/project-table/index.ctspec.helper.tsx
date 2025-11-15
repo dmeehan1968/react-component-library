@@ -46,6 +46,10 @@ export class ProjectTableViewHelper {
     return this.projectRows.getByTestId(ids.columns.name.cell).allTextContents()
   }
 
+	async projectIdeNamesAsRendered() {
+		return this.projectRows.getByTestId(ids.columns.ideNames.cell).allTextContents()
+	}
+
   fixtureNamesInOrder(by: SortableColumns, order: SortOrder) {
     return projectSort(this.fixtures, by, order).map(p => p.name)
   }
@@ -69,6 +73,10 @@ export class ProjectTableViewHelper {
   get issueCountColumn() {
     return this.root.getByTestId(ids.columns.issueCount.header)
   }
+
+	get ideNamesColumn() {
+		return this.root.getByTestId(ids.columns.ideNames.header)
+	}
 
   get tagName() {
     return this.root.evaluate(el => el.tagName)

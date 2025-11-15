@@ -1,10 +1,11 @@
 import * as React from "react"
 
 export interface Project {
-  name: string
-  url: string
-  lastUpdated: Date
-  issueCount: number
+	name: string
+	url: string
+	lastUpdated: Date
+	issueCount: number
+	ideNames: string[]
 }
 
 export type ProjectsContextType =

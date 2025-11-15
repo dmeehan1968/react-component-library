@@ -8,14 +8,14 @@ export function apiPlugin(): Plugin {
   return {
     name: 'api-routes',
     configureServer(server) {
-      server.middlewares.use('/api', (req, res, next) => {
-        void router.handle(req, res)
+      server.middlewares.use('/api', async (req, res, next) => {
+        await router.handle(req, res)
         if (!res.writableEnded) next?.()
       })
     },
     configurePreviewServer(server) {
-      server.middlewares.use('/api', (req, res, next) => {
-        void router.handle(req, res)
+      server.middlewares.use('/api', async (req, res, next) => {
+        await router.handle(req, res)
         if (!res.writableEnded) next?.()
       })
     },

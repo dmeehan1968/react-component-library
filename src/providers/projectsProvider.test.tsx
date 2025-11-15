@@ -21,13 +21,14 @@ describe("ProjectsProvider", () => {
     // Immediately after mount we should see loading:true
     expect(ProjectsProviderHelper.state.textContent).toBe("loading:true")
 
-    // Resolve with a successful response
-    const projects = [{ name: "A", url: "/a", lastUpdated: new Date().toISOString(), issueCount: 1 }]
-    d.resolve(okResponse(projects))
+  		// Resolve with a successful response
+  		const projects = [{ name: "A", url: "/a", lastUpdated: new Date().toISOString(), issueCount: 1 }]
+  		d.resolve(okResponse(projects))
 
-    await waitFor(() => {
-      expect(ProjectsProviderHelper.state.textContent).toBe(`projects:${JSON.stringify(projects)}`)
-    })
+  		await waitFor(() => {
+  			const expected = projects.map((p) => ({ ...p, ideNames: [] }))
+  			expect(ProjectsProviderHelper.state.textContent).toBe(`projects:${JSON.stringify(expected)}`)
+  		})
 
     // loading should be false now and no residual nodes
     expect(container.textContent?.includes("loading:true")).toBe(false)

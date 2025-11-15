@@ -9,7 +9,7 @@ Project: react-component-library — Guidelines (2025-11-12)
   - Ask for approval before implementing any refactor. Do not change code until approved.
   
 - Brainstorming
-  - Before asking each question, explore the codebase to find relevant context.
+  - Before asking each question, explore the codebase to find relevant context.  Consider using web search to find up-to-date information.
 
 - Refactor protocol
   - semantics↑, duplication↓, modularity↑

@@ -1,3 +1,4 @@
+import clsx from "clsx"
 import * as React from "react"
 import { useProjects } from "../../hooks/useProjects.tsx"
 import { T as ids, sortIndicatorId } from "./index.testids.ts"
@@ -77,7 +78,12 @@ export const ProjectTableView: React.FC = () => {
           <td data-testid={ids.columns.name.cell} className="link link-primary no-underline font-bold">
             {project.name}
           </td>
-          <td data-testid={ids.columns.lastUpdated.cell} className="tabular-nums whitespace-nowrap">{project.lastUpdated.toLocaleString()}</td>
+          <td
+            data-testid={ids.columns.lastUpdated.cell}
+            className={clsx("tabular-nums whitespace-nowrap", !project.lastUpdated && 'loading loading-dots loading-xs')}
+          >
+            {project.lastUpdated?.toLocaleString()}
+          </td>
           <td data-testid={ids.columns.issueCount.cell}>{project.issueCount}</td>
           <td data-testid={ids.columns.ideNames.cell}>{project.ideNames.join(', ')}</td>
         </tr>

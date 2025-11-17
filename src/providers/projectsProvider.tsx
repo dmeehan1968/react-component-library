@@ -1,6 +1,6 @@
 import * as React from "react"
 import { type Project, ProjectsContext, type ProjectsContextType } from "./projectsContext.tsx"
-import { parseProjects } from "../schemas/project.ts"
+import { ProjectSchema } from "../schemas/project.ts"
 
 export type FetchImpl = (req: RequestInfo| string, init?: RequestInit) => Promise<Response>
 
@@ -29,8 +29,7 @@ export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
           setFetchedProjects([])
           return
         }
-        const raw = await res.json()
-        const parsed = parseProjects(raw) as Project[]
+        const parsed = ProjectSchema.array().decode(await res.json())
         setFetchedProjects(parsed)
       } catch (err) {
         setError(err instanceof Error ? err : new Error(String(err)))

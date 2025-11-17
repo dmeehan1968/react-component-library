@@ -1,12 +1,5 @@
 import * as React from "react"
-
-export interface Project {
-	name: string
-	url: string
-	lastUpdated: Date
-	issueCount: number
-	ideNames: string[]
-}
+import type { Project } from "../schemas/project.ts"
 
 export type ProjectsContextType =
   {

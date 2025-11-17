@@ -1,7 +1,7 @@
 import { promises as fs } from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
-import { JsonCodec, type Project, ProjectSchema } from "../../../schemas/project.ts"
+import { JsonCodec, Project, ProjectSchema } from "../../../schemas/project.ts"
 
 import type { RouteHandler } from '../router'
 
@@ -73,22 +73,21 @@ class JunieLogs {
 
 			for (const [projectName, ideSet] of projectsByName) {
 				const slug = this.slugify(projectName)
-				projects.push({
+				projects.push(new Project({
 					name: projectName,
 					url: `/projects/${slug}/issues`,
 					issueCount: 0,
 					lastUpdated: now,
 					ideNames: Array.from(ideSet).sort(),
-				})
+				}))
 			}
 
 			return projects
 
 		}
 
-		this._projects ??= getProjects()
 
-		return this._projects
+		return (this._projects ??= getProjects())
 
 	}
 

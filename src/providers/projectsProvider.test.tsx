@@ -22,7 +22,7 @@ describe("ProjectsProvider", () => {
     expect(ProjectsProviderHelper.state.textContent).toBe("loading:true")
 
   		// Resolve with a successful response
-  		const projects = [{ name: "A", url: "/a", lastUpdated: new Date().toISOString(), issueCount: 1 }]
+  		const projects = [{ name: "A", url: "/a", lastUpdated: new Date().toISOString(), issueCount: 1, ideNames: [] }]
   		d.resolve(okResponse(projects))
 
   		await waitFor(() => {
@@ -35,7 +35,7 @@ describe("ProjectsProvider", () => {
     expect(fetchSpy.mock.calls).toEqual([['/api/projects']])
   })
 
-  it("leaves projects empty when response is not ok", async () => {
+  it("shows error when response is not ok", async () => {
     const d = deferred<Response>()
     const fetchSpy = createFetchMock(() => d.promise)
     ProjectsProviderHelper.renderWithProvider(fetchSpy)
@@ -46,7 +46,7 @@ describe("ProjectsProvider", () => {
     d.resolve(notOkResponse())
 
     await waitFor(() => {
-      expect(ProjectsProviderHelper.state.textContent).toBe("projects:[]")
+      expect(ProjectsProviderHelper.state.textContent).toBe("error:Failed to fetch projects: undefined")
     })
   })
 

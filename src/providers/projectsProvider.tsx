@@ -1,6 +1,6 @@
 import * as React from "react"
-import { type Project, ProjectsContext, type ProjectsContextType } from "./projectsContext.tsx"
-import { ProjectSchema } from "../schemas/project.ts"
+import { ProjectsContext, type ProjectsContextType } from "./projectsContext.tsx"
+import { Project } from "../schemas/project.ts"
 
 export type FetchImpl = (req: RequestInfo| string, init?: RequestInit) => Promise<Response>
 
@@ -24,12 +24,10 @@ export const ProjectsProvider: React.FC<ProjectsProviderProps> = ({
         setError(undefined)
         const res = await fetchImpl!('/api/projects')
         if (!res.ok) {
-          // Treat non-OK HTTP responses as an empty dataset rather than an error.
-          // This matches test expectations and allows the UI to show "no data" state.
-          setFetchedProjects([])
+          setError(new Error(`Failed to fetch projects: ${res.statusText}`))
           return
         }
-        const parsed = ProjectSchema.array().decode(await res.json())
+        const parsed = Project.schema.array().decode(await res.json()).map(p => new Project(p))
         setFetchedProjects(parsed)
       } catch (err) {
         setError(err instanceof Error ? err : new Error(String(err)))

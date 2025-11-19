@@ -8,13 +8,13 @@ function apiPluginEntrypoint(): Plugin {
     name: 'api-routes-entry',
     async configureServer(server) {
       const mod = await server.ssrLoadModule('/src/server/api/index.ts')
-      const innerFactory = mod.apiPlugin as () => Plugin
+      const innerFactory = mod.apiPlugin
       const inner = innerFactory()
-      await inner.configureServer?.(server)
+      await inner.configureServer(server)
     },
     async configurePreviewServer(server) {
       const mod = await server.ssrLoadModule('/src/server/api/index.ts')
-      const innerFactory = mod.apiPlugin as () => Plugin
+      const innerFactory = mod.apiPlugin
       const inner = innerFactory()
       await inner.configurePreviewServer?.(server)
     },
